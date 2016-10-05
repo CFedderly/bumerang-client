@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     /* called when skip button is tapped */
     public void skipLoginScreen(View view) {
-        Intent intent = new Intent(this, NavDrawer.class);
+        Intent intent = new Intent(this, CreateProfile.class);
         startActivity(intent);
     }
 

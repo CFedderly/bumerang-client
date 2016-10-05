@@ -1,5 +1,6 @@
 package com.seng480b.bumerang;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -31,8 +32,7 @@ public class NavDrawer extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                floatingClicked();
             }
         });
 
@@ -44,6 +44,11 @@ public class NavDrawer extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public void floatingClicked() {
+        Intent intent = new Intent(this, CreateRequest.class);
+        startActivity(intent);
     }
 
     @Override
@@ -87,12 +92,8 @@ public class NavDrawer extends AppCompatActivity
         Fragment fragment2 = new TestFragment();
 
         if (id == R.id.nav_camera) {
-
-            // Handle the camera action
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame, fragment);
-            ft.commit();
-
+            Intent intent = new Intent(this, CreateRequest.class);
+            startActivity(intent);
         } else if (id == R.id.nav_gallery) {
 
             // Second Action
@@ -103,7 +104,8 @@ public class NavDrawer extends AppCompatActivity
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
-
+            Intent intent = new Intent(this, CreateProfile.class);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

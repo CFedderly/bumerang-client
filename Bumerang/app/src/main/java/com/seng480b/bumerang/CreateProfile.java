@@ -19,6 +19,8 @@ public class CreateProfile extends AppCompatActivity {
     }
 
     public void goButton(View view) {
-        // Intent forward = new Intent(this, NEXTACTIVITY.class);
+        Intent forward = new Intent(this, NavDrawer.class); // NavDrawer is the "home"
+        // Get input from all the text fields here.
+        startActivity(forward);
     }
 }
