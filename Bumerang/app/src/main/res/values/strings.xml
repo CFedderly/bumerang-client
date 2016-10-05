@@ -1,6 +1,20 @@
 <resources>
     <string name="app_name">Bumerang</string>
     <string name="facebook_app_id">1614053472225944</string>
+
     // if your App ID is 1234567, you should use fb1234567
     <string name="fb_login_protocol_scheme">fb1614053472225944</string>
+
+    <string name="button_skip">skip</string>
+
+    <string name="title_activity_nav_drawer">nav_drawer</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_test_fragment">Hello TEST fragment</string>
+
 </resources>

@@ -8,6 +8,7 @@ import android.view.View;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
@@ -59,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
         // String profileInfo = GET FACEBOOK DATA VALUES HERE
         // intent.putExtra(PROFILE_VALUES, profileInfo);
         startActivity(createProfile);
+    }
+
+    /* called when skip button is tapped */
+    public void skipLoginScreen(View view) {
+        Intent intent = new Intent(this, NavDrawer.class);
+        startActivity(intent);
     }
 
 }
