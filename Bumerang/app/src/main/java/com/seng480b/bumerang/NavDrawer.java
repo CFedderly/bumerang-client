@@ -96,6 +96,7 @@ public class NavDrawer extends AppCompatActivity
         int id = item.getItemId();
         Fragment fragment = new BlankFragment();
         Fragment fragment2 = new TestFragment();
+
         //Fragment createReq = newCreateRequest();
         Fragment browse = new Browse();
 
