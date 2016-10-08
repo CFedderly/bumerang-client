@@ -90,10 +90,12 @@ public class NavDrawer extends AppCompatActivity
         int id = item.getItemId();
         Fragment fragment = new BlankFragment();
         Fragment fragment2 = new TestFragment();
+        Fragment createReq = new CreateRequest();
 
         if (id == R.id.nav_camera) {
-            Intent intent = new Intent(this, CreateRequest.class);
-            startActivity(intent);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame,createReq);
+            ft.commit();
         } else if (id == R.id.nav_gallery) {
 
             // Second Action
