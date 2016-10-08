@@ -28,6 +28,12 @@ public class NavDrawer extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //Fragment Browse --> main page
+        Fragment browse = new Browse();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.mainFrame,browse);
+        ft.commit();
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,10 +96,14 @@ public class NavDrawer extends AppCompatActivity
         int id = item.getItemId();
         Fragment fragment = new BlankFragment();
         Fragment fragment2 = new TestFragment();
+        //Fragment createReq = newCreateRequest();
+        Fragment browse = new Browse();
+
 
         if (id == R.id.nav_camera) {
-            Intent intent = new Intent(this, CreateRequest.class);
-            startActivity(intent);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame,fragment);  //change 'fragment' to createReq
+            ft.commit();
         } else if (id == R.id.nav_gallery) {
 
             // Second Action
@@ -101,7 +111,10 @@ public class NavDrawer extends AppCompatActivity
             ft.replace(R.id.mainFrame,fragment2);
             ft.commit();
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_home) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame,browse);
+            ft.commit();
 
         } else if (id == R.id.nav_manage) {
             Intent intent = new Intent(this, CreateProfile.class);
