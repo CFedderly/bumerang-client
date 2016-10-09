@@ -9,22 +9,49 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 public class CreateRequest extends Fragment {
+    private SeekBar distanceBar;
+    private TextView time, distance;
+
     @Override
     // Fragment Cancel = new Browse();
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.activity_create_request, container, false);
+        View inflatedView = inflater.inflate(R.layout.activity_create_request, container, false);
+
+        // Setup for Seekbars
+        distanceBar = (SeekBar) inflatedView.findViewById(R.id.barDistance);
+
+        // Setup for editText associated with above SeekBars
+        distance = (TextView) inflatedView.findViewById(R.id.labelDistanceNum);
+
+        // Setup for the distance seek bar
+        distanceBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                distance.setText(progress + " kms");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        return inflatedView;
     }
-/*
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        //super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_create_request);
-    }
-*/
+
     public void cancelClicked(View view) {
         // go back to the home page fragment
     }

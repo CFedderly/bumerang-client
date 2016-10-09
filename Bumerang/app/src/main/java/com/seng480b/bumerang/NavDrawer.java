@@ -47,8 +47,10 @@ public class NavDrawer extends AppCompatActivity
     }
 
     public void floatingClicked() {
-        Intent intent = new Intent(this, CreateRequest.class);
-        startActivity(intent);
+        Fragment createReq = new CreateRequest();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.mainFrame,createReq);
+        ft.commit();
     }
 
     @Override
