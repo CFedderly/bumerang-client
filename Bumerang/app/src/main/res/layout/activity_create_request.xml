@@ -59,42 +59,6 @@
         android:hint="Include a brief description about your item" />
 
     <TextView
-        android:text="Distance:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/barDuration"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="26dp"
-        android:id="@+id/labelDistance"
-        android:textAppearance="@style/TextAppearance.AppCompat" />
-
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/labelDistance"
-        android:layout_alignParentStart="true"
-        android:id="@+id/barDistance" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/inputTags"
-        android:layout_above="@+id/buttonCreate"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="27dp" />
-
-    <TextView
-        android:text="Tags:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/labelTags"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:layout_above="@+id/inputTags"
-        android:layout_alignParentStart="true" />
-
-    <TextView
         android:text="Duration:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -116,13 +80,6 @@
         android:layout_alignParentBottom="true"
         android:onClick="cancelClicked" />
 
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/barDuration"
-        android:layout_below="@+id/labelDuration"
-        android:layout_alignParentStart="true" />
-
     <Button
         android:text="Create"
         android:layout_width="wrap_content"
@@ -133,5 +90,105 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:background="@android:color/holo_green_dark"
         android:onClick="createClicked" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/barDistance"
+        android:max="50"
+        android:progress="5"
+        android:layout_below="@+id/labelDuration"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="94dp" />
+
+    <TextView
+        android:text="Tags:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelTags"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_below="@+id/barDistance"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/inputTags"
+        android:layout_below="@+id/labelTags"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="17dp" />
+
+    <TextView
+        android:text="Distance:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelDistance"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_above="@+id/labelTags"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:text="2 km"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelDistanceNum"
+        android:layout_alignBaseline="@+id/labelDistance"
+        android:layout_alignBottom="@+id/labelDistance"
+        android:layout_alignStart="@+id/labelCRequest"
+        android:layout_alignEnd="@+id/buttonCreate" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/labelDuration"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:text="00"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView11"
+            android:visibility="invisible" />
+
+        <EditText
+            android:layout_width="54dp"
+            android:layout_height="wrap_content"
+            android:inputType="time"
+            android:ems="10"
+            android:id="@+id/editText20" />
+
+    </FrameLayout>
+
+    <EditText
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:inputType="time"
+        android:ems="10"
+        android:id="@+id/editText21"
+        android:layout_below="@+id/labelDuration"
+        android:layout_toEndOf="@+id/labelHours" />
+
+    <TextView
+        android:text="Minutes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelMinutes"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_alignBaseline="@+id/editText21"
+        android:layout_alignBottom="@+id/editText21"
+        android:layout_toEndOf="@+id/editText21" />
+
+    <TextView
+        android:text="Hours"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelHours"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_alignBaseline="@+id/editText21"
+        android:layout_alignBottom="@+id/editText21"
+        android:layout_toEndOf="@+id/labelDuration" />
 
 </RelativeLayout>
