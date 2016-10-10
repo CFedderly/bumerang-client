@@ -1,11 +1,13 @@
 package com.seng480b.bumerang;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -27,6 +29,12 @@ public class NavDrawer extends AppCompatActivity
         setContentView(R.layout.activity_nav_drawer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //Fragment Browse --> main page
+        ListFragment browse = new Browse();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.mainFrame,browse);
+        ft.commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -92,20 +100,26 @@ public class NavDrawer extends AppCompatActivity
         int id = item.getItemId();
         Fragment fragment = new BlankFragment();
         Fragment fragment2 = new TestFragment();
+
         Fragment createReq = new CreateRequest();
+        ListFragment browse = new Browse();
+
 
         if (id == R.id.nav_camera) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame,createReq);
             ft.commit();
-        } else if (id == R.id.nav_gallery) {
 
+        } else if (id == R.id.nav_gallery) {
             // Second Action
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame,fragment2);
             ft.commit();
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_home) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame,browse);
+            ft.commit();
 
         } else if (id == R.id.nav_manage) {
             Intent intent = new Intent(this, CreateProfile.class);
