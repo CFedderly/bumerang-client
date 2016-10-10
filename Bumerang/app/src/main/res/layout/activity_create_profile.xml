@@ -56,7 +56,7 @@
         android:onClick="goButton"/>
 
     <TextView
-        android:text="Create Profile"
+        android:text="Edit Profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/createProfileHeader"
@@ -84,28 +84,8 @@
         android:selectAllOnFocus="false"
         android:hint="First"
         android:layout_below="@+id/labelName"
-        android:layout_alignParentStart="true" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/inputTags"
-        android:hint="Enter items, seperated by a comma, of the items you are willing to lend out."
-        android:layout_above="@+id/buttonCreate"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="46dp" />
-
-    <TextView
-        android:text="Tags:"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/labelTags"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:layout_above="@+id/inputTags"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="20dp" />
+        android:layout_toStartOf="@+id/inputLastName" />
 
     <TextView
         android:text="About yourself:"
@@ -115,5 +95,26 @@
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:layout_below="@+id/inputLastName"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Tags:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelTags"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/inputTags"
+        android:hint="Enter items, seperated by a comma, of the items you are willing to lend out."
+        android:layout_below="@+id/labelTags"
+        android:layout_alignStart="@+id/labelTags"
+        android:layout_marginTop="8dp" />
 
 </RelativeLayout>
