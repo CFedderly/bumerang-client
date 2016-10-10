@@ -1,11 +1,13 @@
 package com.seng480b.bumerang;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -29,7 +31,7 @@ public class NavDrawer extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         //Fragment Browse --> main page
-        Fragment browse = new Browse();
+        ListFragment browse = new Browse();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame,browse);
         ft.commit();
@@ -97,16 +99,16 @@ public class NavDrawer extends AppCompatActivity
         Fragment fragment = new BlankFragment();
         Fragment fragment2 = new TestFragment();
 
-        //Fragment createReq = newCreateRequest();
-        Fragment browse = new Browse();
+        Fragment createReq = new CreateRequest();
+        ListFragment browse = new Browse();
 
 
         if (id == R.id.nav_camera) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame,fragment);  //change 'fragment' to createReq
+            ft.replace(R.id.mainFrame,createReq);
             ft.commit();
-        } else if (id == R.id.nav_gallery) {
 
+        } else if (id == R.id.nav_gallery) {
             // Second Action
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame,fragment2);
