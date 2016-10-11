@@ -8,13 +8,13 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Home" />
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_createReq"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Item1" />
+            android:title="Create Request" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_editProfile"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Item2"/> />
+            android:title="Edit Profile"/> />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
