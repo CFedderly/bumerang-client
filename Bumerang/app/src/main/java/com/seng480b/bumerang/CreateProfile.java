@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 public class CreateProfile extends AppCompatActivity {
-	private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
