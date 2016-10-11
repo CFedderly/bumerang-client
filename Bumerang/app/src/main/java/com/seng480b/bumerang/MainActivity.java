@@ -14,11 +14,13 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     CallbackManager callbackManager;
+    private FirebaseAnalytics mFirebaseAnalytics;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         AppEventsLogger.activateApp(this);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
     }
 
