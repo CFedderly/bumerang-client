@@ -35,8 +35,7 @@ public class CreateProfile extends AppCompatActivity {
     }
 
     public void goButton(View view) {
-        System.out.println(profileUrl);
-        forward = new Intent(this, NavDrawer.class); // NavDrawer is the "home"
+        forward = new Intent(this, Home.class); // NavDrawer is the "home"
         if (Connectivity.checkNetworkConnection(getApplicationContext())) {
             new CreateProfileTask().execute(profileUrl, currProfile.toJsonString());
         }
