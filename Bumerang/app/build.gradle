@@ -14,7 +14,7 @@ android {
     buildTypes {
         debug {
             // for using localhost
-            /*buildConfigField "String", "SERVER_URL", '"http://10.0.2.2:8888"'*/
+            /*buildConfigField "String", "SERVER_URL", '"http://localhost:8888"'*/
             // for using an emulator
             buildConfigField "String", "SERVER_URL", '"http://10.0.2.2:8888"'
         }
