@@ -36,7 +36,7 @@ public class CreateRequest extends Fragment {
         distanceBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                distance.setText(progress + " kms");
+                distance.setText(progress + " km");
             }
 
             @Override
