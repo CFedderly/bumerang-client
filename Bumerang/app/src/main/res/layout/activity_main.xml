@@ -28,4 +28,5 @@
         android:text="@string/button_skip"
         android:onClick="skipLoginScreen"  />
 
+
 </RelativeLayout>

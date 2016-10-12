@@ -36,17 +36,19 @@
 
         <activity android:name=".CreateProfile" />
         <activity
-            android:name=".NavDrawer"
+            android:name=".Home"
             android:label="@string/title_activity_nav_drawer"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CreateRequest" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".SplashScreen"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_splash_screen"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".MyRequests" />
-        <activity android:name=".ProfilePage"></activity>
+
+        <activity android:name=".ProfilePage" />
+
+
     </application>
 
 </manifest>

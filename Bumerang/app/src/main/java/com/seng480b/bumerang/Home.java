@@ -3,6 +3,7 @@ package com.seng480b.bumerang;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 
@@ -20,9 +21,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class NavDrawer extends AppCompatActivity
+public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    private FloatingActionButton fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +37,7 @@ public class NavDrawer extends AppCompatActivity
         ft.replace(R.id.mainFrame,browse);
         ft.commit();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,6 +56,10 @@ public class NavDrawer extends AppCompatActivity
     }
 
     public void floatingClicked() {
+        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        p.setAnchorId(View.NO_ID);
+        fab.setLayoutParams(p);
+        fab.setVisibility(View.GONE);
         Fragment createReq = new CreateRequest();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame,createReq);
@@ -98,32 +103,43 @@ public class NavDrawer extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Fragment fragment = new BlankFragment();
+        Fragment editProfile = new EditProfile();
         Fragment fragment2 = new TestFragment();
 
         Fragment createReq = new CreateRequest();
         ListFragment browse = new Browse();
 
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_createReq) {
+            // Hide the Floating action button
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            fab.setLayoutParams(p);
+            fab.setVisibility(View.GONE);
+            // Transition to the create request fragment
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame,createReq);
             ft.commit();
 
-        } else if (id == R.id.nav_gallery) {
-            // Second Action
+        } else if (id == R.id.nav_editProfile) {
+            // Hide the Floating action button
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            fab.setLayoutParams(p);
+            fab.setVisibility(View.GONE);
+            // Call the Edit Profile Fragment
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame,fragment2);
+            ft.replace(R.id.mainFrame,editProfile);
             ft.commit();
 
         } else if (id == R.id.nav_home) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame,browse);
-            ft.commit();
+            Intent reload = new Intent(this, Home.class );
+            startActivity(reload);
 
         } else if (id == R.id.nav_manage) {
-            Intent intent = new Intent(this, CreateProfile.class);
-            startActivity(intent);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame,fragment2);
+            ft.commit();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

@@ -15,40 +15,14 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-public class CreateRequest extends Fragment {
-    private SeekBar distanceBar;
-    private TextView distance;
-    View inflatedView;
-    Button cancelButton, createButton;
+public class EditProfile extends Fragment {
+    private View inflatedView;
+    private Button cancelButton, createButton;
     @Override
     // Fragment Cancel = new Browse();
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        inflatedView = inflater.inflate(R.layout.activity_create_request, container, false);
-
-        // Setup for Seekbars
-        distanceBar = (SeekBar) inflatedView.findViewById(R.id.barDistance);
-
-        // Setup for editText associated with above SeekBars
-        distance = (TextView) inflatedView.findViewById(R.id.labelDistanceNum);
-
-        // Setup for the distance seek bar
-        distanceBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                distance.setText(progress + " km");
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
+        inflatedView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
 
         // Setup for the Cancel button on screen
         cancelButton = (Button) inflatedView.findViewById(R.id.buttonCancel);
@@ -65,11 +39,13 @@ public class CreateRequest extends Fragment {
             }
         });
 
-        createButton = (Button) inflatedView.findViewById(R.id.buttonCreate);
+        createButton = (Button) inflatedView.findViewById(R.id.button5);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO Make the create button go to my requests page
+                // TODO Get all the values from the editTexts and update values
+                Intent reload = new Intent(getActivity(), Home.class );
+                startActivity(reload);
             }
         });
 
