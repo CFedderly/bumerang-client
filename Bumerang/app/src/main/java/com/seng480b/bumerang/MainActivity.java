@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         AppEventsLogger.activateApp(this);
+        //This should collect basic analytics as described here
+        // https://codelabs.developers.google.com/codelabs/firebase-android/#11
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
     }

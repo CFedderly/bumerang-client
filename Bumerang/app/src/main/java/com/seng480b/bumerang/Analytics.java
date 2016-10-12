@@ -10,8 +10,6 @@ public class Analytics extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //I wasn't sure where to set this so I just set it to the splash screen
-        setContentView(R.layout.activity_splash_screen);
 
 //The dream would be to eventually put the bundles where
 // the data is pushed to from 'CreateRequest'.

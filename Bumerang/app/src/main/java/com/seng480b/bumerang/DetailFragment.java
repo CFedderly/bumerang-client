@@ -3,12 +3,15 @@ package com.seng480b.bumerang;
 
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 public class DetailFragment extends DialogFragment {
-
+    private Button cancelButton, okayButton;
     public DetailFragment() {
         // Required empty public constructor
     }

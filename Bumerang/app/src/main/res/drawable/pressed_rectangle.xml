@@ -7,5 +7,5 @@
         android:right="2dp"
         android:bottom="2dp" />
     <corners android:radius="5dp" />
-    <solid android:color="#ff9fff" />
+    <solid android:color="@color/buttonPress" />
 </shape>
