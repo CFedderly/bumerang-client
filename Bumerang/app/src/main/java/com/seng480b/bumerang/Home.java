@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -103,7 +102,7 @@ public class Home extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Fragment editProfile = new EditProfile();
+        Fragment editProfile = new EditProfileFragment();
         Fragment fragment2 = new TestFragment();
 
         Fragment createReq = new CreateRequest();
@@ -130,7 +129,7 @@ public class Home extends AppCompatActivity
             fab.setVisibility(View.GONE);
             // Call the Edit Profile Fragment
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame,editProfile);
+            ft.replace(R.id.mainFrame, editProfile);
             ft.commit();
 
         } else if (id == R.id.nav_home) {

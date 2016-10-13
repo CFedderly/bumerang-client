@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#74b6ca</color>
+    <color name="colorPrimaryDark">#69a1c1</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="black_overlay">#66000000</color>
     <color name="textboxBackground">#66cec9c9</color>
+
+    <color name="colorNavBar">#ffffff</color>
+
+    <color name="black_overlay">#ce000000</color>
+
+    <color name="buttonPress">#ff758c</color>
+
+
 </resources>
