@@ -27,4 +27,9 @@
 
     <string name="facebook_first_name">First Name</string>
 
+    <string-array name="distance_array">
+        <item>Km</item>
+        <item>m</item>
+    </string-array>
+
 </resources>
