@@ -10,14 +10,20 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 public class CreateRequest extends Fragment {
     private SeekBar distanceBar;
     private TextView distance;
+    private int multipler;
+    private Spinner distSpinner;
+
     View inflatedView;
     Button cancelButton, createButton;
     @Override
@@ -36,7 +42,8 @@ public class CreateRequest extends Fragment {
         distanceBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                distance.setText(progress + " km");
+                int value = multipler * progress;
+                distance.setText(Integer.toString(value));
             }
 
             @Override
@@ -70,6 +77,31 @@ public class CreateRequest extends Fragment {
             @Override
             public void onClick(View v) {
                 // TODO Make the create button go to my requests page
+            }
+        });
+
+       distSpinner = (Spinner) inflatedView.findViewById(R.id.spinnerDistance);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.distance_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        distSpinner.setAdapter(adapter);
+
+        distSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 1) {
+                    multipler = 10;
+                } else {
+                    multipler = 1;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
