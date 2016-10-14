@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Button;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -22,9 +23,10 @@ import org.json.JSONObject;
 
 
 public class ProfilePage extends Fragment {
-    public String user_id;
-    public String name = "dude";
-    public View myInflatedView;
+
+    private String user_id;
+    private String name;
+    private View myInflatedView;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         myInflatedView = inflater.inflate(R.layout.fragment_profile_page, container,false);
@@ -57,7 +59,6 @@ public class ProfilePage extends Fragment {
         parameters.putString("fields", "id,name,link");
         request.setParameters(parameters);
         request.executeAsync();
-
 
         return myInflatedView;
     }
