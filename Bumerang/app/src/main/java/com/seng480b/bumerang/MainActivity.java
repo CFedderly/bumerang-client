@@ -18,6 +18,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequestBatch;
@@ -32,6 +33,7 @@ import org.json.JSONException;
 
 public class MainActivity extends AppCompatActivity {
     CallbackManager callbackManager;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         AppEventsLogger.activateApp(this);
+        //This should collect basic analytics as described here
+        // https://codelabs.developers.google.com/codelabs/firebase-android/#11
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
     }
 
