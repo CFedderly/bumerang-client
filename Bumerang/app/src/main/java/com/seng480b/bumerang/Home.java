@@ -108,6 +108,7 @@ public class Home extends AppCompatActivity
         Fragment createReq = new CreateRequest();
         ListFragment browse = new Browse();
 
+        Fragment profilePage = new ProfilePage();
 
         if (id == R.id.nav_createReq) {
             // Hide the Floating action button
@@ -136,8 +137,14 @@ public class Home extends AppCompatActivity
             startActivity(reload);
 
         } else if (id == R.id.nav_manage) {
+            // Hide the Floating action button
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            fab.setLayoutParams(p);
+            fab.setVisibility(View.GONE);
+            // Call the Profile Page Fragment
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame,fragment2);
+            ft.replace(R.id.mainFrame,profilePage);
             ft.commit();
         } else if (id == R.id.nav_share) {
 

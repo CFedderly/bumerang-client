@@ -25,4 +25,6 @@
 
     <string name="empty_browse_message">Seems like nobody needs anything!</string>
 
+    <string name="facebook_first_name">First Name</string>
+
 </resources>

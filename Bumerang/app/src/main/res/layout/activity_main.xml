@@ -38,4 +38,5 @@
         android:layout_above="@+id/image"
         android:layout_alignStart="@+id/image" />
 
+
 </RelativeLayout>
