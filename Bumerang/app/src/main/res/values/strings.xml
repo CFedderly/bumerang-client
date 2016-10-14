@@ -7,7 +7,7 @@
 
     <string name="button_skip">skip</string>
 
-    <string name="title_activity_nav_drawer">nav_drawer</string>
+    <string name="title_activity_nav_drawer">Bumerang</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -16,46 +16,15 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hello_test_fragment">Hello TEST fragment</string>
+    <string name="browse_text">Gday</string>
+    <string name="details">DETAILS DETAILS</string>
 
     <string name="title_activity_splash_screen">SplashScreen</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string-array name="hour_array">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>10</item>
-        <item>11</item>
-        <item>12</item>
-        <item>13</item>
-        <item>14</item>
-        <item>15</item>
-        <item>16</item>
-        <item>17</item>
-        <item>18</item>
-        <item>19</item>
-        <item>20</item>
-        <item>21</item>
-        <item>22</item>
-        <item>23</item>
-        <item>23</item>
-    </string-array>
 
-    <string-array name="planets_array">
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
-    </string-array>
+    <string name="empty_browse_message">Seems like nobody needs anything!</string>
+
+    <string name="facebook_first_name">First Name</string>
+
 </resources>

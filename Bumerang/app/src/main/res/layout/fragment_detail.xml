@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="10dp"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="245dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_menu_slideshow"
+        android:layout_weight="0.14" />
+
+    <TextView
+        android:id="@+id/name_of_borrower"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="User: "
+        android:textSize="20dp"
+        android:layout_weight="0.09" />
+
+    <TextView
+        android:id="@+id/item_needed"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Wanted: "
+        android:textSize="20dp"
+        android:layout_weight="0.09" />
+
+
+
+    <Button
+        android:id="@+id/dismiss"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Cancel" />
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Okay" />
+</LinearLayout>
