@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "244125593644",
+    "firebase_url": "https://bumeranganalytics.firebaseio.com",
+    "project_id": "bumeranganalytics",
+    "storage_bucket": "bumeranganalytics.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:244125593644:android:a7155e1e748446cb",
+        "android_client_info": {
+          "package_name": "com.seng480b.bumerang"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "244125593644-5nr11ohg40tn2l14pnejahqo1uei8lo0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.seng480b.bumerang",
+            "certificate_hash": "CF7AD5A4F48DDF5F3B8494BE3B08D2F44DFE45AF"
+          }
+        },
+        {
+          "client_id": "244125593644-i7jmej2rdjfdt628je7dcevhl5rnbkcb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1cwZSi59hLuEj66X7zvdIIk71KI7GKDA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "244125593644-i7jmej2rdjfdt628je7dcevhl5rnbkcb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

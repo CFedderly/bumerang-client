@@ -26,4 +26,11 @@
     <string name="empty_browse_message">Seems like nobody needs anything!</string>
     <string name="empty_myrequests_message">Hey, guess you don\'t need anything?</string>
 
+    <string name="facebook_first_name">First Name</string>
+
+    <string-array name="distance_array">
+        <item>Km</item>
+        <item>m</item>
+    </string-array>
+
 </resources>
