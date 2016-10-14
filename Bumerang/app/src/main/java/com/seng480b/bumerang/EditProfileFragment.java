@@ -81,12 +81,12 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void populateFields() {
-      /*
+/*
         ((EditText) inflatedView.findViewById(firstNameField)).setText(currProfile.getFirstName());
         ((EditText) inflatedView.findViewById(lastNameField)).setText(currProfile.getLastName());
         ((EditText) inflatedView.findViewById(descriptionField)).setText(currProfile.getDescription());
         ((EditText) inflatedView.findViewById(tagsField)).setText(currProfile.getTags());
-      */
+*/
     }
 
     private class CreateProfileTask extends AsyncTask<String, Void, String> {
