@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 
 
-public class DetailFragment extends DialogFragment {
+public class BorrowDialogFragment extends DialogFragment {
     //private Button cancelButton, acceptButton;
-    public DetailFragment() {
+    public BorrowDialogFragment() {
         // Required empty public constructor
     }
 
@@ -32,11 +33,11 @@ public class DetailFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_borrow_dialog, container, false);
         getDialog().setTitle("-MORE INFORMATION- DIALOG");
 
-        ImageButton cancelButton = (ImageButton)rootView.findViewById(R.id.buttonDetailDismiss);
-        Button acceptButton = (Button)rootView.findViewById(R.id.buttonDetailAccept);
+        ImageButton cancelButton = (ImageButton)rootView.findViewById(R.id.buttonBorrowDismiss);
+        Button acceptButton = (Button)rootView.findViewById(R.id.buttonBorrowAccept);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,6 +48,25 @@ public class DetailFragment extends DialogFragment {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //alert box -> change strings 'yes' and 'undo' to res/values/strings
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Accept Lend Offer")
+                        .setMessage("Your phone number will be shared with the user.")
+                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setNegativeButton("undo", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .show();
+
+
                 dismiss(v);
             }
         });

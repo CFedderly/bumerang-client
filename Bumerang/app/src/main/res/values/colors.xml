@@ -12,5 +12,7 @@
 
     <color name="buttonPress">#ff758c</color>
 
+    <color name="white">#ffffff</color>
+
 
 </resources>

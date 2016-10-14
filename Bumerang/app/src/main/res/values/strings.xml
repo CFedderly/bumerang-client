@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Bumerang</string>
+    <string name="app_name">Bümerang</string>
     <string name="facebook_app_id">1614053472225944</string>
 
     // if your App ID is 1234567, you should use fb1234567
@@ -7,7 +7,7 @@
 
     <string name="button_skip">skip</string>
 
-    <string name="title_activity_nav_drawer">Bumerang</string>
+    <string name="title_activity_nav_drawer">Bümerang</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -24,6 +24,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="empty_browse_message">Seems like nobody needs anything!</string>
+    <string name="empty_myrequests_message">Hey, guess you don\'t need anything?</string>
 
     <string name="facebook_first_name">First Name</string>
 

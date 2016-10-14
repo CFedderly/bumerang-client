@@ -106,7 +106,8 @@ public class Home extends AppCompatActivity
         Fragment fragment2 = new TestFragment();
 
         Fragment createReq = new CreateRequest();
-        ListFragment browse = new Browse();
+        //ListFragment browse = new Browse();
+        Fragment my_requests = new MyRequests();
 
         Fragment profilePage = new ProfilePage();
 
@@ -145,6 +146,10 @@ public class Home extends AppCompatActivity
             // Call the Profile Page Fragment
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame,profilePage);
+            ft.commit();
+        } else if (id == R.id.nav_my_requests){
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame, my_requests);
             ft.commit();
         } else if (id == R.id.nav_share) {
 
