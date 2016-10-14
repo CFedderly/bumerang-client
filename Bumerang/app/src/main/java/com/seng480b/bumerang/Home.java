@@ -107,7 +107,8 @@ public class Home extends AppCompatActivity
         Fragment fragment2 = new TestFragment();
 
         Fragment createReq = new CreateRequest();
-        ListFragment browse = new Browse();
+        //ListFragment browse = new Browse();
+        Fragment my_requests = new MyRequests();
 
 
         if (id == R.id.nav_createReq) {
@@ -138,7 +139,11 @@ public class Home extends AppCompatActivity
 
         } else if (id == R.id.nav_manage) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame,fragment2);
+            ft.replace(R.id.mainFrame, fragment2);
+            ft.commit();
+        } else if (id == R.id.nav_my_requests){
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame, my_requests);
             ft.commit();
         } else if (id == R.id.nav_share) {
 

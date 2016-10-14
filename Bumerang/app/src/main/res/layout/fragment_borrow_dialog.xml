@@ -2,11 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:padding="10dp" >
 
 
     <ImageButton
-        android:id="@+id/buttonDetailDismiss"
+        android:id="@+id/buttonBorrowDismiss"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_cancel"
@@ -14,13 +14,13 @@
         android:layout_alignParentRight="true" />
 
     <TextView
-        android:id="@+id/item_needed"
+        android:id="@+id/item_wanted"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Item Title and More"
+        android:text="The Item I Want"
         android:textSize="25dp"
         android:textStyle="bold"
-        android:layout_toLeftOf="@id/buttonDetailDismiss"/>
+        android:layout_toLeftOf="@id/buttonBorrowDismiss"/>
 
     <TextView
         android:id="@+id/item_desc"
@@ -29,7 +29,7 @@
         android:text="I would like to borrow this item.\nThis is a pretty long description.\nMore information on this line too."
         android:layout_weight="0.01"
         android:textSize="15sp"
-        android:layout_below="@id/item_needed"/>
+        android:layout_below="@id/item_wanted"/>
 
     <View
         android:id="@+id/divider_line"
@@ -69,20 +69,47 @@
 
 
     <TextView
-        android:id="@+id/tags"
+        android:id="@+id/temp_text_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="tags, tags, tags, tags"
         android:layout_below="@id/name_of_borrower"/>
 
+
+    <View
+        android:id="@+id/divider_line2"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/colorPrimaryDark"
+        android:layout_margin="5dp"
+        android:layout_below="@id/temp_text_tags"/>
+
     <Button
-        android:id="@+id/buttonDetailAccept"
+        android:id="@+id/buttonBorrowAccept"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Respond"
+        android:text="Accept"
         android:background="@color/colorAccent"
         android:textColor="@color/white"
-        android:layout_below="@id/tags"
-        android:layout_centerHorizontal="true"
+        android:layout_below="@id/divider_line2"
+        android:layout_alignParentRight="true"
         android:layout_margin="10dp" />
+
+    <TextView
+        android:id="@+id/borrow_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="[User] wants to lend you their [Item]!\n"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:background="@color/colorPrimary"
+        android:layout_below="@id/divider_line2"
+        android:layout_toLeftOf="@id/buttonBorrowAccept"
+        android:layout_margin="10dp"/>
+
+
+
+
+
+
 </RelativeLayout>
