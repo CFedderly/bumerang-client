@@ -1,5 +1,6 @@
 package com.seng480b.bumerang;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +21,8 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import com.facebook.GraphRequest;
@@ -37,7 +40,6 @@ import org.json.JSONException;
 public class MainActivity extends AppCompatActivity {
     CallbackManager callbackManager;
     private FirebaseAnalytics mFirebaseAnalytics;
-    private static final int SUCCESS = 0;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,15 @@ public class MainActivity extends AppCompatActivity {
         //This should collect basic analytics as described here
         // https://codelabs.developers.google.com/codelabs/firebase-android/#11
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        // Check for Google play services API is available and updated.
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int status = googleApiAvailability.isGooglePlayServicesAvailable(this);
+        // Check if up to date, if not display
+        if (status != ConnectionResult.SUCCESS) {
+            if(googleApiAvailability.isUserResolvableError(status)) {
+                googleApiAvailability.getErrorDialog(this, status, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            }
+        }
 
     }
 
@@ -137,5 +148,4 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CreateProfile.class);
         startActivity(intent);
     }
-
 }
