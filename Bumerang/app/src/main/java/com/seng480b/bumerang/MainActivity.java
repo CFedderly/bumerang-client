@@ -1,5 +1,7 @@
 package com.seng480b.bumerang;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequestBatch;
 import com.facebook.GraphResponse;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;
 import org.json.JSONObject;
@@ -34,12 +37,13 @@ import org.json.JSONException;
 public class MainActivity extends AppCompatActivity {
     CallbackManager callbackManager;
     private FirebaseAnalytics mFirebaseAnalytics;
-
+    private static final int SUCCESS = 0;
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
-
+        Dialog errorDialog = null;
 
 
         setContentView(R.layout.activity_main);
