@@ -30,6 +30,9 @@ public class CreateRequest extends Fragment {
     // Fragment Cancel = new Browse();
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        ((Home)getActivity()).setActionBarTitle("Create Request");
+
         inflatedView = inflater.inflate(R.layout.activity_create_request, container, false);
 
         // Setup for Seekbars

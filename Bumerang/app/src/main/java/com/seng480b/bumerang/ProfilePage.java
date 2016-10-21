@@ -31,6 +31,8 @@ public class ProfilePage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         myInflatedView = inflater.inflate(R.layout.fragment_profile_page, container,false);
 
+        ((Home)getActivity()).setActionBarTitle("Profile");
+
         GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
 
                 new GraphRequest.GraphJSONObjectCallback() {
