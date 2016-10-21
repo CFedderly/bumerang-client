@@ -28,6 +28,7 @@ public class Home extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_drawer);
+        //toolbar/actionbar setup
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         String borrowDialog = getIntent().getStringExtra("BorrowDialogFragment");
@@ -110,6 +111,13 @@ public class Home extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setActionBarTitle(String title){
+        if (getSupportActionBar().isShowing()){
+            getSupportActionBar().setTitle(title);
+        }
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
