@@ -1,6 +1,7 @@
 package com.seng480b.bumerang;
 
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -30,29 +31,43 @@ public class Home extends AppCompatActivity
         //toolbar/actionbar setup
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        String borrowDialog = getIntent().getStringExtra("BorrowDialogFragment");
 
-        //Fragment Browse --> main page
-        ListFragment browse = new Browse();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainFrame,browse);
-        ft.commit();
+        FragmentManager fragmentManager = getFragmentManager();
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                floatingClicked();
+        // If borrowDialog is defined then this activity was launched with a fragment selection
+        if (borrowDialog != null) {
+            if (borrowDialog.equals("borrowDialog")) {
+                Fragment my_requests = new MyRequests();
+                ft.replace(R.id.mainFrame, my_requests);;
+                ft.commit();
             }
-        });
+        } else {
+            // Activity was not with a notification. Perform normal setup
+            //Fragment Browse --> main page
+            ListFragment browse = new Browse();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+            ft.replace(R.id.mainFrame, browse);
+            ft.commit();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+            fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    floatingClicked();
+                }
+            });
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
+
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
+        }
     }
 
     public void floatingClicked() {
