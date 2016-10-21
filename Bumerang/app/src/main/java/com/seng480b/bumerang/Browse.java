@@ -30,6 +30,8 @@ public class Browse extends ListFragment implements OnItemClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_browse_list, container, false);
 
+        ((Home)getActivity()).setActionBarTitle("Lend");
+
         return view;
     }
 
@@ -56,6 +58,7 @@ public class Browse extends ListFragment implements OnItemClickListener {
         super.onActivityCreated(savedInstanceState);
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
+
 
     }
 

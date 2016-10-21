@@ -32,6 +32,8 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_myrequests_list, container, false);
 
+        ((Home)getActivity()).setActionBarTitle("My Requests");
+
         return view;
     }
 
@@ -53,6 +55,7 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
         setListAdapter(adapter);
 
         getListView().setOnItemClickListener(this);
+
 
     }
 
