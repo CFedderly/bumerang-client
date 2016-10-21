@@ -25,6 +25,7 @@ public class ProfilePage extends Fragment {
         return myInflatedView;
     }
 
+
     //grabs profile info from db
     //currently grabs some data from fb
     public void updateProfileInfo() {
@@ -63,6 +64,8 @@ public class ProfilePage extends Fragment {
         profile_bio.setText(user_bio);
         profile_picture.setProfileId(profile.getId());
         profile_name.setText(user_name);
+
+        ((Home)getActivity()).setActionBarTitle("Profile");
 
     }
 

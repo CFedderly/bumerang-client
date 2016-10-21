@@ -32,6 +32,9 @@ public class EditProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         inflatedView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
 
+        //this is crashing the app because there's no actionbar the first time you see the edit profile page
+        //((Home)getActivity()).setActionBarTitle("Edit Profile");
+
         // Check if the user already has a profile
         if (Connectivity.checkNetworkConnection(getApplicationContext())) {
             new LoadProfileTask().execute(profileUrl);
@@ -79,6 +82,7 @@ public class EditProfileFragment extends Fragment {
 
         return inflatedView;
     }
+
 
     private void populateFields() {
 
