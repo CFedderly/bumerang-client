@@ -30,11 +30,6 @@ public class Home extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Fragment Browse --> main page
-        ListFragment browse = new Browse();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainFrame,browse);
-        ft.commit();
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -43,6 +38,10 @@ public class Home extends AppCompatActivity
                 floatingClicked();
             }
         });
+
+
+        //put logic here that will check if they have an account or not
+        loadStartupFragment(false);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -54,6 +53,31 @@ public class Home extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    //will start up the browse fragment if is not the first time opening the app
+    //will open the edit profile page if it is the first time.
+    public void loadStartupFragment(boolean first){
+
+        if(first){
+            // Hide the Floating action button
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            fab.setLayoutParams(p);
+            fab.setVisibility(View.GONE);
+            // Call the Edit Profile Fragment
+            Fragment editProfileFragment = new EditProfileFragment();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame,editProfileFragment);
+            ft.commit();
+        }else{
+            ListFragment browse = new Browse();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame,browse);
+            ft.commit();
+
+        }
+
+
+    }
     public void floatingClicked() {
         CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
         p.setAnchorId(View.NO_ID);
@@ -111,6 +135,9 @@ public class Home extends AppCompatActivity
 
         Fragment profilePage = new ProfilePage();
 
+        Fragment browse = new Browse();
+
+
         if (id == R.id.nav_createReq) {
             // Hide the Floating action button
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
@@ -134,8 +161,21 @@ public class Home extends AppCompatActivity
             ft.commit();
 
         } else if (id == R.id.nav_home) {
-            Intent reload = new Intent(this, Home.class );
-            startActivity(reload);
+
+            // this is just to fix a bug might be unneeded later
+            // Hide the Floating action button
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            fab.setLayoutParams(p);
+            fab.setVisibility(View.VISIBLE);
+            // Call the Edit Profile Fragment
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame, browse);
+            ft.commit();
+
+
+            //Intent reload = new Intent(this, Home.class );
+            //startActivity(reload);
 
         } else if (id == R.id.nav_manage) {
             // Hide the Floating action button

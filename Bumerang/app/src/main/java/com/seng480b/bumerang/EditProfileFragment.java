@@ -3,6 +3,7 @@ package com.seng480b.bumerang;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-
 import java.io.IOException;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -41,13 +41,10 @@ public class EditProfileFragment extends Fragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                forward = new Intent(getActivity(), Home.class );
-                startActivity(forward);
-               /*
-                Fragment back = new Browse();
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.mainFrame,back);
-                ft.commit(); */
+                // forward = new Intent(getActivity(), Home.class );
+                // startActivity(forward);
+                changeFragmentToBrowse();
+
             }
         });
 
@@ -56,7 +53,7 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                forward = new Intent(getActivity(), Home.class );
+                //forward = new Intent(getActivity(), Home.class );
 
                 // get the text from the fields
                 currProfile = new Profile(
@@ -69,10 +66,13 @@ public class EditProfileFragment extends Fragment {
                 if (Connectivity.checkNetworkConnection(getApplicationContext())) {
                     Log.d("DEBUG", "Profile JSON to send: " + currProfile.toJSONString());
                     new CreateProfileTask().execute(profileUrl, currProfile.toJSONString());
-                    startActivity(forward);
+                    //startActivity(forward);
+                    changeFragmentToBrowse();
                 }
                 // TODO: error handling if not connected to internet
-                startActivity(forward);
+                //startActivity(forward);
+                changeFragmentToBrowse();
+
             }
         });
 
@@ -126,6 +126,13 @@ public class EditProfileFragment extends Fragment {
         protected void onPostExecute(String result) {
             populateFields();
         }
+    }
+
+    public void changeFragmentToBrowse(){
+        Fragment back = new Browse();
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.mainFrame,back);
+        ft.commit();
     }
 
 }
