@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#74b6ca</color>
-    <color name="colorPrimaryDark">#69a1c1</color>
+    <color name="colorPrimary">#7da8c2</color>
+    <color name="colorPrimaryDark">#6592ac</color>
     <color name="colorAccent">#FF4081</color>
 
     <color name="textboxBackground">#66cec9c9</color>
@@ -13,6 +13,8 @@
     <color name="buttonPress">#ff758c</color>
 
     <color name="white">#ffffff</color>
+
+    <color name="pale_gray">#fff6f9</color>
 
 
 </resources>
