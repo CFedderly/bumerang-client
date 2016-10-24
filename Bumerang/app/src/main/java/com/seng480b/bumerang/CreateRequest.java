@@ -1,10 +1,13 @@
 package com.seng480b.bumerang;
 
 import android.content.Intent;
+import android.os.Parcelable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,10 +16,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CreateRequest extends Fragment {
     private SeekBar distanceBar;
@@ -24,8 +29,11 @@ public class CreateRequest extends Fragment {
     private int multipler;
     private Spinner distSpinner;
 
+    private RadioGroup radioLendBorrow;
+
     View inflatedView;
     Button cancelButton, createButton;
+
     @Override
     // Fragment Cancel = new Browse();
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,6 +42,29 @@ public class CreateRequest extends Fragment {
         ((Home)getActivity()).setActionBarTitle("Create Request");
 
         inflatedView = inflater.inflate(R.layout.activity_create_request, container, false);
+
+        /** make the tabs invisible **/
+        ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
+        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
+        mViewPager.setVisibility(View.GONE);
+        tabLayout.setVisibility(View.GONE);
+
+        // Setup radiogroup (choose lend or borrow)
+        radioLendBorrow = (RadioGroup) inflatedView.findViewById(R.id.radio_borrow_lend);
+        radioLendBorrow.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                //checkedId is the radiobutton that was selected
+                switch(checkedId){
+                    case R.id.radio_borrow:
+                        Toast.makeText(getActivity(),"Borrow!",Toast.LENGTH_LONG).show();
+                        break;
+                    case R.id.radio_lend:
+                        Toast.makeText(getActivity(),"Lend!",Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+        });
 
         // Setup for Seekbars
         distanceBar = (SeekBar) inflatedView.findViewById(R.id.barDistance);

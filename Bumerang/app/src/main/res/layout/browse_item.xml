@@ -61,10 +61,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_message_alert"
-        android:background="@color/white"
-        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="45dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:visibility="invisible" />
 
 
