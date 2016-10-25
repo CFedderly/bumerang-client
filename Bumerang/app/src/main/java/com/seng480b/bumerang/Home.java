@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -24,6 +26,12 @@ import android.view.MenuItem;
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private FloatingActionButton fab;
+    /**ADDED THIS**/
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    //ViewPager hosts section contents
+    private ViewPager mViewPager;
+    private TabLayout tabLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +52,21 @@ public class Home extends AppCompatActivity
                 ft.commit();
             }
         } else {
-            // Activity was not with a notification. Perform normal setup
-            //Fragment Browse --> main page
-            ListFragment browse = new Browse();
+            /**ADDED THIS**/
+            // Create the adapter that will return a fragment for each of the three
+            // primary sections of the activity.
+            mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+            // Set up the ViewPager with the sections adapter.
+            mViewPager = (ViewPager) findViewById(R.id.container);
+            mViewPager.setAdapter(mSectionsPagerAdapter);
+            tabLayout = (TabLayout) findViewById(R.id.tabs);
+            tabLayout.setupWithViewPager(mViewPager);
 
-            ft.replace(R.id.mainFrame, browse);
-            ft.commit();
+            //Fragment Browse --> main page
+        /*ListFragment browse = new Browse();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.mainFrame,browse);
+        ft.commit();*/
 
             fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
