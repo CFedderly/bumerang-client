@@ -2,8 +2,10 @@ package com.seng480b.bumerang;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +33,15 @@ public class EditProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         inflatedView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+
+
+        /* make the tabs invisible */
+        /* //crashes the app as well - unfortunately for now the tabs are over top of the edit profile page
+        ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
+        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
+        mViewPager.setVisibility(View.GONE);
+        tabLayout.setVisibility(View.GONE);
+        */
 
         //this is crashing the app because there's no actionbar the first time you see the edit profile page
         //((Home)getActivity()).setActionBarTitle("Edit Profile");

@@ -1,8 +1,10 @@
 package com.seng480b.bumerang;
 
 import android.graphics.drawable.Drawable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -32,6 +34,12 @@ public class ProfilePage extends Fragment {
         myInflatedView = inflater.inflate(R.layout.fragment_profile_page, container,false);
 
         ((Home)getActivity()).setActionBarTitle("Profile");
+
+        /** make the tabs invisible **/
+        ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
+        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
+        mViewPager.setVisibility(View.GONE);
+        tabLayout.setVisibility(View.GONE);
 
         GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
 
