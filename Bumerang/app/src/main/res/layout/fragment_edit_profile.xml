@@ -16,15 +16,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
 
-        <TextView
-            android:text="Edit Profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView4"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
-
         <Button
             android:text="Cancel"
             android:layout_width="wrap_content"

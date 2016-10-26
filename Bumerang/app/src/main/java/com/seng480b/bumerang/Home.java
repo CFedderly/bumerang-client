@@ -157,17 +157,6 @@ public class Home extends AppCompatActivity
             ft.replace(R.id.mainFrame,createReq);
             ft.commit();
 
-        } else if (id == R.id.nav_editProfile) {
-            // Hide the Floating action button
-            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-            p.setAnchorId(View.NO_ID);
-            fab.setLayoutParams(p);
-            fab.setVisibility(View.GONE);
-            // Call the Edit Profile Fragment
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame, editProfile);
-            ft.commit();
-
         } else if (id == R.id.nav_home) {
 
             // this is just to fix a bug might be unneeded later

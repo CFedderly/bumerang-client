@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loginSuccess() {
-        Intent createProfile = new Intent(this, CreateProfile.class );
+        Intent intent = new Intent(this, Home.class );
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
         // We will need to retrieve the profile values from facebook and
         // pass the values to EditText
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         //grabbing the profile information from facebook
         //grabFBinfo();
 
-        startActivity(createProfile);
+        startActivity(intent);
     }
 
     public void grabFBinfo(){

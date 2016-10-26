@@ -31,6 +31,8 @@ public class EditProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         inflatedView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+        ((Home)getActivity()).setActionBarTitle("Edit Profile");
+
 
         //this is crashing the app because there's no actionbar the first time you see the edit profile page
         //((Home)getActivity()).setActionBarTitle("Edit Profile");
