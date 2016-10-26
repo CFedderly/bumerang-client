@@ -1,13 +1,16 @@
 package com.seng480b.bumerang;
 
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -21,17 +24,35 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FloatingActionButton fab;
 
-    /**ADDED THIS**/
+    /**
+     * ADDED THIS
+     **/
     private SectionsPagerAdapter mSectionsPagerAdapter;
     //ViewPager hosts section contents
     private ViewPager mViewPager;
     private TabLayout tabLayout;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +94,9 @@ public class Home extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -83,7 +107,7 @@ public class Home extends AppCompatActivity
         fab.setVisibility(View.GONE);
         Fragment createReq = new CreateRequest();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainFrame,createReq);
+        ft.replace(R.id.mainFrame, createReq);
         ft.commit();
     }
 
@@ -113,14 +137,47 @@ public class Home extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+
+
+            disconnectFromFacebook();
+
+            //Fragment backToHome = new CreateRequest();
+            //FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            //ft.replace(R.id.homeFrame, backToHome);
+            //ft.commit();
+            
+            //This makes it so when the user logs out of facebook, the user is directed to the main page of the phone
+            Intent i = new Intent(Intent.ACTION_MAIN);
+            i.addCategory(Intent.CATEGORY_HOME);
+            startActivity(i);
+
+
         }
 
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
-    public void setActionBarTitle(String title){
-        if (getSupportActionBar().isShowing()){
+
+    //This was taken from here: http://stackoverflow.com/questions/29305232/facebook-sdk-4-for-android-how-to-log-out-programmatically
+    public void disconnectFromFacebook() {
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return; // already logged out
+        }
+
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
+                .Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+
+                LoginManager.getInstance().logOut();
+
+            }
+        }).executeAsync();
+    }
+
+    public void setActionBarTitle(String title) {
+        if (getSupportActionBar().isShowing()) {
             getSupportActionBar().setTitle(title);
         }
 
@@ -148,7 +205,7 @@ public class Home extends AppCompatActivity
             fab.setVisibility(View.GONE);
             // Transition to the create request fragment
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame,createReq);
+            ft.replace(R.id.mainFrame, createReq);
             ft.commit();
 
         } else if (id == R.id.nav_editProfile) {
@@ -163,7 +220,7 @@ public class Home extends AppCompatActivity
             ft.commit();
 
         } else if (id == R.id.nav_home) {
-            Intent reload = new Intent(this, Home.class );
+            Intent reload = new Intent(this, Home.class);
             startActivity(reload);
 
         } else if (id == R.id.nav_manage) {
@@ -174,9 +231,9 @@ public class Home extends AppCompatActivity
             fab.setVisibility(View.GONE);
             // Call the Profile Page Fragment
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame,profilePage);
+            ft.replace(R.id.mainFrame, profilePage);
             ft.commit();
-        } else if (id == R.id.nav_my_requests){
+        } else if (id == R.id.nav_my_requests) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, my_requests);
             ft.commit();
@@ -190,5 +247,41 @@ public class Home extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Home Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 }
