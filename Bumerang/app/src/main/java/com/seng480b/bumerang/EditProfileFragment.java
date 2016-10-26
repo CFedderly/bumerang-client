@@ -19,10 +19,10 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class EditProfileFragment extends Fragment {
     private static final String profileUrl = BuildConfig.SERVER_URL + "/profile/";
-    private static final int firstNameField = R.id.inputFirstName;
-    private static final int lastNameField = R.id.inputLastName;
-    private static final int descriptionField = R.id.inputAbout;
-    private static final int tagsField = R.id.inputTags;
+    private static final int firstNameField = R.id.editProfile_InputFirstName;
+    private static final int lastNameField = R.id.editProfile_InputLastName;
+    private static final int descriptionField = R.id.editProfile_InputBio;
+    private static final int tagsField = R.id.editProfile_InputTags;
 
     private Intent forward;
     private Profile currProfile;
@@ -38,15 +38,12 @@ public class EditProfileFragment extends Fragment {
 
 
         /* make the tabs invisible */
-        /* //crashes the app as well - unfortunately for now the tabs are over top of the edit profile page
+        //crashes the app as well - unfortunately for now the tabs are over top of the edit profile page
         ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
         mViewPager.setVisibility(View.GONE);
         tabLayout.setVisibility(View.GONE);
-        */
 
-        //this is crashing the app because there's no actionbar the first time you see the edit profile page
-        //((Home)getActivity()).setActionBarTitle("Edit Profile");
 
         // Check if the user already has a profile
         if (Connectivity.checkNetworkConnection(getApplicationContext())) {
