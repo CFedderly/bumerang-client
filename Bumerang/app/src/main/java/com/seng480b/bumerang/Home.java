@@ -122,13 +122,6 @@ public class Home extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.nav_drawer, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -137,18 +130,10 @@ public class Home extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            disconnectFromFacebook();
-
-            //Sets the page back to the login page so when the user logs out they're forced to log back in
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-
-            //This makes it so when the user logs out of facebook, the user is directed to the main page of the phone
-            Intent i = new Intent(Intent.ACTION_MAIN);
-            i.addCategory(Intent.CATEGORY_HOME);
-            startActivity(i);
+            return true;
         }
-        return false;
+
+        return super.onOptionsItemSelected(item);
     }
 
     //This was taken from here: http://stackoverflow.com/questions/29305232/facebook-sdk-4-for-android-how-to-log-out-programmatically
