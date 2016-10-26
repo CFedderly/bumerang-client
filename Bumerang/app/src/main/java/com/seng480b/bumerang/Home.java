@@ -227,7 +227,18 @@ public class Home extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, my_requests);
             ft.commit();
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_logout) {
+
+            disconnectFromFacebook();
+            //Sets the page back to the login page so when the user logs out they're forced to log back in
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+
+            //This makes it so when the user logs out of facebook, the user is directed to the main page of the phone
+            Intent i = new Intent(Intent.ACTION_MAIN);
+            i.addCategory(Intent.CATEGORY_HOME);
+            startActivity(i);
+
 
         } else if (id == R.id.nav_send) {
 
