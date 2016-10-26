@@ -32,5 +32,6 @@
         <item>Km</item>
         <item>m</item>
     </string-array>
+    <string name="title_activity_browse_tabs">BrowseTabs</string>
 
 </resources>
