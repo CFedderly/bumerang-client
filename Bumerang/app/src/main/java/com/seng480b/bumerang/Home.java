@@ -39,52 +39,41 @@ public class Home extends AppCompatActivity
         //toolbar/actionbar setup
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        String borrowDialog = getIntent().getStringExtra("BorrowDialogFragment");
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        FragmentManager fragmentManager = getFragmentManager();
 
-        // If borrowDialog is defined then this activity was launched with a fragment selection
-        if (borrowDialog != null) {
-            if (borrowDialog.equals("borrowDialog")) {
-                Fragment my_requests = new MyRequests();
-                ft.replace(R.id.mainFrame, my_requests);;
-                ft.commit();
-            }
-        } else {
-            /**ADDED THIS**/
-            // Create the adapter that will return a fragment for each of the three
-            // primary sections of the activity.
-            mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-            // Set up the ViewPager with the sections adapter.
-            mViewPager = (ViewPager) findViewById(R.id.container);
-            mViewPager.setAdapter(mSectionsPagerAdapter);
-            tabLayout = (TabLayout) findViewById(R.id.tabs);
-            tabLayout.setupWithViewPager(mViewPager);
+        /**ADDED THIS**/
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
 
-            //Fragment Browse --> main page
+        //Fragment Browse --> main page
         /*ListFragment browse = new Browse();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame,browse);
         ft.commit();*/
 
-            fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     floatingClicked();
                 }
             });
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.setDrawerListener(toggle);
-            toggle.syncState();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
-        }
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     public void floatingClicked() {
