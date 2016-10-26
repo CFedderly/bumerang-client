@@ -137,26 +137,19 @@ public class Home extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-
-
             disconnectFromFacebook();
 
-            //Fragment backToHome = new CreateRequest();
-            //FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            //ft.replace(R.id.homeFrame, backToHome);
-            //ft.commit();
-            
+            //Sets the page back to the login page so when the user logs out they're forced to log back in
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+
             //This makes it so when the user logs out of facebook, the user is directed to the main page of the phone
             Intent i = new Intent(Intent.ACTION_MAIN);
             i.addCategory(Intent.CATEGORY_HOME);
             startActivity(i);
-
-
         }
-
         return false;
     }
-
 
     //This was taken from here: http://stackoverflow.com/questions/29305232/facebook-sdk-4-for-android-how-to-log-out-programmatically
     public void disconnectFromFacebook() {
@@ -164,14 +157,11 @@ public class Home extends AppCompatActivity
         if (AccessToken.getCurrentAccessToken() == null) {
             return; // already logged out
         }
-
         new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
                 .Callback() {
             @Override
             public void onCompleted(GraphResponse graphResponse) {
-
                 LoginManager.getInstance().logOut();
-
             }
         }).executeAsync();
     }
