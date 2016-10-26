@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -24,6 +26,12 @@ import android.view.MenuItem;
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private FloatingActionButton fab;
+    /**ADDED THIS**/
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    //ViewPager hosts section contents
+    private ViewPager mViewPager;
+    private TabLayout tabLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,43 +39,41 @@ public class Home extends AppCompatActivity
         //toolbar/actionbar setup
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        String borrowDialog = getIntent().getStringExtra("BorrowDialogFragment");
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        FragmentManager fragmentManager = getFragmentManager();
 
-        // If borrowDialog is defined then this activity was launched with a fragment selection
-        if (borrowDialog != null) {
-            if (borrowDialog.equals("borrowDialog")) {
-                Fragment my_requests = new MyRequests();
-                ft.replace(R.id.mainFrame, my_requests);;
-                ft.commit();
-            }
-        } else {
-            // Activity was not with a notification. Perform normal setup
-            //Fragment Browse --> main page
-            ListFragment browse = new Browse();
+        /**ADDED THIS**/
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
 
-            ft.replace(R.id.mainFrame, browse);
-            ft.commit();
+        //Fragment Browse --> main page
+        /*ListFragment browse = new Browse();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.mainFrame,browse);
+        ft.commit();*/
 
-            fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     floatingClicked();
                 }
             });
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.setDrawerListener(toggle);
-            toggle.syncState();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
-        }
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     public void floatingClicked() {

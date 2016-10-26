@@ -2,12 +2,14 @@ package com.seng480b.bumerang;
 
 
 import android.annotation.SuppressLint;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,12 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
         View view = inflater.inflate(R.layout.fragment_myrequests_list, container, false);
 
         ((Home)getActivity()).setActionBarTitle("My Requests");
+
+        /** make the tabs invisible **/
+        ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
+        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
+        mViewPager.setVisibility(View.GONE);
+        tabLayout.setVisibility(View.GONE);
 
         return view;
     }
