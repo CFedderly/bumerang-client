@@ -3,16 +3,12 @@ package com.seng480b.bumerang;
 
 import android.support.v4.app.Fragment;
 
-import android.graphics.drawable.Drawable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 
@@ -29,6 +25,16 @@ public class ProfilePage extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         myInflatedView = inflater.inflate(R.layout.fragment_profile_page, container,false);
+        /** set the action bar title **/
+        ((Home)getActivity()).setActionBarTitle("Profile");
+
+        /** make the tabs invisible **/
+        ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
+        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
+        mViewPager.setVisibility(View.GONE);
+        tabLayout.setVisibility(View.GONE);
+
+
         updateProfileInfo();
         setUpButton();
         return myInflatedView;
@@ -46,7 +52,7 @@ public class ProfilePage extends Fragment {
         String user_tags = "Mac_Book, Power_Cable, Pencil, Calculator, Paper";
         String user_bio = "I am realy awesome, please let me borrow your things!";
         String user_number = "1-111-111-1111";
-        String user_carma = "1.3";
+        String user_carma = "0";
 
         //TEMP! grabbing info from facebook
         Profile profile = Profile.getCurrentProfile();
@@ -74,15 +80,6 @@ public class ProfilePage extends Fragment {
         profile_bio.setText(user_bio);
         profile_picture.setProfileId(profile.getId());
         profile_name.setText(user_name);
-
-        ((Home)getActivity()).setActionBarTitle("Profile");
-
-        /** make the tabs invisible **/
-        ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
-        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
-        mViewPager.setVisibility(View.GONE);
-        tabLayout.setVisibility(View.GONE);
-
 
     }
 

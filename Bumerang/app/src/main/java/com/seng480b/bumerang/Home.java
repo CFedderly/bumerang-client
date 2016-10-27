@@ -1,14 +1,12 @@
 package com.seng480b.bumerang;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -40,23 +38,6 @@ public class Home extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-
-        //Fragment Browse --> main page
-        /*ListFragment browse = new Browse();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainFrame,browse);
-        ft.commit();*/
-
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +48,8 @@ public class Home extends AppCompatActivity
 
 
         //put logic here that will check if they have an account or not
+        // currently is just skips to the browse page
+        // if you change it to 'true' it will start at the edit profile page
         loadStartupFragment(false);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -96,14 +79,25 @@ public class Home extends AppCompatActivity
             ft.replace(R.id.mainFrame,editProfileFragment);
             ft.commit();
         }else{
-            ListFragment browse = new Browse();
+            // call a blank fragment for the background of the tabs
+            Fragment fragment2 = new TestFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame,browse);
+            ft.replace(R.id.mainFrame, fragment2);
             ft.commit();
 
+            loadTabs();
         }
+    }
 
-
+    public void loadTabs(){
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
     }
 
     public void floatingClicked() {
@@ -192,10 +186,13 @@ public class Home extends AppCompatActivity
             p.setAnchorId(View.NO_ID);
             fab.setLayoutParams(p);
             fab.setVisibility(View.VISIBLE);
-            // Call the Edit Profile Fragment
+
+            // call a blank fragment for the background of the tabs
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame, browse);
+            ft.replace(R.id.mainFrame, fragment2);
             ft.commit();
+
+            loadTabs();
 
 
             //Intent reload = new Intent(this, Home.class );

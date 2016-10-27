@@ -1,6 +1,5 @@
 package com.seng480b.bumerang;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -13,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.facebook.login.widget.ProfilePictureView;
+
 import java.io.IOException;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -24,9 +26,12 @@ public class EditProfileFragment extends Fragment {
     private static final int descriptionField = R.id.editProfile_InputBio;
     private static final int tagsField = R.id.editProfile_InputTags;
 
-    private Intent forward;
     private Profile currProfile;
     private View inflatedView;
+    private com.facebook.Profile FBProfile = com.facebook.Profile.getCurrentProfile();
+
+    //both the create and cancel buttons redirect to the profile page
+    private Fragment back = new ProfilePage();
 
     @Override
     // Fragment Cancel = new Browse();
@@ -50,18 +55,18 @@ public class EditProfileFragment extends Fragment {
             new LoadProfileTask().execute(profileUrl);
         }
         // Setup for the Cancel button on screen
-        Button cancelButton = (Button) inflatedView.findViewById(R.id.buttonCancel);
+        Button cancelButton = (Button) inflatedView.findViewById(R.id.editProfile_ButtonCancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // forward = new Intent(getActivity(), Home.class );
                 // startActivity(forward);
-                changeFragmentToBrowse();
+                changeFragment();
 
             }
         });
 
-        Button createButton = (Button) inflatedView.findViewById(R.id.button5);
+        Button createButton = (Button) inflatedView.findViewById(R.id.editProfile_ButtonSave);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,11 +85,11 @@ public class EditProfileFragment extends Fragment {
                     Log.d("DEBUG", "Profile JSON to send: " + currProfile.toJSONString());
                     new CreateProfileTask().execute(profileUrl, currProfile.toJSONString());
                     //startActivity(forward);
-                    changeFragmentToBrowse();
+                    changeFragment();
                 }
                 // TODO: error handling if not connected to internet
                 //startActivity(forward);
-                changeFragmentToBrowse();
+                changeFragment();
 
             }
         });
@@ -95,6 +100,10 @@ public class EditProfileFragment extends Fragment {
 
 
     private void populateFields() {
+        //grab the profile picture form FB
+        ProfilePictureView profile_picture = (ProfilePictureView) inflatedView.findViewById(R.id.editProfile_ProfilePicture);
+        profile_picture.setProfileId(FBProfile.getId());
+
 
         ((EditText) inflatedView.findViewById(firstNameField)).setText(currProfile.getFirstName());
         ((EditText) inflatedView.findViewById(lastNameField)).setText(currProfile.getLastName());
@@ -142,8 +151,7 @@ public class EditProfileFragment extends Fragment {
         }
     }
 
-    public void changeFragmentToBrowse(){
-        Fragment back = new Browse();
+    public void changeFragment(){
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame,back);
         ft.commit();

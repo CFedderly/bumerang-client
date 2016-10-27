@@ -28,13 +28,13 @@
         <EditText
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:ems="10"
             android:id="@+id/editProfile_InputFirstName"
             android:layout_width="wrap_content"
-            android:singleLine="true"
             android:selectAllOnFocus="false"
-            android:hint="First"
-            android:layout_below="@+id/editProfile_ProfilePicture" />
+            android:hint="First Name"
+            android:layout_below="@+id/editProfile_ProfilePicture"
+            android:background="@color/textboxBackground"
+            android:textSize="24sp" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -42,23 +42,26 @@
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/editProfile_InputLastName"
-            android:singleLine="true"
-            android:hint="Last"
+            android:hint="Last Name"
             android:layout_alignBaseline="@+id/editProfile_InputFirstName"
             android:layout_alignBottom="@+id/editProfile_InputFirstName"
-            android:layout_toEndOf="@+id/editProfile_InputFirstName" />
+            android:layout_toEndOf="@+id/editProfile_InputFirstName"
+            android:background="@color/textboxBackground"
+            android:textSize="24sp"
+            android:layout_marginStart="5dp"/>
 
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1-234-567-8910"
+            android:hint="Phone No.(111) 111-1111"
             android:textSize="24sp"
             android:id="@+id/editProfile_InputPhoneNumber"
             android:textAlignment="textStart"
             android:inputType="phone"
             android:layout_below="@+id/editProfile_InputFirstName"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:background="@color/textboxBackground"/>
 
         <TextView
             android:text="Bio:"
@@ -77,7 +80,8 @@
             android:id="@+id/editProfile_InputBio"
             android:hint="Tell us a little about yourself!"
             android:layout_below="@+id/editProfile_LabelBio"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:background="@color/textboxBackground"/>
 
 
         <TextView
@@ -86,7 +90,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/editProfile_LabelTags"
             android:textAppearance="@style/TextAppearance.AppCompat"
-            android:layout_marginTop="73dp"
             android:layout_below="@+id/editProfile_InputBio"
             android:layout_alignParentStart="true" />
 
@@ -98,13 +101,15 @@
             android:id="@+id/editProfile_InputTags"
             android:hint="Enter items, seperated by a comma, of the items you are willing to lend out."
             android:layout_below="@+id/editProfile_LabelTags"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:background="@color/textboxBackground"/>
+
 
         <Button
-            android:text="Done"
+            android:text="Save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button5"
+            android:id="@+id/editProfile_ButtonSave"
             android:elevation="8dp"
             android:backgroundTint="@android:color/holo_green_light"
             android:onClick="goButton"
@@ -115,12 +120,13 @@
             android:text="Cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/buttonCancel"
+            android:id="@+id/editProfile_ButtonCancel"
             android:elevation="8dp"
             android:backgroundTint="@android:color/holo_red_dark"
             android:onClick="cancelButton"
-            android:layout_below="@+id/button5"
-            android:layout_alignParentEnd="true" />
+            android:layout_below="@+id/editProfile_ButtonSave"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="30dp"/>
 
     </RelativeLayout>
 
