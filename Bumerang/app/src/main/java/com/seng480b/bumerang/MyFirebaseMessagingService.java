@@ -1,16 +1,13 @@
 package com.seng480b.bumerang;
 
 
-import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import android.view.WindowManager;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -42,15 +39,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Add information to the extra in order to specify action upon returning to home screen.
         resultIntent.putExtra("MsgRecieved", "messageRecieved");
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        // Adds the back stack for the Intent
+        stackBuilder.addParentStack(Home.class);
+        // Adds the intent that starts the activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Priority of the messages could be either MAX or HIGH. Set to max because they are time critical and urgent.
+        // TODO: Update resultPendingIntent for .addAction below to redirect to the proper
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.bumerang_umbrella).setContentTitle("Bumerang")
                 .setContentTitle("Someone has accepted your request!")
-                .setContentText("Someone has responded to you!")
+                .setContentText(remoteMessage.getNotification().getBody())
                 .setDefaults(Notification.DEFAULT_VIBRATE)
-                .setPriority(Notification.PRIORITY_HIGH);
+                .setPriority(Notification.PRIORITY_HIGH)
+                .addAction(R.drawable.ic_add, "Accept", resultPendingIntent)
+                .addAction(R.drawable.ic_cancel, "Decline", resultPendingIntent);
+
 
 
         mBuilder.setContentIntent(resultPendingIntent);
