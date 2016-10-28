@@ -1,13 +1,16 @@
 package com.seng480b.bumerang;
 
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -21,17 +24,28 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
+
+
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FloatingActionButton fab;
 
-    /**ADDED THIS**/
+    /**
+     * ADDED THIS
+     **/
     private SectionsPagerAdapter mSectionsPagerAdapter;
     //ViewPager hosts section contents
     private ViewPager mViewPager;
     private TabLayout tabLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +87,7 @@ public class Home extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
 
@@ -83,7 +98,7 @@ public class Home extends AppCompatActivity
         fab.setVisibility(View.GONE);
         Fragment createReq = new CreateRequest();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainFrame,createReq);
+        ft.replace(R.id.mainFrame, createReq);
         ft.commit();
     }
 
@@ -95,13 +110,6 @@ public class Home extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.nav_drawer, menu);
-        return true;
     }
 
     @Override
@@ -119,8 +127,23 @@ public class Home extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public void setActionBarTitle(String title){
-        if (getSupportActionBar().isShowing()){
+    //This was taken from here: http://stackoverflow.com/questions/29305232/facebook-sdk-4-for-android-how-to-log-out-programmatically
+    public void disconnectFromFacebook() {
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return; // already logged out
+        }
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
+                .Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+                LoginManager.getInstance().logOut();
+            }
+        }).executeAsync();
+    }
+
+    public void setActionBarTitle(String title) {
+        if (getSupportActionBar().isShowing()) {
             getSupportActionBar().setTitle(title);
         }
 
@@ -148,7 +171,7 @@ public class Home extends AppCompatActivity
             fab.setVisibility(View.GONE);
             // Transition to the create request fragment
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame,createReq);
+            ft.replace(R.id.mainFrame, createReq);
             ft.commit();
 
         } else if (id == R.id.nav_editProfile) {
@@ -163,7 +186,7 @@ public class Home extends AppCompatActivity
             ft.commit();
 
         } else if (id == R.id.nav_home) {
-            Intent reload = new Intent(this, Home.class );
+            Intent reload = new Intent(this, Home.class);
             startActivity(reload);
 
         } else if (id == R.id.nav_manage) {
@@ -174,13 +197,24 @@ public class Home extends AppCompatActivity
             fab.setVisibility(View.GONE);
             // Call the Profile Page Fragment
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame,profilePage);
+            ft.replace(R.id.mainFrame, profilePage);
             ft.commit();
-        } else if (id == R.id.nav_my_requests){
+        } else if (id == R.id.nav_my_requests) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, my_requests);
             ft.commit();
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_logout) {
+
+            disconnectFromFacebook();
+            //Sets the page back to the login page so when the user logs out they're forced to log back in
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+
+            //This makes it so when the user logs out of facebook, the user is directed to the main page of the phone
+            Intent i = new Intent(Intent.ACTION_MAIN);
+            i.addCategory(Intent.CATEGORY_HOME);
+            startActivity(i);
+
 
         } else if (id == R.id.nav_send) {
 
@@ -191,4 +225,5 @@ public class Home extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }
