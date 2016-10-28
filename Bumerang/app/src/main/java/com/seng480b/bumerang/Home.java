@@ -26,8 +26,6 @@ public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FloatingActionButton fab;
-
-    /**ADDED THIS**/
     private SectionsPagerAdapter mSectionsPagerAdapter;
     //ViewPager hosts section contents
     private ViewPager mViewPager;
@@ -41,7 +39,6 @@ public class Home extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /**ADDED THIS**/
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -132,12 +129,8 @@ public class Home extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Fragment editProfile = new EditProfileFragment();
-        Fragment fragment2 = new TestFragment();
-
         Fragment createReq = new CreateRequest();
-        //ListFragment browse = new Browse();
         Fragment my_requests = new MyRequests();
-
         Fragment profilePage = new ProfilePage();
 
         if (id == R.id.nav_createReq) {

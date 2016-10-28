@@ -26,10 +26,18 @@
     <string name="empty_browse_message">Seems like nobody needs anything!</string>
     <string name="empty_myrequests_message">Hey, guess you don\'t need anything?</string>
 
+    <string name="empty_request_field_message">Looks like you forgot to fill in a field!</string>
+
+    <string name="no_internet_connection_generic">We weren\'t able to connect to the internet. Please try again!</string>
+    <string name="no_internet_connection_create_request">We weren\'t able to connect to the internet, so we couldn\'t create your request. Please try again!</string>
+    <string name="no_internet_connection_update_profile">We weren\'t able to connect to the internet, so we couldn\'t update your profile. Please try again!</string>
+    <string name="unable_to_create_request">We weren\'t able to create your request. Please try again!</string>
+    <string name="created_request">Request created!</string>
+
     <string name="facebook_first_name">First Name</string>
 
     <string-array name="distance_array">
-        <item>Km</item>
+        <item>km</item>
         <item>m</item>
     </string-array>
     <string name="title_activity_browse_tabs">BrowseTabs</string>

@@ -1,11 +1,8 @@
 package com.seng480b.bumerang;
 
 
-import android.annotation.SuppressLint;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.os.Bundle;
@@ -15,12 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.List;
-
 
 
 public class MyRequests extends ListFragment implements OnItemClickListener {
@@ -49,22 +42,23 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
     public void onActivityCreated(Bundle savedInstanceState) {
 
         /* just a test array list */
-        ArrayList<DummyRequest> array_of_request_tickets = new ArrayList<>();
-        DummyRequest ticket1 = new DummyRequest("you", "Charger");
-        DummyRequest ticket2 = new DummyRequest("you", "Pants");
+        ArrayList<Request> arrayOfRequestTickets = new ArrayList<>();
 
-        array_of_request_tickets.add(ticket1);
-        array_of_request_tickets.add(ticket2);
+        Request ticket1 = new Request("Study Buddy", "Someone help me with Math 101!", 1, 22, 400,
+                Request.RequestType.BORROW);
+        Request ticket2 = new Request("Calculator", "Sharp DAL EL-510RN", 1, 22, 400,
+                Request.RequestType.LEND);
+
+        arrayOfRequestTickets.add(ticket1);
+        arrayOfRequestTickets.add(ticket2);
         /* end of testing stuff */
 
-        BorrowAdapter adapter = new BorrowAdapter(getActivity(), array_of_request_tickets);
+        MyRequestAdapter adapter = new MyRequestAdapter(getActivity(), arrayOfRequestTickets);
 
         super.onActivityCreated(savedInstanceState);
         setListAdapter(adapter);
 
         getListView().setOnItemClickListener(this);
-
-
     }
 
     @Override
@@ -75,7 +69,5 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
 
         FragmentManager fm = getFragmentManager();
         more_info_dialog.show(fm, "Sample Fragment");
-
-
     }
 }
