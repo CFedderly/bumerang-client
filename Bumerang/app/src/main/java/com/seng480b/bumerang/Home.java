@@ -1,6 +1,7 @@
 package com.seng480b.bumerang;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +19,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 
 
 public class Home extends AppCompatActivity
@@ -150,6 +155,14 @@ public class Home extends AppCompatActivity
 
     }
 
+    public void logoutFromFacebook(){
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        if (AccessToken.getCurrentAccessToken()==null){
+            return; //already logged out
+        }
+        LoginManager.getInstance().logOut();
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -212,9 +225,11 @@ public class Home extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, my_requests);
             ft.commit();
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_logout) {
+            logoutFromFacebook();
+            //Go back to login page
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
 
         }
 
