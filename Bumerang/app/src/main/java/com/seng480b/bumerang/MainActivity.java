@@ -1,6 +1,7 @@
 package com.seng480b.bumerang;
 
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -39,33 +40,43 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
-
-
-
-        setContentView(R.layout.activity_main);
-        callbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(callbackManager,
-
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        loginSuccess();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        // App code
-                    }
-
-                    @Override
-                    public void onError(FacebookException exception) {
-                        // App code
-                    }
-                });
-        AppEventsLogger.activateApp(this);
         //This should collect basic analytics as described here
         // https://codelabs.developers.google.com/codelabs/firebase-android/#11
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        //the FacebookSdk needs a 'second' to load the AccessToken
+        //This should eventually be turned into an async task
+        SystemClock.sleep(100);
+        boolean loggedIn = AccessToken.getCurrentAccessToken()!=null;
+
+        //If user is already logged in automatically goes to the 'Browse page"
+        if  (loggedIn) {
+            Intent intent = new Intent(this, Home.class);
+            startActivity(intent);
+        //If user is not logged in they are taken to the Login page.
+        } else{
+            setContentView(R.layout.activity_main);
+            callbackManager = CallbackManager.Factory.create();
+            LoginManager.getInstance().registerCallback(callbackManager,
+
+                    new FacebookCallback<LoginResult>() {
+                        @Override
+                        public void onSuccess(LoginResult loginResult) {
+                            loginSuccess();
+                        }
+
+                        @Override
+                        public void onCancel() {
+                            // App code
+                        }
+
+                        @Override
+                        public void onError(FacebookException exception) {
+                            // App code
+                        }
+                    });
+            AppEventsLogger.activateApp(this);
+        }
+
 
     }
 
