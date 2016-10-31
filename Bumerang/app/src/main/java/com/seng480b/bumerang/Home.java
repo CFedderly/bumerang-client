@@ -1,20 +1,17 @@
 package com.seng480b.bumerang;
 
 
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,11 +19,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private FloatingActionButton fab;
-    /**ADDED THIS**/
     private SectionsPagerAdapter mSectionsPagerAdapter;
     //ViewPager hosts section contents
     private ViewPager mViewPager;
@@ -71,6 +71,12 @@ public class Home extends AppCompatActivity
                 }
             });
 
+
+            //put logic here that will check if they have an account or not
+            // currently is just skips to the browse page
+            // if you change it to 'true' it will start at the edit profile page
+            loadStartupFragment(false);
+
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -80,6 +86,42 @@ public class Home extends AppCompatActivity
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
         }
+    }
+    //will start up the browse fragment if is not the first time opening the app
+    //will open the edit profile page if it is the first time.
+    public void loadStartupFragment(boolean first){
+
+        if(first){
+            // Hide the Floating action button
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+            p.setAnchorId(View.NO_ID);
+            fab.setLayoutParams(p);
+            fab.setVisibility(View.GONE);
+            // Call the Edit Profile Fragment
+            Fragment editProfileFragment = new EditProfileFragment();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame,editProfileFragment);
+            ft.commit();
+        }else{
+            // call a blank fragment for the background of the tabs
+            Fragment fragment2 = new TestFragment();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame, fragment2);
+            ft.commit();
+
+            loadTabs();
+        }
+    }
+
+    public void loadTabs(){
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
     }
 
     public void floatingClicked() {
@@ -132,6 +174,14 @@ public class Home extends AppCompatActivity
 
     }
 
+    public void logoutFromFacebook(){
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        if (AccessToken.getCurrentAccessToken()==null){
+            return; //already logged out
+        }
+        LoginManager.getInstance().logOut();
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -146,6 +196,9 @@ public class Home extends AppCompatActivity
 
         Fragment profilePage = new ProfilePage();
 
+        Fragment browse = new Browse();
+
+
         if (id == R.id.nav_createReq) {
             // Hide the Floating action button
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
@@ -157,20 +210,25 @@ public class Home extends AppCompatActivity
             ft.replace(R.id.mainFrame,createReq);
             ft.commit();
 
-        } else if (id == R.id.nav_editProfile) {
+        } else if (id == R.id.nav_home) {
+
+            // this is just to fix a bug might be unneeded later
             // Hide the Floating action button
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
             p.setAnchorId(View.NO_ID);
             fab.setLayoutParams(p);
-            fab.setVisibility(View.GONE);
-            // Call the Edit Profile Fragment
+            fab.setVisibility(View.VISIBLE);
+
+            // call a blank fragment for the background of the tabs
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame, editProfile);
+            ft.replace(R.id.mainFrame, fragment2);
             ft.commit();
 
-        } else if (id == R.id.nav_home) {
-            Intent reload = new Intent(this, Home.class );
-            startActivity(reload);
+            loadTabs();
+
+
+            //Intent reload = new Intent(this, Home.class );
+            //startActivity(reload);
 
         } else if (id == R.id.nav_manage) {
             // Hide the Floating action button
@@ -186,9 +244,11 @@ public class Home extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, my_requests);
             ft.commit();
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_logout) {
+            logoutFromFacebook();
+            //Go back to login page
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
 
         }
 

@@ -1,9 +1,9 @@
 package com.seng480b.bumerang;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -13,64 +13,65 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.facebook.login.widget.ProfilePictureView;
+
 import java.io.IOException;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class EditProfileFragment extends Fragment {
     private static final String profileUrl = BuildConfig.SERVER_URL + "/profile/";
-    private static final int firstNameField = R.id.inputFirstName;
-    private static final int lastNameField = R.id.inputLastName;
-    private static final int descriptionField = R.id.inputAbout;
-    private static final int tagsField = R.id.inputTags;
+    private static final int firstNameField = R.id.editProfile_InputFirstName;
+    private static final int lastNameField = R.id.editProfile_InputLastName;
+    private static final int descriptionField = R.id.editProfile_InputBio;
+    private static final int tagsField = R.id.editProfile_InputTags;
 
-    private Intent forward;
     private Profile currProfile;
     private View inflatedView;
+    private com.facebook.Profile FBProfile = com.facebook.Profile.getCurrentProfile();
+
+    //both the create and cancel buttons redirect to the profile page
+    private Fragment back = new ProfilePage();
 
     @Override
     // Fragment Cancel = new Browse();
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         inflatedView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+        ((Home)getActivity()).setActionBarTitle("Edit Profile");
+
 
 
         /* make the tabs invisible */
-        /* //crashes the app as well - unfortunately for now the tabs are over top of the edit profile page
+        //crashes the app as well - unfortunately for now the tabs are over top of the edit profile page
         ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
         mViewPager.setVisibility(View.GONE);
         tabLayout.setVisibility(View.GONE);
-        */
 
-        //this is crashing the app because there's no actionbar the first time you see the edit profile page
-        //((Home)getActivity()).setActionBarTitle("Edit Profile");
 
         // Check if the user already has a profile
         if (Connectivity.checkNetworkConnection(getApplicationContext())) {
             new LoadProfileTask().execute(profileUrl);
         }
         // Setup for the Cancel button on screen
-        Button cancelButton = (Button) inflatedView.findViewById(R.id.buttonCancel);
+        Button cancelButton = (Button) inflatedView.findViewById(R.id.editProfile_ButtonCancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                forward = new Intent(getActivity(), Home.class );
-                startActivity(forward);
-               /*
-                Fragment back = new Browse();
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.mainFrame,back);
-                ft.commit(); */
+                // forward = new Intent(getActivity(), Home.class );
+                // startActivity(forward);
+                changeFragment();
+
             }
         });
 
-        Button createButton = (Button) inflatedView.findViewById(R.id.button5);
+        Button createButton = (Button) inflatedView.findViewById(R.id.editProfile_ButtonSave);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                forward = new Intent(getActivity(), Home.class );
+                //forward = new Intent(getActivity(), Home.class );
 
                 // get the text from the fields
                 currProfile = new Profile(
@@ -83,10 +84,13 @@ public class EditProfileFragment extends Fragment {
                 if (Connectivity.checkNetworkConnection(getApplicationContext())) {
                     Log.d("DEBUG", "Profile JSON to send: " + currProfile.toJSONString());
                     new CreateProfileTask().execute(profileUrl, currProfile.toJSONString());
-                    startActivity(forward);
+                    //startActivity(forward);
+                    changeFragment();
                 }
                 // TODO: error handling if not connected to internet
-                startActivity(forward);
+                //startActivity(forward);
+                changeFragment();
+
             }
         });
 
@@ -96,6 +100,10 @@ public class EditProfileFragment extends Fragment {
 
 
     private void populateFields() {
+        //grab the profile picture form FB
+        ProfilePictureView profile_picture = (ProfilePictureView) inflatedView.findViewById(R.id.editProfile_ProfilePicture);
+        profile_picture.setProfileId(FBProfile.getId());
+
 
         ((EditText) inflatedView.findViewById(firstNameField)).setText(currProfile.getFirstName());
         ((EditText) inflatedView.findViewById(lastNameField)).setText(currProfile.getLastName());
@@ -141,6 +149,12 @@ public class EditProfileFragment extends Fragment {
         protected void onPostExecute(String result) {
             populateFields();
         }
+    }
+
+    public void changeFragment(){
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.mainFrame,back);
+        ft.commit();
     }
 
 }

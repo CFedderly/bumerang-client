@@ -16,67 +16,60 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
 
-        <TextView
-            android:text="Edit Profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView4"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        <com.facebook.login.widget.ProfilePictureView
+            android:id="@+id/editProfile_ProfilePicture"
+            android:layout_height="175dp"
+            android:layout_width="150dp"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
-
-        <Button
-            android:text="Cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/buttonCancel"
-            android:elevation="8dp"
-            android:backgroundTint="@android:color/holo_red_dark"
-            android:onClick="cancelButton"
-            android:layout_alignParentBottom="true"
-            android:layout_toStartOf="@+id/inputLastName" />
-
-        <TextView
-            android:text="Enter first and last name:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView3"
-            android:textAppearance="@style/TextAppearance.AppCompat"
-            android:layout_below="@+id/textView4"
             android:layout_alignParentStart="true" />
 
         <EditText
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/inputFirstName"
+            android:id="@+id/editProfile_InputFirstName"
             android:layout_width="wrap_content"
-            android:singleLine="true"
             android:selectAllOnFocus="false"
-            android:hint="First"
-            android:layout_below="@+id/textView3"
-            android:layout_alignParentStart="true"
-            android:layout_alignEnd="@+id/textView3" />
+            android:hint="First Name"
+            android:layout_below="@+id/editProfile_ProfilePicture"
+            android:background="@color/textboxBackground"
+            android:textSize="24sp" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/inputLastName"
-            android:singleLine="true"
-            android:hint="Last"
-            android:layout_alignBaseline="@+id/inputFirstName"
-            android:layout_alignBottom="@+id/inputFirstName"
-            android:layout_toEndOf="@+id/inputFirstName" />
+            android:id="@+id/editProfile_InputLastName"
+            android:hint="Last Name"
+            android:layout_alignBaseline="@+id/editProfile_InputFirstName"
+            android:layout_alignBottom="@+id/editProfile_InputFirstName"
+            android:layout_toEndOf="@+id/editProfile_InputFirstName"
+            android:background="@color/textboxBackground"
+            android:textSize="24sp"
+            android:layout_marginStart="5dp"/>
 
-        <TextView
-            android:text="About yourself:"
+
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView5"
+            android:hint="Phone No.(111) 111-1111"
+            android:textSize="24sp"
+            android:id="@+id/editProfile_InputPhoneNumber"
+            android:textAlignment="textStart"
+            android:inputType="phone"
+            android:layout_below="@+id/editProfile_InputFirstName"
+            android:layout_alignParentStart="true"
+            android:background="@color/textboxBackground"/>
+
+        <TextView
+            android:text="Bio:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editProfile_LabelBio"
             android:textAppearance="@style/TextAppearance.AppCompat"
-            android:layout_below="@+id/inputFirstName"
+            android:layout_below="@+id/editProfile_InputPhoneNumber"
             android:layout_alignParentStart="true" />
 
         <EditText
@@ -84,42 +77,57 @@
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:ems="10"
-            android:id="@+id/inputAbout"
+            android:id="@+id/editProfile_InputBio"
             android:hint="Tell us a little about yourself!"
-            android:layout_below="@+id/textView5"
-            android:layout_alignParentStart="true" />
+            android:layout_below="@+id/editProfile_LabelBio"
+            android:layout_alignParentStart="true"
+            android:background="@color/textboxBackground"/>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:id="@+id/inputTags"
-            android:hint="Enter items, seperated by a comma, of the items you are willing to lend out."
-            android:layout_below="@+id/textView6"
-            android:layout_alignParentStart="true" />
 
         <TextView
             android:text="Tags:"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textView6"
+            android:id="@+id/editProfile_LabelTags"
             android:textAppearance="@style/TextAppearance.AppCompat"
-            android:layout_marginTop="73dp"
-            android:layout_below="@+id/inputAbout"
+            android:layout_below="@+id/editProfile_InputBio"
             android:layout_alignParentStart="true" />
 
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/editProfile_InputTags"
+            android:hint="Enter items, seperated by a comma, of the items you are willing to lend out."
+            android:layout_below="@+id/editProfile_LabelTags"
+            android:layout_alignParentStart="true"
+            android:background="@color/textboxBackground"/>
+
+
         <Button
-            android:text="Done"
+            android:text="Save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button5"
+            android:id="@+id/editProfile_ButtonSave"
             android:elevation="8dp"
             android:backgroundTint="@android:color/holo_green_light"
             android:onClick="goButton"
-            android:layout_marginStart="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toEndOf="@+id/buttonCancel" />
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
+
+        <Button
+            android:text="Cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editProfile_ButtonCancel"
+            android:elevation="8dp"
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:onClick="cancelButton"
+            android:layout_below="@+id/editProfile_ButtonSave"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="30dp"/>
 
     </RelativeLayout>
+
 </RelativeLayout>

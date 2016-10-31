@@ -90,11 +90,8 @@ public class MainActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-
-    String name;
-
     public void loginSuccess() {
-        Intent createProfile = new Intent(this, CreateProfile.class );
+        Intent intent = new Intent(this, Home.class );
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
         // We will need to retrieve the profile values from facebook and
         // pass the values to EditText
@@ -102,50 +99,23 @@ public class MainActivity extends AppCompatActivity {
         // intent.putExtra(PROFILE_VALUES, profileInfo);
 
         //grabbing the profile information from facebook
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        //grabFBinfo();
 
-        GraphRequest request = GraphRequest.newMeRequest(
-                accessToken,
-                new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(
-                            JSONObject object,
-                            GraphResponse response) {
-                        // Application code
-
-                        //testing getting the information form facebook
-                        // just logs the name and id
-                        try {
-
-                            //send the json file to the database
-                            //we might want to just have this in the editProfile page
-
-                            String  name=object.getString("name");
-                            Log.d("user name ", name);
-
-                            String id = object.getString("id");
-                            Log.d("user id ",id);
-
-                        } catch (JSONException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-
-                    }
-                });
-
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name");
-        request.setParameters(parameters);
-        request.executeAsync();
-
-
-        startActivity(createProfile);
+        startActivity(intent);
     }
 
-    /* called when skip button is tapped */
+    public void grabFBinfo(){
+        Profile profile = Profile.getCurrentProfile();
+        String  name=profile.getName();
+        Log.d("user name ", name);
+
+        String id =profile.getId();
+        Log.d("user id ", id);
+
+    }
     public void skipLoginScreen(View view) {
-        Intent intent = new Intent(this, CreateProfile.class);
+        //Intent intent = new Intent(this, CreateProfile.class);
+        Intent intent = new Intent(this, Home.class);
         startActivity(intent);
     }
 }
