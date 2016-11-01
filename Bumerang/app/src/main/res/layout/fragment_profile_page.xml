@@ -12,17 +12,6 @@
     tools:context="com.seng480b.bumerang.ProfilePage">
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="User Name"
-        android:textSize="24sp"
-        android:id="@+id/profileName"
-        android:textAlignment="textStart"
-        android:layout_below="@+id/profilePicture"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="11dp" />
-
     <View
         android:id="@+id/profileLine1"
         android:layout_width="match_parent"
@@ -31,40 +20,32 @@
         android:layout_below="@+id/profileName"
         android:layout_alignParentStart="true" />
 
-    <View
-        android:id="@+id/profileBioBox"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@color/textboxBackground"
-        android:layout_below="@+id/labelProfileBio"
-        android:layout_alignParentStart="true" />
-
-
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bio:"
-        android:textSize="18sp"
-        android:id="@+id/labelProfileBio"
-        android:layout_below="@+id/profileLine1"
-        android:layout_alignParentStart="true" />
-
-    <View
-        android:id="@+id/profileLine2"
+        android:id="@+id/profileTags"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:layout_below="@+id/labelProfileBio"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="106dp" />
+        android:layout_height="wrap_content"
+        android:text="stuff, things"
+        android:textAlignment="textStart"
+        android:layout_below="@+id/labelProfileTags"
+        android:background="@color/textboxBackground"
+        android:textSize="18sp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tags:"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:id="@+id/labelProfileTags"
-        android:layout_below="@+id/profileLine2"
+        android:layout_below="@+id/profileBio"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bio:"
+        android:textSize="14sp"
+        android:id="@+id/labelProfileBio"
+        android:layout_below="@+id/profileLine3"
         android:layout_alignParentStart="true" />
 
     <TextView
@@ -72,26 +53,79 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="bio goes here, blah balh balh"
+        android:textAlignment="textStart"
         android:layout_below="@+id/labelProfileBio"
         android:layout_alignParentStart="true"
-        android:textAlignment="textStart" />
-
-    <View
-        android:id="@+id/profileTagsBox"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
         android:background="@color/textboxBackground"
-        android:layout_below="@+id/labelProfileTags"
+        android:textSize="18sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User Name"
+        android:textSize="24sp"
+        android:id="@+id/profileName"
+        android:textAlignment="textStart"
+        android:layout_below="@+id/profilePicture"
         android:layout_alignParentStart="true" />
 
-    <ImageView
-        app:srcCompat="@drawable/com_facebook_profile_picture_blank_portrait"
-        android:layout_width="150dp"
-        android:layout_height="175dp"
-        android:cropToPadding="false"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1-234-567-8910"
+        android:textSize="24sp"
+        android:id="@+id/profilePhoneNumber"
+        android:textAlignment="textStart"
+        android:phoneNumber="true"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
+
+    <com.facebook.login.widget.ProfilePictureView
         android:id="@+id/profilePicture"
+        android:layout_height="175dp"
+        android:layout_width="150dp"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
+
+    <View
+        android:id="@+id/profileLine3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@+id/profilePhoneNumber"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp" />
+
+    <Button
+        android:id="@+id/profileButtonEdit"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@android:drawable/ic_menu_edit"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:elevation="24dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/messenger_button_send_round_shadow"
+        android:id="@+id/imageView2"
+        android:layout_alignBottom="@+id/profileButtonEdit"
+        android:layout_alignStart="@+id/profileButtonEdit" />
+
+    <TextView
+        android:id="@+id/profileCarma"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0.0"
+        android:textSize="75dp"
+        android:textStyle="bold"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="18dp"
+        android:layout_below="@+id/profileButtonEdit"
+        android:layout_toStartOf="@+id/profileButtonEdit" />
 
 
 </RelativeLayout>

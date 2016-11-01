@@ -1,8 +1,6 @@
 package com.seng480b.bumerang;
 
-
 import android.support.design.widget.TabLayout;
-
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.os.Bundle;
@@ -14,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import java.util.ArrayList;
-
 
 public class MyRequests extends ListFragment implements OnItemClickListener {
 

@@ -13,7 +13,6 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import java.util.ArrayList;
 
-
 public class Browse extends ListFragment implements OnItemClickListener {
 
     public Browse() {
@@ -43,7 +42,6 @@ public class Browse extends ListFragment implements OnItemClickListener {
         ArrayList<Request> arrayOfRequestTickets = new ArrayList<>();
         // TODO: Pull requests from the DB
         RequestAdapter adapter = new RequestAdapter(getActivity().getApplicationContext(), arrayOfRequestTickets);
-
         super.onActivityCreated(savedInstanceState);
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
