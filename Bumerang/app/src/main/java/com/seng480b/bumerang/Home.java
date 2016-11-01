@@ -38,6 +38,7 @@ public class Home extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_nav_drawer);
         //toolbar/actionbar setup
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -65,7 +66,10 @@ public class Home extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
     }
+
 
 
     //will start up the browse fragment if is not the first time opening the app
