@@ -1,26 +1,17 @@
 package com.seng480b.bumerang;
 
-import android.annotation.SuppressLint;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.List;
-
 
 public class Browse extends ListFragment implements OnItemClickListener {
 
@@ -48,52 +39,9 @@ public class Browse extends ListFragment implements OnItemClickListener {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
-
-        /*
-
-        View rootView = inflater.inflate(R.layout.fragment_browse_tabs, container, false);
-        TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-        textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-        return rootView;
-         */
-
-
-        /* just a test array list */
-        ArrayList<DummyRequest> array_of_request_tickets = new ArrayList<>();
-        DummyRequest ticket1 = new DummyRequest("Bob", "Pencil");
-        DummyRequest ticket2 = new DummyRequest("Jeff", "Mac Charger");
-        DummyRequest ticket3 = new DummyRequest("Ned", "HLTX9000 Calculator");
-        DummyRequest ticket4 = new DummyRequest("Molly", "Some paper");
-        DummyRequest ticket5 = new DummyRequest("Polly", "A sort of adapter thing I dunno");
-
-
-        int test = 0;
-
-        if (getArguments() == null){
-            Log.d("ARGUMENTS","null value");
-        } else {
-            test = getArguments().getInt(ARG_SECTION_NUMBER);
-        }
-
-
-        if (test == 1){
-            array_of_request_tickets.add(ticket1);
-            array_of_request_tickets.add(ticket2);
-            array_of_request_tickets.add(ticket3);
-            array_of_request_tickets.add(ticket1);
-            array_of_request_tickets.add(ticket2);
-            array_of_request_tickets.add(ticket3);
-            array_of_request_tickets.add(ticket4);
-
-        } else {
-            array_of_request_tickets.add(ticket5);
-        }
-
-        /* end of testing stuff */
-
-
-        RequestAdapter adapter = new RequestAdapter(getActivity(),array_of_request_tickets);
-
+        ArrayList<Request> arrayOfRequestTickets = new ArrayList<>();
+        // TODO: Pull requests from the DB
+        RequestAdapter adapter = new RequestAdapter(getActivity().getApplicationContext(), arrayOfRequestTickets);
         super.onActivityCreated(savedInstanceState);
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
