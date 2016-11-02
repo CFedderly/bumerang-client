@@ -17,8 +17,6 @@ import com.facebook.login.widget.ProfilePictureView;
 
 import java.io.IOException;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
-
 public class EditProfileFragment extends Fragment {
     private static final String profileUrl = BuildConfig.SERVER_URL + "/profile/";
     private static final int firstNameField = R.id.editProfile_InputFirstName;
@@ -49,9 +47,8 @@ public class EditProfileFragment extends Fragment {
         mViewPager.setVisibility(View.GONE);
         tabLayout.setVisibility(View.GONE);
 
-
         // Check if the user already has a profile
-        if (Connectivity.checkNetworkConnection(getApplicationContext())) {
+        if (Connectivity.checkNetworkConnection(getActivity().getApplicationContext())) {
             new LoadProfileTask().execute(profileUrl);
         }
         // Setup for the Cancel button on screen
@@ -81,14 +78,13 @@ public class EditProfileFragment extends Fragment {
                         ((EditText) inflatedView.findViewById(tagsField)).getText().toString().trim());
 
                 // If we are connected to the network, send profile object to server
-                if (Connectivity.checkNetworkConnection(getApplicationContext())) {
+                if (Connectivity.checkNetworkConnection(getActivity().getApplicationContext())) {
                     Log.d("DEBUG", "Profile JSON to send: " + currProfile.toJSONString());
                     new CreateProfileTask().execute(profileUrl, currProfile.toJSONString());
                     //startActivity(forward);
                     changeFragment();
                 }
                 // TODO: error handling if not connected to internet
-                //startActivity(forward);
                 changeFragment();
 
             }
@@ -116,7 +112,7 @@ public class EditProfileFragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             try {
-                Connectivity.httpPost(params[0], params[1]);
+                Connectivity.makeHttpPostRequest(profileUrl, currProfile.getJSONKeyValuePairs());
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e("ERROR","Unable to create profile. URL may be invalid.");
@@ -133,7 +129,7 @@ public class EditProfileFragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String result = Connectivity.httpGet(params[0]);
+                String result = Connectivity.makeHttpGetRequest(profileUrl);
                 // if response isn't empty attempt to fill the profile fields
                 if (!result.equals("")) {
                     currProfile = new Profile(result);

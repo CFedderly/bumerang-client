@@ -14,7 +14,7 @@
         android:layout_alignParentRight="true" />
 
     <TextView
-        android:id="@+id/item_needed"
+        android:id="@+id/request_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Item Title and More"
@@ -29,7 +29,7 @@
         android:text="I would like to borrow this item.\nThis is a pretty long description.\nMore information on this line too."
         android:layout_weight="0.01"
         android:textSize="15sp"
-        android:layout_below="@id/item_needed"/>
+        android:layout_below="@id/request_title"/>
 
     <View
         android:id="@+id/divider_line"
@@ -59,7 +59,7 @@
         android:layout_marginLeft="5dp"/>
 
     <TextView
-        android:id="@+id/name_of_borrower"
+        android:id="@+id/request_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="UserName1000"
@@ -73,7 +73,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="tags, tags, tags, tags"
-        android:layout_below="@id/name_of_borrower"/>
+        android:layout_below="@id/request_description"/>
 
     <Button
         android:id="@+id/buttonDetailAccept"

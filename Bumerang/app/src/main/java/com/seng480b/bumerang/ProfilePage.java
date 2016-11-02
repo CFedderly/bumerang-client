@@ -1,14 +1,10 @@
 package com.seng480b.bumerang;
 
-
 import android.support.v4.app.Fragment;
-
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-
 import android.os.Bundle;
-
 import android.util.Log;
 import android.view.View;
 
@@ -33,8 +29,6 @@ public class ProfilePage extends Fragment {
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
         mViewPager.setVisibility(View.GONE);
         tabLayout.setVisibility(View.GONE);
-
-
         updateProfileInfo();
         setUpButton();
         return myInflatedView;

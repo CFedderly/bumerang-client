@@ -4,24 +4,50 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.HttpURLConnection;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Connectivity {
+class Connectivity {
 
-    public static NetworkInfo getNetworkInfo(Context context) {
+    private static final int Timeout = 15000;
+
+    private enum HttpMethod {
+        GET,
+        POST
+    }
+
+    private static NetworkInfo getNetworkInfo(Context context) {
         ConnectivityManager conMan = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return conMan.getActiveNetworkInfo();
     }
 
-    public static boolean checkNetworkConnection(Context context) {
+    @SuppressWarnings("unused")
+    public static boolean checkNetworkAndShowGenericAlert(Context context) {
+        return checkNetworkAndShowAlert(context, R.string.no_internet_connection_generic);
+    }
+
+    static boolean checkNetworkAndShowAlert(Context context, int alertTextResource) {
+        boolean isConnected = checkNetworkConnection(context);
+        if (!isConnected) {
+            Toast.makeText(context, alertTextResource, Toast.LENGTH_LONG).show();
+        }
+        return isConnected;
+    }
+
+    static boolean checkNetworkConnection(Context context) {
         NetworkInfo netInfo = Connectivity.getNetworkInfo(context);
         if (netInfo != null) {
             Log.d("DEBUG", "Network connection: " + netInfo.isConnected());
@@ -31,39 +57,82 @@ public class Connectivity {
         }
     }
 
-    public static String httpGet(String myUrl) throws IOException {
+    static String makeHttpGetRequest(String requestUrl) throws IOException {
+        return makeHttpRequest(requestUrl, HttpMethod.GET, null);
+    }
+
+    static String makeHttpPostRequest(String requestUrl, HashMap<String, String> params) throws IOException {
+        return makeHttpRequest(requestUrl, HttpMethod.POST, params);
+    }
+
+    private static String makeHttpRequest(String requestUrl, HttpMethod method, HashMap<String, String> params) throws IOException {
         String result = "";
-        URL url = new URL(myUrl);
-        HttpURLConnection urlCon = (HttpURLConnection) url.openConnection();
-        urlCon.connect();
-        result = streamToString(urlCon.getInputStream());
+        try {
+            URL url = new URL(requestUrl);
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setReadTimeout(Timeout);
+            connection.setConnectTimeout(Timeout);
+            switch (method) {
+                case GET:
+                    result = httpGet(connection);
+                    break;
+                case POST:
+                    result = httpPost(connection, params);
+                    break;
+                default:
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private static String httpGet(HttpURLConnection connection) throws IOException {
+        connection.connect();
+        String result = streamToString(connection.getInputStream());
         Log.d("DEBUG", "Response from HTTP GET: " + result);
         return result;
     }
 
-    public static int httpPost(String myUrl, String myJSON) throws IOException {
-        URL url = new URL(myUrl);
-        HttpURLConnection urlCon = (HttpURLConnection) url.openConnection();
-        urlCon.setRequestMethod("POST");
-        OutputStreamWriter out = new OutputStreamWriter(urlCon.getOutputStream());
-        out.write(myJSON);
-        out.close();
-        int status = urlCon.getResponseCode();
-        Log.d("DEBUG", "Response from HTTP post:" + status);
-        return status;
+    private static String httpPost(HttpURLConnection connection, HashMap<String, String> params) throws IOException {
+        String response = "";
+
+        connection.setRequestMethod("POST");
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.setRequestProperty("Content-Type", "application/json");
+        DataOutputStream os = new DataOutputStream(connection.getOutputStream());
+        os.writeBytes(postParamsToJSONString(params));
+        os.flush();
+        os.close();
+
+        int status = connection.getResponseCode();
+
+        if (status == HttpURLConnection.HTTP_OK) {
+            String line;
+            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            while ((line = br.readLine()) != null) {
+                response += line;
+            }
+        } else {
+            throw new IOException();
+        }
+        Log.d("DEBUG", "status = " + status);
+        return response;
     }
 
-    private static int httpPut(String myUrl, String myJSON) throws IOException {
-        URL url = new URL(myUrl);
-        HttpURLConnection urlCon = (HttpURLConnection) url.openConnection();
-        urlCon.setRequestMethod("PUT");
-        OutputStreamWriter out = new OutputStreamWriter(urlCon.getOutputStream());
-        out.write(myJSON);
-        out.close();
-
-        int status = urlCon.getResponseCode();
-        Log.d("DEBUG", "Response from HTTP put:" + status);
-        return status;
+    private static String postParamsToJSONString(HashMap<String, String> params) {
+        try {
+            JSONObject json = new JSONObject();
+            for (Map.Entry<String, String> pair : params.entrySet()) {
+                json.put(pair.getKey(), pair.getValue());
+            }
+            return json.toString();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static String streamToString(InputStream inStream) throws IOException {
