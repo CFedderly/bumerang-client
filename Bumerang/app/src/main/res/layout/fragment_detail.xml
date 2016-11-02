@@ -48,15 +48,15 @@
         android:layout_alignParentLeft="true" />
 
 
-
-    <ImageView
+    <com.facebook.login.widget.ProfilePictureView
         android:id="@+id/user_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_menu_slideshow"
         android:layout_below="@id/divider_line"
         android:layout_alignParentRight="true"
-        android:layout_marginLeft="5dp"/>
+        android:layout_marginLeft="5dp"
+        />
 
     <TextView
         android:id="@+id/request_description"

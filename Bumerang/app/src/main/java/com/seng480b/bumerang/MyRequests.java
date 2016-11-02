@@ -10,6 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -62,9 +66,21 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
     public void onItemClick(AdapterView<?> parent, View view, int position,
                             long id) {
 
-        BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
+        JSONObject obj = new JSONObject();
+        try{
+            obj.put("Lender", "Daniel");
+            obj.put("Item", "Pencil");
+            obj.put("Exp", "5:30");
+            obj.put("Phone_No", "(250) 123-4567");
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        BorrowDialogFragment more_info_dialog = new BorrowDialogFragment(obj);
 
         FragmentManager fm = getFragmentManager();
         more_info_dialog.show(fm, "Sample Fragment");
+
+
     }
 }

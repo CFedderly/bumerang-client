@@ -14,12 +14,25 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
+import android.widget.TextView;
+
+import com.facebook.*;
+import com.facebook.login.widget.ProfilePictureView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 
 public class BorrowDialogFragment extends DialogFragment {
+
+    private JSONObject reqObj;
+    private View rootView;
+
     //private Button cancelButton, acceptButton;
-    public BorrowDialogFragment() {
+    public BorrowDialogFragment(JSONObject obj) {
         // Required empty public constructor
+        reqObj = obj;
     }
 
     @Override
@@ -33,7 +46,7 @@ public class BorrowDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_borrow_dialog, container, false);
+        rootView = inflater.inflate(R.layout.fragment_borrow_dialog, container, false);
         getDialog().setTitle("-MORE INFORMATION- DIALOG");
 
         ImageButton cancelButton = (ImageButton)rootView.findViewById(R.id.buttonBorrowDismiss);
@@ -71,10 +84,38 @@ public class BorrowDialogFragment extends DialogFragment {
             }
         });
 
+        populateViews();
+
+
         return rootView;
     }
 
+    public void populateViews(){
+        TextView itemName = (TextView) rootView.findViewById(R.id.item_wanted);
+        TextView itemExp = (TextView) rootView.findViewById(R.id.time_left);
+        TextView lenderName = (TextView) rootView.findViewById(R.id.borrow_message);
+        TextView phone = (TextView) rootView.findViewById(R.id.phone);
 
+        ProfilePictureView profile_picture = (ProfilePictureView) rootView.findViewById(R.id.user_image);
+
+        //TEMP! grabbing info from facebook
+        com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
+
+        String exp_time = "00:00";
+        String lender_message = "someone's got you covered!";
+        try{
+            itemName.setText(reqObj.getString("Item"));
+            exp_time = "Expires at " + reqObj.get("Exp");
+            lender_message = " "+reqObj.getString("Lender")+"'s got you covered! ";
+            phone.setText(reqObj.getString("Phone_No"));
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        profile_picture.setProfileId(profile.getId());
+        lenderName.setText(lender_message);
+        itemExp.setText(exp_time);
+    }
     /** cancel (x) button **/
     public void dismiss(View view){
         getDialog().dismiss();
