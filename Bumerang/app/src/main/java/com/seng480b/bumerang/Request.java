@@ -62,7 +62,7 @@ class Request {
         }
     }
 
-    private int getMinutesUntilExpiry() {
+    public int getMinutesUntilExpiry() {
         Calendar now = Calendar.getInstance();
         long millisUntilExpiry = expiryTime.getTimeInMillis() - now.getTimeInMillis();
         return (int) TimeUnit.MINUTES.convert(millisUntilExpiry, TimeUnit.MILLISECONDS);
@@ -75,6 +75,7 @@ class Request {
     public String getTitle() { return this.title; }
 
     public String getDescription() { return this.description; }
+
 
     HashMap<String, String> getJSONKeyValuePairs() {
         HashMap<String, String> keyValue = new HashMap<>();

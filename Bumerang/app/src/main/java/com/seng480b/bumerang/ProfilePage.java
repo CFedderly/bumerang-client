@@ -41,10 +41,12 @@ public class ProfilePage extends Fragment {
     public void updateProfileInfo() {
         String user_id;
         String user_name;
+
+
         //these are just temp
         //grab them from the db later
         String user_tags = "Mac_Book, Power_Cable, Pencil, Calculator, Paper";
-        String user_bio = "I am realy awesome, please let me borrow your things!";
+        String user_bio = "I am really awesome, please let me borrow your things!";
         String user_number = "1-111-111-1111";
         String user_carma = "0";
 

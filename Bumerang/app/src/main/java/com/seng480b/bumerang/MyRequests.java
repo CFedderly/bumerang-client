@@ -10,14 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.TextView;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MyRequests extends ListFragment implements OnItemClickListener {
+
+    ArrayList<Request> arrayOfRequestTickets;
+
 
     public MyRequests() {
         // Required empty public constructor
@@ -43,7 +47,7 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
     public void onActivityCreated(Bundle savedInstanceState) {
 
         /* just a test array list */
-        ArrayList<Request> arrayOfRequestTickets = new ArrayList<>();
+        arrayOfRequestTickets = new ArrayList<>();
 
         Request ticket1 = new Request("Study Buddy", "Someone help me with Math 101!", 1, 22, 400,
                 Request.RequestType.BORROW);
@@ -63,20 +67,33 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-                            long id) {
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        Request req = arrayOfRequestTickets.get(position);
+
+        String time = "Will expire in " + req.getMinutesUntilExpiry() + " minutes.";
+        String itemName = req.getTitle();
+
+        //TEMP get NAME, PHONE, FB id for the responder
+        String lenderName = "User_0";
+        String phone_no = "(012) 345-6789";
+        com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
+        String fb_id = profile.getId();
+
 
         JSONObject obj = new JSONObject();
         try{
-            obj.put("Lender", "Daniel");
-            obj.put("Item", "Pencil");
-            obj.put("Exp", "5:30");
-            obj.put("Phone_No", "(250) 123-4567");
+            obj.put("Lender", lenderName);
+            obj.put("Item", itemName);
+            obj.put("Exp", time);
+            obj.put("Phone_No", phone_no);
+            obj.put("FB_id", fb_id);
         } catch (JSONException e){
             e.printStackTrace();
         }
 
-        BorrowDialogFragment more_info_dialog = new BorrowDialogFragment(obj);
+        BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
+        more_info_dialog.sendInfo(obj);
 
         FragmentManager fm = getFragmentManager();
         more_info_dialog.show(fm, "Sample Fragment");

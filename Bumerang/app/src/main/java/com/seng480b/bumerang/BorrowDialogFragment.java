@@ -30,9 +30,11 @@ public class BorrowDialogFragment extends DialogFragment {
     private View rootView;
 
     //private Button cancelButton, acceptButton;
-    public BorrowDialogFragment(JSONObject obj) {
-        // Required empty public constructor
-        reqObj = obj;
+    public BorrowDialogFragment() {
+    }
+
+    public void sendInfo(JSONObject obj){
+        this.reqObj = obj;
     }
 
     @Override
@@ -98,23 +100,22 @@ public class BorrowDialogFragment extends DialogFragment {
 
         ProfilePictureView profile_picture = (ProfilePictureView) rootView.findViewById(R.id.user_image);
 
-        //TEMP! grabbing info from facebook
-        com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
 
-        String exp_time = "00:00";
+        String exp_time = "there is no time limit.";
         String lender_message = "someone's got you covered!";
+
         try{
             itemName.setText(reqObj.getString("Item"));
-            exp_time = "Expires at " + reqObj.get("Exp");
+            exp_time = ""+reqObj.get("Exp");
             lender_message = " "+reqObj.getString("Lender")+"'s got you covered! ";
             phone.setText(reqObj.getString("Phone_No"));
-
+            profile_picture.setProfileId(reqObj.getString("FB_id"));
         }catch (JSONException e){
             e.printStackTrace();
         }
-        profile_picture.setProfileId(profile.getId());
         lenderName.setText(lender_message);
         itemExp.setText(exp_time);
+
     }
     /** cancel (x) button **/
     public void dismiss(View view){
