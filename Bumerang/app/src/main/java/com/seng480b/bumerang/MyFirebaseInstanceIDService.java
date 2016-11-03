@@ -3,6 +3,7 @@ package com.seng480b.bumerang;
 
 import android.util.Log;
 
+import com.facebook.*;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
@@ -20,7 +21,13 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     }
 
     public void sendRegistrationToServer(String refereshedToken) {
-        // Send the updated token to the server
+        // Retrieve Facebook ID of current logged in person.
+        com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
+        String user_id = profile.getId();
+        if (user_id != null) {
+            // send the device ID to the server paired with the facebook id.
+        }
+
     }
 
 }
