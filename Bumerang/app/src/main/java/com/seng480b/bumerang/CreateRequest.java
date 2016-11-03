@@ -84,7 +84,7 @@ public class CreateRequest extends Fragment {
 
         // Setup for Seekbars
         SeekBar distanceBar = (SeekBar) inflatedView.findViewById(R.id.barDistance);
-        distanceBar.setProgress(2);
+        distanceBar.setProgress(0);
 
         // Setup for editText associated with above SeekBars
         distanceText = (TextView) inflatedView.findViewById(R.id.labelDistanceNum);

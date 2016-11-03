@@ -10,6 +10,7 @@ import java.util.HashMap;
 public class Profile {
     private String firstName;
     private String lastName;
+    private String phoneNumber;
     private String description;
     private String tags;
 

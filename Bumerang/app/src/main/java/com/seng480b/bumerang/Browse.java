@@ -1,28 +1,46 @@
 package com.seng480b.bumerang;
 
+import android.app.Activity;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Browse extends ListFragment implements OnItemClickListener {
     ArrayList<Request> arrayOfRequestTickets;
 
+    private static final String requestUrl = BuildConfig.SERVER_URL + "/requests/recent/";
+    private ViewPager viewPager;
+    private Activity activity;
+
     public Browse() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity){
+            this.activity =(Activity) context;
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,25 +49,27 @@ public class Browse extends ListFragment implements OnItemClickListener {
 
         ((Home)getActivity()).setActionBarTitle("Browse");
 
-        /** make the tabs visible **/
-        ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
-        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
-        mViewPager.setVisibility(View.VISIBLE);
+        // make the tabs visible
+        viewPager = (ViewPager) activity.findViewById(R.id.container);
+        populateBrowse();
+        // add a listener to reload the browse page once the tab is switched
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+
+            @Override
+            public void onPageSelected(int position) {
+                populateBrowse();
+            }
+        });
+
+        TabLayout tabLayout = (TabLayout) activity.findViewById(R.id.tabs);
+        viewPager.setVisibility(View.VISIBLE);
         tabLayout.setVisibility(View.VISIBLE);
 
         return view;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-
-
-        arrayOfRequestTickets = new ArrayList<>();
-        // TODO: Pull requests from the DB
-        RequestAdapter adapter = new RequestAdapter(getActivity().getApplicationContext(), arrayOfRequestTickets);
-        super.onActivityCreated(savedInstanceState);
-        setListAdapter(adapter);
-        getListView().setOnItemClickListener(this);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
 
     }
 
@@ -59,7 +79,7 @@ public class Browse extends ListFragment implements OnItemClickListener {
 
         String time = "Will expire in " + req.getMinutesUntilExpiry() + " minutes.";
         String itemName = req.getTitle();
-        String userName = req.getUser();
+        int userName = req.getUserId();
         String desc = req.getDescription();
 
         //TEMP get NAME, PHONE, FB id for the responder
@@ -68,23 +88,26 @@ public class Browse extends ListFragment implements OnItemClickListener {
         String tags = "stuff, things";
 
         JSONObject obj = new JSONObject();
-        try{
+        try {
             obj.put("Name", userName);
             obj.put("Item", itemName);
             obj.put("Exp", time);
             obj.put("FB_id", fb_id);
             obj.put("Tags", tags);
             obj.put("Description", desc);
-        } catch (JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
         DetailFragment details = new DetailFragment();
         details.sendInfo(obj);
         FragmentManager fm = getFragmentManager();
-        details.show(fm,"Sample Fragment");
+        details.show(fm, "Sample Fragment");
     }
 
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
 
     /**
      * The fragment argument representing the section number for this
@@ -104,4 +127,61 @@ public class Browse extends ListFragment implements OnItemClickListener {
         return fragment;
     }
 
+    private void populateBrowse() {
+        Request.RequestType requestType = getCurrentRequestType(viewPager);
+        if (requestType != null) {
+            new GetRequestsTask().execute(requestUrl);
+        } else {
+            Toast.makeText(activity, R.string.unable_to_display_requests, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public static Request.RequestType getCurrentRequestType(ViewPager pager) {
+        int currentTab = pager.getCurrentItem();
+        Request.RequestType requestType;
+        Log.d("DEBUG", "Current tab: " + currentTab);
+        switch(currentTab) {
+            case 0:
+                requestType = Request.RequestType.BORROW;
+                break;
+            case 1:
+                requestType = Request.RequestType.LEND;
+                break;
+            default:
+                requestType = null;
+        }
+        return requestType;
+    }
+
+    private class GetRequestsTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                return Connectivity.makeHttpGetRequest(params[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("ERROR", "Unable to retrieve requests");
+                cancel(true);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
+            RequestAdapter mAdapter = new RequestAdapter(activity,
+                    Request.filterRequestsByType(requests, getCurrentRequestType(viewPager)));
+            getListView().setAdapter(mAdapter);
+            getListView().setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    DetailFragment details = new DetailFragment();
+
+                    FragmentManager fm = getFragmentManager();
+                    details.show(fm,"Sample Fragment");
+                }
+            });
+        }
+    }
 }

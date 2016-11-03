@@ -2,21 +2,43 @@ package com.seng480b.bumerang;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 class Request {
 
     enum RequestType {
-        BORROW,
-        LEND
+        BORROW(0), LEND(1);
+
+        private int num;
+
+        private static Map<Integer, RequestType> map = new HashMap<Integer, RequestType>();
+
+        static {
+            for (RequestType req : RequestType.values()) {
+                map.put(req.num, req);
+            }
+        }
+
+        RequestType(final int number) { num = number; }
+
+        public int getValue() {
+            return num;
+        }
+
+        public static RequestType valueOf(int number) {
+            return map.get(number);
+        }
     }
 
-    private String user;
+    private int userId;
     private String title;
     private String description;
     private Calendar expiryTime;
@@ -24,14 +46,12 @@ class Request {
     private RequestType requestType;
 
     Request(String title,
-                   String description,
-                   int durationHours,
-                   int durationMinutes,
-                   int distanceMeters,
-                   RequestType requestType) {
-        // TODO: Associate a request with a particular user
-        // TODO: store the type of request (borrow, lend)
-        this.user = "";
+            String description,
+            int durationHours,
+            int durationMinutes,
+            int distanceMeters,
+            RequestType requestType) {
+        this.userId = UserDataCache.getUserId();
         this.title = title;
         this.description = description;
         this.distance = distanceMeters;
@@ -47,7 +67,7 @@ class Request {
     public Request(String JSONString) {
         try {
             JSONObject obj = new JSONObject(JSONString);
-            this.user = "";
+            this.userId = obj.getInt("user_id");
             this.title = obj.getString("title");
             this.description = obj.getString("description");
             this.distance = obj.getInt("distance");
@@ -56,6 +76,8 @@ class Request {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.MINUTE, minutesToExpiry);
             this.expiryTime = cal;
+
+            this.requestType = RequestType.valueOf(obj.getInt("request_type"));
         } catch (JSONException e) {
             Log.e("ERROR", "Unable to create profile object from JSON string");
             e.printStackTrace();
@@ -68,8 +90,8 @@ class Request {
         return (int) TimeUnit.MINUTES.convert(millisUntilExpiry, TimeUnit.MILLISECONDS);
     }
 
-    public String getUser(){
-        return this.user;
+    public int getUserId(){
+        return this.userId;
     }
 
     public String getTitle() { return this.title; }
@@ -79,9 +101,37 @@ class Request {
     HashMap<String, String> getJSONKeyValuePairs() {
         HashMap<String, String> keyValue = new HashMap<>();
         keyValue.put("title", title);
+        keyValue.put("user_id", String.valueOf(userId));
         keyValue.put("description", description);
         keyValue.put("distance", String.valueOf(distance));
         keyValue.put("duration", String.valueOf(getMinutesUntilExpiry()));
+        keyValue.put("request_type", String.valueOf(requestType.getValue()));
         return keyValue;
+    }
+
+    public static ArrayList<Request> filterRequestsByType(ArrayList<Request> original, RequestType type) {
+        ArrayList<Request> newList = new ArrayList<>();
+        for (Request request : original) {
+            if (request.requestType == type) {
+                newList.add(request);
+            }
+        }
+        return newList;
+    }
+
+    public static ArrayList<Request> getListOfRequestsFromJSON(String json) {
+        ArrayList<Request> requests = new ArrayList<>();
+        try {
+            JSONObject obj = new JSONObject(json);
+            JSONArray results = obj.getJSONArray("results");
+            for (int i = 0; i < results.length() ; i++) {
+                JSONObject result = results.getJSONObject(i).getJSONObject("request");
+                requests.add(new Request(result.toString()));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return requests;
     }
 }
