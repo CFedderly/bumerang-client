@@ -36,7 +36,7 @@ class RequestAdapter extends ArrayAdapter<Request> {
         //populate the data into the template view using data object
         title.setText(request_ticket.getTitle());
         description.setText(request_ticket.getDescription());
-        user.setText(request_ticket.getUser());
+        user.setText(Integer.toString(request_ticket.getUserId()));
 
         return convertView;
     }

@@ -1,24 +1,32 @@
 package com.seng480b.bumerang;
 
+import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Browse extends ListFragment implements OnItemClickListener {
 
+    private static final String requestUrl = BuildConfig.SERVER_URL + "/requests/recent/";
+    private ViewPager mViewPager;
+    private RequestAdapter mAdapter;
+
     public Browse() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -27,8 +35,18 @@ public class Browse extends ListFragment implements OnItemClickListener {
 
         ((Home)getActivity()).setActionBarTitle("Browse");
 
-        /** make the tabs visible **/
-        ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
+        // make the tabs visible
+        mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
+
+        // add a listener to reload the browse page once the tab is switched
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+
+            @Override
+            public void onPageSelected(int position) {
+                populateBrowse();
+            }
+        });
+
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
         mViewPager.setVisibility(View.VISIBLE);
         tabLayout.setVisibility(View.VISIBLE);
@@ -37,27 +55,21 @@ public class Browse extends ListFragment implements OnItemClickListener {
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-
-        ArrayList<Request> arrayOfRequestTickets = new ArrayList<>();
-        // TODO: Pull requests from the DB
-        RequestAdapter adapter = new RequestAdapter(getActivity().getApplicationContext(), arrayOfRequestTickets);
         super.onActivityCreated(savedInstanceState);
-        setListAdapter(adapter);
-        getListView().setOnItemClickListener(this);
-
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position,
                             long id) {
 
-        DetailFragment details = new DetailFragment();
 
-        FragmentManager fm = getFragmentManager();
-        details.show(fm,"Sample Fragment");
     }
-
 
     /**
      * The fragment argument representing the section number for this
@@ -77,4 +89,61 @@ public class Browse extends ListFragment implements OnItemClickListener {
         return fragment;
     }
 
+    private void populateBrowse() {
+        Request.RequestType requestType = getCurrentRequestType();
+        if (requestType != null) {
+            new GetRequestsTask().execute(requestUrl);
+        } else {
+            Toast.makeText(getActivity(), R.string.unable_to_display_requests, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private Request.RequestType getCurrentRequestType() {
+        int currentTab = mViewPager.getCurrentItem();
+        Request.RequestType requestType;
+        Log.d("DEBUG", "Current tab: " + currentTab);
+        switch(currentTab) {
+            case 0:
+                requestType = Request.RequestType.BORROW;
+                break;
+            case 1:
+                requestType = Request.RequestType.LEND;
+                break;
+            default:
+                requestType = null;
+        }
+        return requestType;
+    }
+
+
+    private class GetRequestsTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                return Connectivity.makeHttpGetRequest(params[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("ERROR", "Unable to retrieve requests");
+                cancel(true);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
+            mAdapter = new RequestAdapter(getActivity(), requests);
+            getListView().setAdapter(mAdapter);
+            getListView().setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    DetailFragment details = new DetailFragment();
+
+                    FragmentManager fm = getFragmentManager();
+                    details.show(fm,"Sample Fragment");
+                }
+            });
+        }
+    }
 }
