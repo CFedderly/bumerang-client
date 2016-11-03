@@ -22,6 +22,8 @@ import android.view.MenuItem;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
 
 
 public class Home extends AppCompatActivity
@@ -35,6 +37,7 @@ public class Home extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_nav_drawer);
         //toolbar/actionbar setup
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -87,6 +90,7 @@ public class Home extends AppCompatActivity
             navigationView.setNavigationItemSelectedListener(this);
         }
     }
+
     //will start up the browse fragment if is not the first time opening the app
     //will open the edit profile page if it is the first time.
     public void loadStartupFragment(boolean first){
