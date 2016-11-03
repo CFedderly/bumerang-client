@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class MyRequests extends ListFragment implements OnItemClickListener {
 
     private static final String requestUrl = BuildConfig.SERVER_URL +
-            "/requests/user/" + UserDataCache.getUserId();
+            "/requests/user/" + UserDataCache.getCurrentUser().getUserId();
     private ViewPager mViewPager;
     private Activity activity;
 
@@ -100,6 +100,7 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
         @Override
         protected void onPostExecute(String result) {
             ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
+            // TODO: uncomment this once there are borrow/lend tabs on the myrequest page
             /*RequestAdapter mAdapter = new RequestAdapter(activity,
                     Request.filterRequestsByType(requests, Browse.getCurrentRequestType(mViewPager)));*/
             RequestAdapter mAdapter = new RequestAdapter(activity, requests);

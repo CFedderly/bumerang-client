@@ -52,11 +52,8 @@ public class Home extends AppCompatActivity
             }
         });
 
-
-        //put logic here that will check if they have an account or not
-        // currently is just skips to the browse page
-        // if you change it to 'true' it will start at the edit profile page
-        loadStartupFragment(false);
+        // If user hasn't logged in before, redirect them to profile edit page
+        loadStartupFragment(ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile()));
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

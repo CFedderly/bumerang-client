@@ -51,7 +51,7 @@ class Request {
             int durationMinutes,
             int distanceMeters,
             RequestType requestType) {
-        this.userId = UserDataCache.getUserId();
+        this.userId = UserDataCache.getCurrentUser().getUserId();
         this.title = title;
         this.description = description;
         this.distance = distanceMeters;

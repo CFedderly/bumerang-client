@@ -90,9 +90,14 @@ class Connectivity {
     }
 
     private static String httpGet(HttpURLConnection connection) throws IOException {
+        String result = null;
         connection.connect();
-        String result = streamToString(connection.getInputStream());
+        int status = connection.getResponseCode();
+        if (status == HttpURLConnection.HTTP_OK) {
+            result = streamToString(connection.getInputStream());
+        }
         Log.d("DEBUG", "Response from HTTP GET: " + result);
+        Log.d("DEBUG", "Response code: " + status);
         return result;
     }
 
