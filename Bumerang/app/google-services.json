@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "244125593644-k5u9rjmm2f2ll1v4gvin63ohfkfkfbig.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.seng480b.bumerang",
+            "certificate_hash": "9F5DAA15D5AD5EEA4B05180F9B9994B9A6DA3BB8"
+          }
+        },
+        {
           "client_id": "244125593644-5nr11ohg40tn2l14pnejahqo1uei8lo0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
