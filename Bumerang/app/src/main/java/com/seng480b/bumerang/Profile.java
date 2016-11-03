@@ -35,8 +35,9 @@ class Profile {
     }
 
     Profile(String JSONString) throws JSONException {
-        JSONObject obj = new JSONObject(JSONString);
-        this.userId = obj.getInt("user_id");
+        JSONObject full = new JSONObject(JSONString);
+        JSONObject obj = full.getJSONObject("profile");
+        this.userId = obj.getInt("id");
         this.facebookId = obj.getLong("facebook_id");
         this.firstName = obj.getString("first_name");
         this.lastName = obj.getString("last_name");

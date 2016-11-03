@@ -112,8 +112,7 @@
                 android:inputType="time"
                 android:ems="10"
                 android:id="@+id/inputHours"
-                android:layout_below="@+id/labelDuration"
-                android:layout_toStartOf="@+id/labelHours" />
+                android:layout_below="@+id/labelDuration" />
 
             <TextView
                 android:text="Hours"

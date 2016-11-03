@@ -1,23 +1,20 @@
 package com.seng480b.bumerang;
 
-import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.facebook.login.widget.ProfilePictureView;
 
 import org.json.JSONException;
-
-import java.io.IOException;
 
 public class EditProfileFragment extends Fragment {
     private static final String profileUrl = BuildConfig.SERVER_URL + "/profile/";
@@ -51,20 +48,8 @@ public class EditProfileFragment extends Fragment {
             String profileUrlWithId = profileUrl + UserDataCache.getCurrentUser().getUserId();
             if (Connectivity.checkNetworkConnection(getActivity().getApplicationContext())) {
                 // if user has profile, populate profile fields
-                new ProfileUtility.LoadProfileTask(new ProfileUtility.AsyncResponse() {
-                    @Override
-                    public Profile processFinish(String output) {
-                        if (output != null) {
-                             try {
-                                 UserDataCache.setCurrentUser(new Profile(output));
-                                 populateFields();
-                             } catch (JSONException e) {
-                                e.printStackTrace();
-                             }
-                        }
-                        return null;
-                    }
-                }).execute(profileUrlWithId);
+                new ProfileUtility.LoadProfileTask().execute(profileUrlWithId);
+                populateFields();
             }
         } else {
             populateFieldsFromFacebook();
@@ -84,14 +69,24 @@ public class EditProfileFragment extends Fragment {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            EditText firstName = (EditText) inflatedView.findViewById(firstNameField);
+            EditText lastName = (EditText) inflatedView.findViewById(lastNameField);
+            EditText description = (EditText) inflatedView.findViewById(descriptionField);
+            EditText phoneNumber = (EditText) inflatedView.findViewById(phoneNumberField);
+
+            // Check that all required fields are filled
+            if (isEmpty(firstName) || isEmpty(lastName) || isEmpty(phoneNumber)) {
+                Toast.makeText(getActivity(), R.string.empty_request_field_message, Toast.LENGTH_LONG).show();
+            } else {
                 if (!UserDataCache.hasProfile()) {
+
                     // create temporary profile from fields
                     Profile tempProfile = new Profile(
                             0, Long.parseLong(FBProfile.getId()), "",
-                            ((EditText) inflatedView.findViewById(firstNameField)).getText().toString().trim(),
-                            ((EditText) inflatedView.findViewById(lastNameField)).getText().toString().trim(),
-                            ((EditText) inflatedView.findViewById(phoneNumberField)).getText().toString().trim(),
-                            ((EditText) inflatedView.findViewById(descriptionField)).getText().toString().trim(), 0);
+                            firstName.getText().toString().trim(),
+                            lastName.getText().toString().trim(),
+                            phoneNumber.getText().toString().trim(),
+                            description.getText().toString().trim(), 0);
                     // Set temporary profile as current profile in cache
                     UserDataCache.setCurrentUser(tempProfile);
                     // If we are connected to the network, send profile object to server
@@ -102,12 +97,11 @@ public class EditProfileFragment extends Fragment {
 
                 } else {
                     // TODO: implement updating profile if already existing
+                    changeFragment();
                 }
-                changeFragment();
-
+            }
             }
         });
-
 
         return inflatedView;
     }
@@ -138,7 +132,11 @@ public class EditProfileFragment extends Fragment {
         ((EditText) inflatedView.findViewById(tagsField)).setText(currProfile.getTags());
     }
 
-    public void changeFragment(){
+    private static boolean isEmpty(EditText eText) {
+        return eText.getText().toString().trim().length() == 0;
+    }
+
+    private void changeFragment(){
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame,back);
         ft.commit();

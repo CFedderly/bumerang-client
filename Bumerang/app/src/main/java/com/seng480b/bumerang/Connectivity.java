@@ -122,6 +122,7 @@ class Connectivity {
                 response += line;
             }
         } else {
+            Log.d("DEBUG", "status = " + status);
             throw new IOException();
         }
         Log.d("DEBUG", "status = " + status);

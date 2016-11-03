@@ -21,8 +21,7 @@ import java.util.ArrayList;
 
 public class MyRequests extends ListFragment implements OnItemClickListener {
 
-    private static final String requestUrl = BuildConfig.SERVER_URL +
-            "/requests/user/" + UserDataCache.getCurrentUser().getUserId();
+    private static final String requestUrl = BuildConfig.SERVER_URL + "/requests/user/";
     private ViewPager mViewPager;
     private Activity activity;
 
@@ -77,7 +76,10 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
     private void populateBrowse() {
         Request.RequestType requestType = Browse.getCurrentRequestType(mViewPager);
         if (requestType != null) {
-            new GetRequestsTask().execute(requestUrl);
+            if (UserDataCache.hasProfile()) {
+                String myRequestUrl = requestUrl + UserDataCache.getCurrentUser().getUserId();
+                new GetRequestsTask().execute(myRequestUrl);
+            }
         } else {
             Toast.makeText(activity, R.string.unable_to_display_requests, Toast.LENGTH_LONG).show();
         }
@@ -99,20 +101,22 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
 
         @Override
         protected void onPostExecute(String result) {
-            ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
-            // TODO: uncomment this once there are borrow/lend tabs on the myrequest page
+            if (result != null) {
+                ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
+                // TODO: uncomment this once there are borrow/lend tabs on the myrequest page
             /*RequestAdapter mAdapter = new RequestAdapter(activity,
                     Request.filterRequestsByType(requests, Browse.getCurrentRequestType(mViewPager)));*/
-            RequestAdapter mAdapter = new RequestAdapter(activity, requests);
-            getListView().setAdapter(mAdapter);
-            getListView().setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
-                    FragmentManager fm = getFragmentManager();
-                    more_info_dialog.show(fm, "Sample Fragment");
-                }
-            });
+                RequestAdapter mAdapter = new RequestAdapter(activity, requests);
+                getListView().setAdapter(mAdapter);
+                getListView().setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
+                        FragmentManager fm = getFragmentManager();
+                        more_info_dialog.show(fm, "Sample Fragment");
+                    }
+                });
+            }
         }
     }
 }

@@ -13,17 +13,11 @@ class ProfileUtility {
     private static final String profileByUserIdUrl = BuildConfig.SERVER_URL + "/profile/";
     private static final String profileByFacebookIdUrl = BuildConfig.SERVER_URL
             + "/profile/facebookid/";
-    private static Profile currProfile;
 
     static boolean isFirstLogin(com.facebook.Profile fbProfile) {
         long facebookId = Long.parseLong(fbProfile.getId());
-        Profile existingProfile = getProfileFromFacebookId(facebookId);
-        if (existingProfile != null) {
-            UserDataCache.setCurrentUser(existingProfile);
-            return false;
-        } else {
-            return true;
-        }
+        storeProfileFromFacebookId(facebookId);
+        return UserDataCache.hasProfile();
     }
 
     static int getUserIdOfUser() {
@@ -32,38 +26,13 @@ class ProfileUtility {
         return userId;
     }
 
-    static Profile getProfileFromFacebookId(long facebookId) {
+    static void storeProfileFromFacebookId(long facebookId) {
         String requestUrl = profileByFacebookIdUrl + String.valueOf(facebookId).trim();
-        new LoadProfileTask(new AsyncResponse() {
-            @Override
-            public Profile processFinish(String output) {
-                currProfile = null;
-                if (output != null) {
-                    try {
-                        currProfile = new Profile(output);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Log.e("ERROR", "Unable to parse JSON object");
-                    }
-                }
-                return currProfile;
-            }
-        }).execute(requestUrl);
-        return null;
-    }
-
-    public interface AsyncResponse {
-        Profile processFinish(String output);
+        new LoadProfileTask().execute(requestUrl);
     }
 
     /* Returns null if HTTP response was not OK, else returns JSON string for profile record */
     public static class LoadProfileTask extends AsyncTask<String, Void, String>{
-
-        public AsyncResponse delegate = null;
-
-        public LoadProfileTask(AsyncResponse delegate) {
-            this.delegate = delegate;
-        }
 
         @Override
         protected String doInBackground(String... params) {
@@ -78,11 +47,17 @@ class ProfileUtility {
 
         @Override
         protected void onPostExecute(String result) {
-            delegate.processFinish(result);
+            if (result != null) {
+                try {
+                    UserDataCache.setCurrentUser(new Profile(result));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e("ERROR", "Unable to parse JSON object");
+                }
+            }
         }
     }
 
-    /* */
     public static class CreateProfileTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -100,6 +75,7 @@ class ProfileUtility {
         protected void onPostExecute(String result) {
             // Parse result for user id
             int id = 0;
+            Log.d("DEBUG", result);
             // Update currentProfile with new userId
             UserDataCache.updateUserId(id);
         }
