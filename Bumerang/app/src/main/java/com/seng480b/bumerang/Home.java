@@ -10,6 +10,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -52,11 +53,9 @@ public class Home extends AppCompatActivity
             }
         });
 
-
-        //put logic here that will check if they have an account or not
-        // currently is just skips to the browse page
-        // if you change it to 'true' it will start at the edit profile page
-        loadStartupFragment(false);
+        // If user hasn't logged in before, redirect them to profile edit page
+        boolean isFirst = ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
+        loadStartupFragment(isFirst);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -66,17 +65,22 @@ public class Home extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
     }
 
+    static boolean isFirstLogin(com.facebook.Profile fbProfile) {
+        return false;
+    }
+
+    static void storeProfileFromFacebookId(long facebookId) {
+
+    }
 
 
     //will start up the browse fragment if is not the first time opening the app
     //will open the edit profile page if it is the first time.
     public void loadStartupFragment(boolean first){
 
-        if(first){
+         if (first) {
             // Hide the Floating action button
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
             p.setAnchorId(View.NO_ID);
@@ -87,7 +91,7 @@ public class Home extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame,editProfileFragment);
             ft.commit();
-        }else{
+        } else {
             // call a blank fragment for the background of the tabs
             Fragment fragment2 = new TestFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

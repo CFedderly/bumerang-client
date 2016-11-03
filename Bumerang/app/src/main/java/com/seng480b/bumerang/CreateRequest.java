@@ -84,7 +84,7 @@ public class CreateRequest extends Fragment {
 
         // Setup for Seekbars
         SeekBar distanceBar = (SeekBar) inflatedView.findViewById(R.id.barDistance);
-        distanceBar.setProgress(2);
+        distanceBar.setProgress(0);
 
         // Setup for editText associated with above SeekBars
         distanceText = (TextView) inflatedView.findViewById(R.id.labelDistanceNum);
@@ -135,8 +135,6 @@ public class CreateRequest extends Fragment {
                     if (Connectivity.checkNetworkAndShowAlert(getContext(), R.string.no_internet_connection_create_request)) {
                         new CreateRequestTask().execute();
                     }
-                } else {
-                    alertForEmptyFields();
                 }
             }
         });
@@ -180,6 +178,7 @@ public class CreateRequest extends Fragment {
 
         // Check that all fields are filled, return null if not
         if (isEmpty(title) || isEmpty(description) || isEmpty(hours) || isEmpty(minutes)) {
+            alertForEmptyFields();
             return null;
         }
 
@@ -187,12 +186,21 @@ public class CreateRequest extends Fragment {
         String descriptionStr = description.getText().toString().trim();
         int hoursInt = Integer.parseInt(hours.getText().toString().trim());
         int minutesInt = Integer.parseInt(minutes.getText().toString().trim());
-
-        return new Request(titleStr, descriptionStr, hoursInt, minutesInt, distance, requestType);
+        if (UserDataCache.hasProfile()) {
+            int userId = UserDataCache.getCurrentUser().getUserId();
+            return new Request(userId, titleStr, descriptionStr, hoursInt, minutesInt, distance, requestType);
+        } else {
+            alertForRequestNotCreated();
+            return null;
+        }
     }
 
     private void alertForEmptyFields() {
-        Toast.makeText(inflatedView.getContext(), R.string.empty_request_field_message, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), R.string.empty_request_field_message, Toast.LENGTH_LONG).show();
+    }
+
+    private void alertForRequestNotCreated() {
+        Toast.makeText(inflatedView.getContext(), R.string.unable_to_create_request, Toast.LENGTH_LONG).show();
     }
 
     private static boolean isEmpty(EditText eText) {
@@ -218,7 +226,7 @@ public class CreateRequest extends Fragment {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, browse);
             ft.commit();
-            Toast.makeText(getActivity(), R.string.unable_to_create_request, Toast.LENGTH_LONG).show();
+            alertForRequestNotCreated();
         }
 
         @Override
