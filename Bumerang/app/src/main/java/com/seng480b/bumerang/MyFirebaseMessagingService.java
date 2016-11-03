@@ -5,12 +5,17 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "FBMS";
@@ -28,7 +33,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
+            Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification());
         }
 
         // TODO(developer): Handle FCM messages here.
@@ -46,18 +51,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        Map<String, String> msgData = remoteMessage.getData();
+        // Set the notification sound.
+        Uri sound= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         // Priority of the messages could be either MAX or HIGH. Set to max because they are time critical and urgent.
         // TODO: Update resultPendingIntent for .addAction below to redirect to the proper
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.bumerang_umbrella).setContentTitle("Bumerang")
                 .setContentTitle("Someone has accepted your request!")
-                .setContentText(remoteMessage.getNotification().getBody())
+                .setContentText(msgData.get("text"))
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setPriority(Notification.PRIORITY_HIGH)
-                .addAction(R.drawable.ic_add, "Accept", resultPendingIntent)
-                .addAction(R.drawable.ic_cancel, "Decline", resultPendingIntent);
-
-
+                .addAction(R.drawable.ic_check, "Accept", resultPendingIntent)
+                .addAction(R.drawable.ic_cancel, "Decline", resultPendingIntent)
+                .setSound(sound)
+                .setLights(Color.MAGENTA, 2000, 2000);
 
         mBuilder.setContentIntent(resultPendingIntent);
         // Sets an ID for the notification
