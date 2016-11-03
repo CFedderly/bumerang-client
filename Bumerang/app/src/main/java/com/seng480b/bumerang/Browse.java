@@ -1,5 +1,7 @@
 package com.seng480b.bumerang;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -21,11 +22,20 @@ import java.util.ArrayList;
 public class Browse extends ListFragment implements OnItemClickListener {
 
     private static final String requestUrl = BuildConfig.SERVER_URL + "/requests/recent/";
-    private ViewPager mViewPager;
-    private RequestAdapter mAdapter;
+    private ViewPager viewPager;
+    private Activity activity;
 
     public Browse() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity){
+            this.activity =(Activity) context;
+        }
     }
 
     @Override
@@ -36,10 +46,10 @@ public class Browse extends ListFragment implements OnItemClickListener {
         ((Home)getActivity()).setActionBarTitle("Browse");
 
         // make the tabs visible
-        mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
-
+        viewPager = (ViewPager) activity.findViewById(R.id.container);
+        populateBrowse();
         // add a listener to reload the browse page once the tab is switched
-        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 
             @Override
             public void onPageSelected(int position) {
@@ -47,8 +57,8 @@ public class Browse extends ListFragment implements OnItemClickListener {
             }
         });
 
-        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
-        mViewPager.setVisibility(View.VISIBLE);
+        TabLayout tabLayout = (TabLayout) activity.findViewById(R.id.tabs);
+        viewPager.setVisibility(View.VISIBLE);
         tabLayout.setVisibility(View.VISIBLE);
 
         return view;
@@ -66,10 +76,7 @@ public class Browse extends ListFragment implements OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position,
-                            long id) {
-
-
-    }
+                            long id) { }
 
     /**
      * The fragment argument representing the section number for this
@@ -90,16 +97,16 @@ public class Browse extends ListFragment implements OnItemClickListener {
     }
 
     private void populateBrowse() {
-        Request.RequestType requestType = getCurrentRequestType();
+        Request.RequestType requestType = getCurrentRequestType(viewPager);
         if (requestType != null) {
             new GetRequestsTask().execute(requestUrl);
         } else {
-            Toast.makeText(getActivity(), R.string.unable_to_display_requests, Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, R.string.unable_to_display_requests, Toast.LENGTH_LONG).show();
         }
     }
 
-    private Request.RequestType getCurrentRequestType() {
-        int currentTab = mViewPager.getCurrentItem();
+    public static Request.RequestType getCurrentRequestType(ViewPager pager) {
+        int currentTab = pager.getCurrentItem();
         Request.RequestType requestType;
         Log.d("DEBUG", "Current tab: " + currentTab);
         switch(currentTab) {
@@ -114,7 +121,6 @@ public class Browse extends ListFragment implements OnItemClickListener {
         }
         return requestType;
     }
-
 
     private class GetRequestsTask extends AsyncTask<String, Void, String> {
 
@@ -133,7 +139,8 @@ public class Browse extends ListFragment implements OnItemClickListener {
         @Override
         protected void onPostExecute(String result) {
             ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
-            mAdapter = new RequestAdapter(getActivity(), requests);
+            RequestAdapter mAdapter = new RequestAdapter(activity,
+                    Request.filterRequestsByType(requests, getCurrentRequestType(viewPager)));
             getListView().setAdapter(mAdapter);
             getListView().setOnItemClickListener(new OnItemClickListener() {
                 @Override

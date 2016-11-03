@@ -109,6 +109,16 @@ class Request {
         return keyValue;
     }
 
+    public static ArrayList<Request> filterRequestsByType(ArrayList<Request> original, RequestType type) {
+        ArrayList<Request> newList = new ArrayList<>();
+        for (Request request : original) {
+            if (request.requestType == type) {
+                newList.add(request);
+            }
+        }
+        return newList;
+    }
+
     public static ArrayList<Request> getListOfRequestsFromJSON(String json) {
         ArrayList<Request> requests = new ArrayList<>();
         try {
