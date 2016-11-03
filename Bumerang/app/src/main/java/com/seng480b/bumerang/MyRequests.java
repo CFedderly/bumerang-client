@@ -21,7 +21,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class MyRequests extends ListFragment implements OnItemClickListener {
 
@@ -134,7 +133,7 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
 
         @Override
         protected void onPostExecute(String result) {
-            ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
+            final ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
             /*RequestAdapter mAdapter = new RequestAdapter(activity,
                     Request.filterRequestsByType(requests, Browse.getCurrentRequestType(mViewPager)));*/
             RequestAdapter mAdapter = new RequestAdapter(activity, requests);
@@ -142,9 +141,39 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
             getListView().setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
-                    FragmentManager fm = getFragmentManager();
-                    more_info_dialog.show(fm, "Sample Fragment");
+
+
+                    //true if someone has responded to your request otherwise it is "un-clickable"
+                    boolean responded = true;
+                    if(responded){
+                        Request req = requests.get(position);
+
+
+                        String time = "Will expire in " + req.getMinutesUntilExpiry() + " minutes.";
+                        String itemName = req.getTitle();
+
+                        String lenderName = "User_0";
+                        String phone_no = "(012) 345-6789";
+                        com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
+                        String fb_id = profile.getId();
+
+                        JSONObject obj = new JSONObject();
+                        try {
+                            obj.put("Lender", lenderName);
+                            obj.put("Item", itemName);
+                            obj.put("Exp", time);
+                            obj.put("Phone_No", phone_no);
+                            obj.put("FB_id", fb_id);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
+                        more_info_dialog.sendInfo(obj);
+
+                        FragmentManager fm = getFragmentManager();
+                        more_info_dialog.show(fm, "Sample Fragment");
+                    }
                 }
             });
         }
