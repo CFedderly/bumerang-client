@@ -67,7 +67,7 @@ public class BorrowDialogFragment extends DialogFragment {
                 //alert box -> change strings 'yes' and 'undo' to res/values/strings
                 new AlertDialog.Builder(getContext())
                         .setTitle("Accept Lend Offer")
-                        .setMessage("Your phone number will be shared with the user.")
+                        .setMessage("Now get in contact.")
                         .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // do nothing

@@ -76,7 +76,6 @@ class Request {
 
     public String getDescription() { return this.description; }
 
-
     HashMap<String, String> getJSONKeyValuePairs() {
         HashMap<String, String> keyValue = new HashMap<>();
         keyValue.put("title", title);

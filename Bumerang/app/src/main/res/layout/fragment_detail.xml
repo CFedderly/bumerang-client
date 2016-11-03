@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp">
@@ -56,16 +59,17 @@
         android:layout_below="@id/divider_line"
         android:layout_alignParentRight="true"
         android:layout_marginLeft="5dp"
-        />
+        facebook:com_facebook_preset_size="small" />
 
     <TextView
-        android:id="@+id/request_description"
+        android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="UserName1000"
         android:textSize="18sp"
         android:layout_below="@id/divider_line"
-        android:layout_toLeftOf="@id/user_image"/>
+        android:layout_toLeftOf="@id/user_image"
+        />
 
 
     <TextView
@@ -73,7 +77,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="tags, tags, tags, tags"
-        android:layout_below="@id/request_description"/>
+        android:layout_below="@id/user_name"/>
 
     <Button
         android:id="@+id/buttonDetailAccept"

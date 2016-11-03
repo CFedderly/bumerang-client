@@ -11,9 +11,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class Browse extends ListFragment implements OnItemClickListener {
+    ArrayList<Request> arrayOfRequestTickets;
 
     public Browse() {
         // Required empty public constructor
@@ -39,7 +43,8 @@ public class Browse extends ListFragment implements OnItemClickListener {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
-        ArrayList<Request> arrayOfRequestTickets = new ArrayList<>();
+
+        arrayOfRequestTickets = new ArrayList<>();
         // TODO: Pull requests from the DB
         RequestAdapter adapter = new RequestAdapter(getActivity().getApplicationContext(), arrayOfRequestTickets);
         super.onActivityCreated(savedInstanceState);
@@ -49,11 +54,33 @@ public class Browse extends ListFragment implements OnItemClickListener {
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-                            long id) {
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Request req = arrayOfRequestTickets.get(position);
+
+        String time = "Will expire in " + req.getMinutesUntilExpiry() + " minutes.";
+        String itemName = req.getTitle();
+        String userName = req.getUser();
+        String desc = req.getDescription();
+
+        //TEMP get NAME, PHONE, FB id for the responder
+        com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
+        String fb_id = profile.getId();
+        String tags = "stuff, things";
+
+        JSONObject obj = new JSONObject();
+        try{
+            obj.put("Name", userName);
+            obj.put("Item", itemName);
+            obj.put("Exp", time);
+            obj.put("FB_id", fb_id);
+            obj.put("Tags", tags);
+            obj.put("Description", desc);
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
 
         DetailFragment details = new DetailFragment();
-
+        details.sendInfo(obj);
         FragmentManager fm = getFragmentManager();
         details.show(fm,"Sample Fragment");
     }
