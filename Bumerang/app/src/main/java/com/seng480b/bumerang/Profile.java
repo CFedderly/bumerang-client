@@ -5,6 +5,8 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 public class Profile {
     private String firstName;
     private String lastName;
@@ -41,6 +43,15 @@ public class Profile {
     public String getDescription() { return this.description; }
 
     public String getTags() { return this.tags; }
+
+    public HashMap<String, String> getJSONKeyValuePairs() {
+        HashMap<String, String> keyValue = new HashMap<>();
+        keyValue.put("firstname", firstName);
+        keyValue.put("lastname", lastName);
+        keyValue.put("description", description);
+        keyValue.put("tags", tags);
+        return keyValue;
+    }
 
     public String toJSONString() {
         try {

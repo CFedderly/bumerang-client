@@ -1,6 +1,10 @@
 package com.seng480b.bumerang;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,11 +22,14 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequestBatch;
 import com.facebook.GraphResponse;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Arrays;
 import org.json.JSONObject;
@@ -34,12 +41,12 @@ import org.json.JSONException;
 public class MainActivity extends AppCompatActivity {
     CallbackManager callbackManager;
     private FirebaseAnalytics mFirebaseAnalytics;
-
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
-
+        Dialog errorDialog = null;
 
 
         setContentView(R.layout.activity_main);
@@ -66,7 +73,48 @@ public class MainActivity extends AppCompatActivity {
         //This should collect basic analytics as described here
         // https://codelabs.developers.google.com/codelabs/firebase-android/#11
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        // Check for Google play services API is available and updated.
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int status = googleApiAvailability.isGooglePlayServicesAvailable(this);
+        // Check if up to date, if not display
+        if (status != ConnectionResult.SUCCESS) {
+            if(googleApiAvailability.isUserResolvableError(status)) {
+                googleApiAvailability.getErrorDialog(this, status, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            }
+        }
+        //the FacebookSdk needs a 'second' to load the AccessToken
+        //This should eventually be turned into an async task
+        SystemClock.sleep(100);
+        boolean loggedIn = AccessToken.getCurrentAccessToken()!=null;
 
+        //If user is already logged in automatically goes to the 'Browse page"
+        if  (loggedIn) {
+            Intent intent = new Intent(this, Home.class);
+            startActivity(intent);
+        //If user is not logged in they are taken to the Login page.
+        } else{
+            setContentView(R.layout.activity_main);
+            callbackManager = CallbackManager.Factory.create();
+            LoginManager.getInstance().registerCallback(callbackManager,
+
+                    new FacebookCallback<LoginResult>() {
+                        @Override
+                        public void onSuccess(LoginResult loginResult) {
+                            loginSuccess();
+                        }
+
+                        @Override
+                        public void onCancel() {
+                            // App code
+                        }
+
+                        @Override
+                        public void onError(FacebookException exception) {
+                            // App code
+                        }
+                    });
+            AppEventsLogger.activateApp(this);
+        }
     }
 
     @Override
@@ -103,5 +151,4 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, Home.class);
         startActivity(intent);
     }
-
 }

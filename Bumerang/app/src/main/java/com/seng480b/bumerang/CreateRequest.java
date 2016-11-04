@@ -1,21 +1,22 @@
 package com.seng480b.bumerang;
 
+import android.os.AsyncTask;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -24,16 +25,27 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class CreateRequest extends Fragment {
-    private SeekBar distanceBar;
-    private TextView distance;
-    private int multipler;
-    private Spinner distSpinner;
+import java.io.IOException;
 
-    private RadioGroup radioLendBorrow;
+public class CreateRequest extends Fragment {
+
+    private static final String requestUrl = BuildConfig.SERVER_URL + "/request/";
+    private static final int titleField = R.id.inputTitle;
+    private static final int descriptionField = R.id.inputDescription;
+    private static final int hoursField = R.id.inputHours;
+    private static final int minutesField = R.id.inputMinutes;
+
+    private Request currRequest;
+    private Request.RequestType requestType;
+    private boolean distanceInMeters = false;
+    private int distance;
+
+    private TextView distanceText;
+    private int multiplier;
 
     View inflatedView;
-    Button cancelButton, createButton;
+    Button cancelButton;
+    Button createButton;
 
     @Override
     // Fragment Cancel = new Browse();
@@ -51,7 +63,9 @@ public class CreateRequest extends Fragment {
         tabLayout.setVisibility(View.GONE);
 
         // Setup radiogroup (choose lend or borrow)
-        radioLendBorrow = (RadioGroup) inflatedView.findViewById(R.id.radio_borrow_lend);
+        RadioGroup radioLendBorrow = (RadioGroup) inflatedView.findViewById(R.id.radio_borrow_lend);
+        radioLendBorrow.check(R.id.radio_borrow);
+        requestType = Request.RequestType.BORROW;
         radioLendBorrow.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -59,26 +73,34 @@ public class CreateRequest extends Fragment {
                 switch(checkedId){
                     case R.id.radio_borrow:
                         Toast.makeText(getActivity(),"Borrow!",Toast.LENGTH_LONG).show();
+                        requestType = Request.RequestType.BORROW;
                         break;
                     case R.id.radio_lend:
                         Toast.makeText(getActivity(),"Lend!",Toast.LENGTH_LONG).show();
+                        requestType = Request.RequestType.LEND;
                         break;
                 }
             }
         });
 
         // Setup for Seekbars
-        distanceBar = (SeekBar) inflatedView.findViewById(R.id.barDistance);
+        SeekBar distanceBar = (SeekBar) inflatedView.findViewById(R.id.barDistance);
+        distanceBar.setProgress(2);
 
         // Setup for editText associated with above SeekBars
-        distance = (TextView) inflatedView.findViewById(R.id.labelDistanceNum);
+        distanceText = (TextView) inflatedView.findViewById(R.id.labelDistanceNum);
 
         // Setup for the distance seek bar
         distanceBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                int value = multipler * progress;
-                distance.setText(Integer.toString(value));
+                int value = multiplier * progress;
+                 if (distanceInMeters) {
+                     distance = value;
+                 } else {
+                     distance = value*1000;
+                 }
+                distanceText.setText(Integer.toString(value));
             }
 
             @Override
@@ -97,13 +119,10 @@ public class CreateRequest extends Fragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent reload = new Intent(getActivity(), Home.class );
-                startActivity(reload);
-               /*
                 Fragment back = new Browse();
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.mainFrame,back);
-                ft.commit(); */
+                ft.commit();
             }
         });
 
@@ -111,9 +130,18 @@ public class CreateRequest extends Fragment {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO Make the create button go to my requests page
+
+                currRequest = createRequest();
+                if (currRequest != null) {
+                    if (Connectivity.checkNetworkAndShowAlert(getContext(), R.string.no_internet_connection_create_request)) {
+                        new CreateRequestTask().execute();
+                    }
+                } else {
+                    alertForEmptyFields();
+                }
             }
         });
+
 
         //
         final Button adv_options_button = (Button)inflatedView.findViewById(R.id.buttonAdvancedOptions);
@@ -133,7 +161,8 @@ public class CreateRequest extends Fragment {
         });
 
 
-       distSpinner = (Spinner) inflatedView.findViewById(R.id.spinnerDistance);
+       Spinner distSpinner = (Spinner) inflatedView.findViewById(R.id.spinnerDistance);
+
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.distance_array, android.R.layout.simple_spinner_item);
@@ -146,9 +175,11 @@ public class CreateRequest extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 1) {
-                    multipler = 10;
+                    multiplier = 10;
+                    distanceInMeters = true;
                 } else {
-                    multipler = 1;
+                    multiplier = 1;
+                    distanceInMeters = false;
                 }
             }
 
@@ -158,9 +189,69 @@ public class CreateRequest extends Fragment {
             }
         });
 
-
         return inflatedView;
     }
 
+
+
+    private Request createRequest() {
+
+        EditText title = (EditText) inflatedView.findViewById(titleField);
+        EditText description = (EditText) inflatedView.findViewById(descriptionField);
+        EditText hours = (EditText) inflatedView.findViewById(hoursField);
+        EditText minutes = (EditText) inflatedView.findViewById(minutesField);
+
+        // Check that all fields are filled, return null if not
+        if (isEmpty(title) || isEmpty(description) || isEmpty(hours) || isEmpty(minutes)) {
+            return null;
+        }
+
+        String titleStr = title.getText().toString().trim();
+        String descriptionStr = description.getText().toString().trim();
+        int hoursInt = Integer.parseInt(hours.getText().toString().trim());
+        int minutesInt = Integer.parseInt(minutes.getText().toString().trim());
+
+        return new Request(titleStr, descriptionStr, hoursInt, minutesInt, distance, requestType);
+    }
+
+    private void alertForEmptyFields() {
+        Toast.makeText(inflatedView.getContext(), R.string.empty_request_field_message, Toast.LENGTH_LONG).show();
+    }
+
+    private static boolean isEmpty(EditText eText) {
+        return eText.getText().toString().trim().length() == 0;
+    }
+
+    private class CreateRequestTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Connectivity.makeHttpPostRequest(requestUrl, currRequest.getJSONKeyValuePairs());
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("ERROR","Unable to create request.");
+                cancel(true);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onCancelled(String result) {
+            Fragment browse = new Browse();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame, browse);
+            ft.commit();
+            Toast.makeText(getActivity(), R.string.unable_to_create_request, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Fragment myRequests = new MyRequests();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame, myRequests);
+            ft.commit();
+            Toast.makeText(getActivity(), R.string.created_request, Toast.LENGTH_LONG).show();
+        }
+    }
 
 }
