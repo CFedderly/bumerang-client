@@ -51,10 +51,6 @@ public class Home extends AppCompatActivity
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-        // If user hasn't logged in before, redirect them to profile edit page
-        boolean isFirst = ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
-        loadStartupFragment(isFirst);
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -77,20 +73,13 @@ public class Home extends AppCompatActivity
                 ft.replace(R.id.mainFrame, my_requests);
                 ft.commit();
         } else {
-            /**ADDED THIS**/
-            // Create the adapter that will return a fragment for each of the three
-            // primary sections of the activity.
-            mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-            // Set up the ViewPager with the sections adapter.
-            mViewPager = (ViewPager) findViewById(R.id.container);
-            mViewPager.setAdapter(mSectionsPagerAdapter);
-            tabLayout = (TabLayout) findViewById(R.id.tabs);
-            tabLayout.setupWithViewPager(mViewPager);
 
             //put logic here that will check if they have an account or not
             // currently is just skips to the browse page
             // if you change it to 'true' it will start at the edit profile page
-            loadStartupFragment(false);
+            // If user hasn't logged in before, redirect them to profile edit page
+            boolean isFirst = ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
+            loadStartupFragment(isFirst);
         }
     }
 
