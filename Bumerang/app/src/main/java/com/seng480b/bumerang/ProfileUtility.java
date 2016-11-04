@@ -31,6 +31,12 @@ class ProfileUtility {
         new LoadProfileTask().execute(requestUrl);
     }
 
+    static void storeProfileFromUserId(int userID) {
+        String requestUrl = profileByUserIdUrl + String.valueOf(userID).trim();
+        new LoadProfileTask().execute(requestUrl);
+    }
+
+
     /* Returns null if HTTP response was not OK, else returns JSON string for profile record */
     public static class LoadProfileTask extends AsyncTask<String, Void, String>{
 

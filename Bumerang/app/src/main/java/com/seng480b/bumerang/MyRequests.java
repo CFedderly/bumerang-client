@@ -120,8 +120,10 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
                         //true if someone has responded to your request otherwise it is "un-clickable"
                         boolean responded = true;
                         if(responded) {
-                            Request req = requests.get(position);
 
+
+
+                            Request req = requests.get(position);
 
                             String time = "Will expire in " + req.getMinutesUntilExpiry() + " minutes.";
                             String itemName = req.getTitle();
@@ -152,5 +154,7 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
                 });
             }
         }
+
+
     }
 }

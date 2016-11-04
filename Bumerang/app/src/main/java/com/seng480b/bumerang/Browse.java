@@ -157,12 +157,14 @@ public class Browse extends ListFragment implements OnItemClickListener {
                         String itemName = req.getTitle();
                         int userID = req.getUserId();
 
-                        String userName = "User_"+userID;
+                        ProfileUtility.storeProfileFromUserId(userID);
+                        Profile currProfile = UserDataCache.getCurrentUser();
+
+                        String userName = currProfile.getFirstName();
                         String desc = req.getDescription();
 
-                        //TEMP get NAME, PHONE, FB id for the responder
-                        com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
-                        String fb_id = profile.getId();
+                        String fb_id = Long.toString(currProfile.getFbId());
+
                         String tags = "stuff, things";
 
                         JSONObject obj = new JSONObject();

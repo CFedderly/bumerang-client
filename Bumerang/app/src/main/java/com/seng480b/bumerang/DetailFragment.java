@@ -1,19 +1,18 @@
 package com.seng480b.bumerang;
 
 
-import android.content.DialogInterface;
+
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.AdapterView.OnItemClickListener;
+
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.login.widget.ProfilePictureView;
 
@@ -22,9 +21,9 @@ import org.json.JSONObject;
 
 
 public class DetailFragment extends DialogFragment {
+    private static final String offerUrl = BuildConfig.SERVER_URL + "/offer/";
     View rootView;
     JSONObject reqObj;
-
     //private Button cancelButton, acceptButton;
     public DetailFragment() {
         // Required empty public constructor
@@ -60,6 +59,8 @@ public class DetailFragment extends DialogFragment {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 dismiss(v);
             }
         });
@@ -94,7 +95,6 @@ public class DetailFragment extends DialogFragment {
         itemExp.setText(exp_time);
 
     }
-
 
 
     /** cancel (x) button **/

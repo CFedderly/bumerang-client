@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.facebook.login.widget.ProfilePictureView;
 
-import org.json.JSONException;
 
 public class EditProfileFragment extends Fragment {
     private static final String profileUrl = BuildConfig.SERVER_URL + "/profile/";

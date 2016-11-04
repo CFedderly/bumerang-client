@@ -38,7 +38,8 @@ public class ProfilePage extends Fragment {
     //grabs profile info from db
     //currently grabs some data from fb
     public void updateProfileInfo() {
-        Profile currProfile = UserDataCache.getCurrentUser();
+        com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
+        String fb_id = profile.getId();
 
         String user_id;
         String user_name;
@@ -52,7 +53,6 @@ public class ProfilePage extends Fragment {
         String user_carma = "0";
 
         //TEMP! grabbing info from facebook
-        com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
         user_id = profile.getId();
         user_name = profile.getName();
         Log.d("user id ", user_id);
@@ -75,7 +75,7 @@ public class ProfilePage extends Fragment {
         profile_number.setText(user_number);
         profile_tags.setText(user_tags);
         profile_bio.setText(user_bio);
-        profile_picture.setProfileId(profile.getId());
+        profile_picture.setProfileId(fb_id);
         profile_name.setText(user_name);
 
     }
