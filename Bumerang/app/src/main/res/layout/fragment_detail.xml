@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:text="expires 5:30 pm"
         android:layout_below="@id/divider_line"
-        android:layout_alignParentLeft="true" />
+        android:layout_centerHorizontal="true"/>
 
 
     <com.facebook.login.widget.ProfilePictureView
@@ -68,15 +68,10 @@
         android:layout_height="wrap_content"
         android:text="UserName1000"
         android:textSize="18sp"
-        android:layout_below="@id/divider_line"
-        android:layout_toLeftOf="@id/user_image"/>
+        android:layout_below="@id/time_left"
+        android:layout_centerHorizontal="true"/>
 
-    <TextView
-        android:id="@+id/tags"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="tags, tags, tags, tags"
-        android:layout_below="@id/user_name"/>
+
 
     <Button
         android:id="@+id/buttonDetailAccept"
@@ -85,7 +80,7 @@
         android:text="Respond"
         android:background="@color/colorAccent"
         android:textColor="@color/white"
-        android:layout_below="@id/tags"
+        android:layout_below="@id/user_name"
         android:layout_centerHorizontal="true"
         android:layout_margin="10dp" />
 </RelativeLayout>

@@ -75,7 +75,6 @@ public class DetailFragment extends DialogFragment {
         TextView itemExp = (TextView) rootView.findViewById(R.id.time_left);
         TextView itemDesc = (TextView) rootView.findViewById(R.id.item_desc);
         TextView userName = (TextView) rootView.findViewById(R.id.user_name);
-        TextView tags = (TextView) rootView.findViewById(R.id.tags);
 
         ProfilePictureView profile_picture = (ProfilePictureView) rootView.findViewById(R.id.user_image);
 
@@ -87,7 +86,6 @@ public class DetailFragment extends DialogFragment {
             exp_time = ""+reqObj.get("Exp");
             userName.setText(reqObj.getString("Name"));
             profile_picture.setProfileId(reqObj.getString("FB_id"));
-            tags.setText(reqObj.getString("Tags"));
             itemDesc.setText(reqObj.getString("Description"));
         }catch (JSONException e) {
             e.printStackTrace();

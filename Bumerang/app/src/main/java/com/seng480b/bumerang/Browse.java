@@ -148,21 +148,29 @@ public class Browse extends ListFragment implements OnItemClickListener {
                 getListView().setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                         Request req = requests.get(position);
 
                         String time = "Will expire in " + req.getMinutesUntilExpiry() + " minutes.";
                         String itemName = req.getTitle();
                         int userID = req.getUserId();
 
-                        ProfileUtility.storeProfileFromUserId(userID);
-                        Profile currProfile = UserDataCache.getCurrentUser();
+                        UserDataCache.setRecentUser(null);
+                        ProfileUtility.storeRecentUserFromUserId(userID);
 
-                        String userName = currProfile.getFirstName();
+                        Profile requestUser = UserDataCache.getRecentUser();;
+
+                        //TODO: this while loop must go!, it is only temporary
+                        boolean correctUser = false;
+                        while(requestUser==null){
+                            requestUser = UserDataCache.getRecentUser();
+                        }
+                        //TODO: it just continually checks to see if teh getRequest has finished
+
+
+                        String userName = requestUser.getFirstName();
                         String desc = req.getDescription();
-
-                        String fb_id = Long.toString(currProfile.getFacebookId());
-
-                        String tags = "stuff, things";
+                        String fb_id = Long.toString(requestUser.getFacebookId());
 
                         JSONObject obj = new JSONObject();
                         try {
@@ -170,7 +178,6 @@ public class Browse extends ListFragment implements OnItemClickListener {
                             obj.put("Item", itemName);
                             obj.put("Exp", time);
                             obj.put("FB_id", fb_id);
-                            obj.put("Tags", tags);
                             obj.put("Description", desc);
                         } catch (JSONException e) {
                             e.printStackTrace();

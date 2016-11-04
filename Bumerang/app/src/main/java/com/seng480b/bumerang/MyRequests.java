@@ -116,18 +116,24 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
                         //true if someone has responded to your request otherwise it is "un-clickable"
                         boolean responded = true;
                         if(responded) {
-
-
-
+                            //Temps
+                            com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
+                            String fb_id = profile.getId();
+                            //-----
                             Request req = requests.get(position);
+                            int reqId = req.getReqId();
+                            Log.d("DEBUG", "Request id: "+Integer.toString(reqId));
 
                             String time = "Will expire in " + req.getMinutesUntilExpiry() + " minutes.";
                             String itemName = req.getTitle();
 
+
+                            //String lenderName = offerUser.getFirstName();
                             String lenderName = "User_0";
                             String phone_no = "(012) 345-6789";
-                            com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
-                            String fb_id = profile.getId();
+
+
+
 
                             JSONObject obj = new JSONObject();
                             try {
