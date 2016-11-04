@@ -1,13 +1,10 @@
 package com.seng480b.bumerang;
 
 import android.os.AsyncTask;
-import android.content.Intent;
-import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,10 +21,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.io.IOException;
 
 public class CreateRequest extends Fragment {
 
+    FirebaseAnalytics mFireBaseAnalytics;
     private static final String requestUrl = BuildConfig.SERVER_URL + "/request/";
     private static final int titleField = R.id.inputTitle;
     private static final int descriptionField = R.id.inputDescription;
@@ -187,6 +187,18 @@ public class CreateRequest extends Fragment {
         String descriptionStr = description.getText().toString().trim();
         int hoursInt = Integer.parseInt(hours.getText().toString().trim());
         int minutesInt = Integer.parseInt(minutes.getText().toString().trim());
+
+        //This is where info on what users are entering is collected
+        mFireBaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+        //Just turn hours into minutes
+        int totalTime = (hoursInt*60)+minutesInt;
+
+        Bundle params = new Bundle();
+        params.putString( FirebaseAnalytics.Param.ITEM_NAME, titleStr);
+        params.putString("Description", descriptionStr);
+        params.putLong(FirebaseAnalytics.Param.VALUE, totalTime);
+        mFireBaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, params);
 
         return new Request(titleStr, descriptionStr, hoursInt, minutesInt, distance, requestType);
     }
