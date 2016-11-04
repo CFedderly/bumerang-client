@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp">
@@ -15,21 +18,22 @@
 
     <TextView
         android:id="@+id/request_title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Item Title and More"
         android:textSize="25dp"
         android:textStyle="bold"
-        android:layout_toLeftOf="@id/buttonDetailDismiss"/>
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:id="@+id/item_desc"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="I would like to borrow this item.\nThis is a pretty long description.\nMore information on this line too."
+        android:text="I would like to borrow this item.This is a pretty long description.More information on this line too."
         android:layout_weight="0.01"
         android:textSize="15sp"
-        android:layout_below="@id/request_title"/>
+        android:layout_below="@id/request_title"
+        android:layout_centerHorizontal="true"/>
 
     <View
         android:id="@+id/divider_line"
@@ -45,35 +49,29 @@
         android:layout_height="wrap_content"
         android:text="expires 5:30 pm"
         android:layout_below="@id/divider_line"
-        android:layout_alignParentLeft="true" />
+        android:layout_centerHorizontal="true"/>
 
 
-
-    <ImageView
+    <com.facebook.login.widget.ProfilePictureView
         android:id="@+id/user_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_menu_slideshow"
         android:layout_below="@id/divider_line"
         android:layout_alignParentRight="true"
-        android:layout_marginLeft="5dp"/>
+        android:layout_marginLeft="5dp"
+        facebook:com_facebook_preset_size="small" />
 
     <TextView
-        android:id="@+id/request_description"
+        android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="UserName1000"
         android:textSize="18sp"
-        android:layout_below="@id/divider_line"
-        android:layout_toLeftOf="@id/user_image"/>
+        android:layout_below="@id/time_left"
+        android:layout_centerHorizontal="true"/>
 
 
-    <TextView
-        android:id="@+id/tags"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="tags, tags, tags, tags"
-        android:layout_below="@id/request_description"/>
 
     <Button
         android:id="@+id/buttonDetailAccept"
@@ -82,7 +80,7 @@
         android:text="Respond"
         android:background="@color/colorAccent"
         android:textColor="@color/white"
-        android:layout_below="@id/tags"
+        android:layout_below="@id/user_name"
         android:layout_centerHorizontal="true"
         android:layout_margin="10dp" />
 </RelativeLayout>

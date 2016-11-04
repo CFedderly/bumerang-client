@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.login.widget.ProfilePictureView;
+
 import com.google.firebase.iid.FirebaseInstanceId;
 
 public class EditProfileFragment extends Fragment {
@@ -134,7 +135,9 @@ public class EditProfileFragment extends Fragment {
         ((EditText) inflatedView.findViewById(descriptionField)).setText(currProfile.getDescription());
         ((EditText) inflatedView.findViewById(phoneNumberField)).setText(currProfile.getPhoneNumber());
         ((EditText) inflatedView.findViewById(tagsField)).setText(currProfile.getTags());
+
     }
+
 
     private static boolean isEmpty(EditText eText) {
         return eText.getText().toString().trim().length() == 0;
