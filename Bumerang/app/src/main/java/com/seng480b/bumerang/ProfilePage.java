@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.facebook.Profile;
 import com.facebook.login.widget.ProfilePictureView;
 
 public class ProfilePage extends Fragment {
@@ -39,6 +38,8 @@ public class ProfilePage extends Fragment {
     //grabs profile info from db
     //currently grabs some data from fb
     public void updateProfileInfo() {
+        Profile currProfile = UserDataCache.getCurrentUser();
+
         String user_id;
         String user_name;
 
@@ -51,7 +52,7 @@ public class ProfilePage extends Fragment {
         String user_carma = "0";
 
         //TEMP! grabbing info from facebook
-        Profile profile = Profile.getCurrentProfile();
+        com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
         user_id = profile.getId();
         user_name = profile.getName();
         Log.d("user id ", user_id);

@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Browse extends ListFragment implements OnItemClickListener {
-    ArrayList<Request> arrayOfRequestTickets;
 
     private static final String requestUrl = BuildConfig.SERVER_URL + "/requests/recent/";
     private ViewPager viewPager;
@@ -144,47 +143,49 @@ public class Browse extends ListFragment implements OnItemClickListener {
 
         @Override
         protected void onPostExecute(String result) {
-            final ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
-            RequestAdapter mAdapter = new RequestAdapter(activity,
-                    Request.filterRequestsByType(requests, getCurrentRequestType(viewPager)));
-            getListView().setAdapter(mAdapter);
-            getListView().setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Request req = requests.get(position);
+            if (result != null) {
+                final ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
+                RequestAdapter mAdapter = new RequestAdapter(activity,
+                        Request.filterRequestsByType(requests, getCurrentRequestType(viewPager)));
+                getListView().setAdapter(mAdapter);
+                getListView().setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Request req = requests.get(position);
 
-                    String time = "Will expire in " + req.getMinutesUntilExpiry() + " minutes.";
-                    String itemName = req.getTitle();
-                    int userID = req.getUserId();
+                        String time = "Will expire in " + req.getMinutesUntilExpiry() + " minutes.";
+                        String itemName = req.getTitle();
+                        int userID = req.getUserId();
 
-                    String userName = "User_"+userID;
-                    String desc = req.getDescription();
+                        String userName = "User_"+userID;
+                        String desc = req.getDescription();
 
-                    //TEMP get NAME, PHONE, FB id for the responder
-                    com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
-                    String fb_id = profile.getId();
-                    String tags = "stuff, things";
+                        //TEMP get NAME, PHONE, FB id for the responder
+                        com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
+                        String fb_id = profile.getId();
+                        String tags = "stuff, things";
 
-                    JSONObject obj = new JSONObject();
-                    try {
-                        obj.put("Name", userName);
-                        obj.put("Item", itemName);
-                        obj.put("Exp", time);
-                        obj.put("FB_id", fb_id);
-                        obj.put("Tags", tags);
-                        obj.put("Description", desc);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        JSONObject obj = new JSONObject();
+                        try {
+                            obj.put("Name", userName);
+                            obj.put("Item", itemName);
+                            obj.put("Exp", time);
+                            obj.put("FB_id", fb_id);
+                            obj.put("Tags", tags);
+                            obj.put("Description", desc);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        DetailFragment details = new DetailFragment();
+
+                        details.sendInfo(obj);
+
+                        FragmentManager fm = getFragmentManager();
+                        details.show(fm,"Sample Fragment");
                     }
-
-                    DetailFragment details = new DetailFragment();
-
-                    details.sendInfo(obj);
-
-                    FragmentManager fm = getFragmentManager();
-                    details.show(fm,"Sample Fragment");
-                }
-            });
+                });
+            }
         }
     }
 }

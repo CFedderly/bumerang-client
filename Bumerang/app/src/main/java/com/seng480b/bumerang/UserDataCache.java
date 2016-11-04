@@ -5,24 +5,23 @@ package com.seng480b.bumerang;
  */
 
 public final class UserDataCache {
-    static private int userId = 1;
-    static private com.facebook.Profile userFacebookId;
+    static private Profile currentUser = null;
 
     private UserDataCache() {}
 
-    static public int getUserId() {
-        return userId;
+    public static boolean hasProfile() {
+        return currentUser != null;
     }
 
-    static public void setUserId(int id) {
-        userId = id;
+    public static Profile getCurrentUser() {
+        return currentUser;
     }
 
-    static public com.facebook.Profile getUserFacebookId() {
-        return userFacebookId;
+    public static void setCurrentUser(Profile currentUser) {
+        UserDataCache.currentUser = currentUser;
     }
 
-    static public void setUserFacebookId(com.facebook.Profile id) {
-        userFacebookId = id;
+    public static void updateUserId(int id) {
+        UserDataCache.currentUser.setUserId(id);
     }
 }

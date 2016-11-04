@@ -24,10 +24,7 @@ import java.util.ArrayList;
 
 public class MyRequests extends ListFragment implements OnItemClickListener {
 
-    ArrayList<Request> arrayOfRequestTickets;
-
-    private static final String requestUrl = BuildConfig.SERVER_URL +
-            "/requests/user/" + UserDataCache.getUserId();
+    private static final String requestUrl = BuildConfig.SERVER_URL + "/requests/user/";
     private ViewPager mViewPager;
     private Activity activity;
 
@@ -77,41 +74,18 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        Request req = arrayOfRequestTickets.get(position);
-
-        String time = "Will expire in " + req.getMinutesUntilExpiry() + " minutes.";
-        String itemName = req.getTitle();
-
-        //TEMP get NAME, PHONE, FB id for the responder
-        String lenderName = "User_0";
-        String phone_no = "(012) 345-6789";
-        com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
-        String fb_id = profile.getId();
-
-
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("Lender", lenderName);
-            obj.put("Item", itemName);
-            obj.put("Exp", time);
-            obj.put("Phone_No", phone_no);
-            obj.put("FB_id", fb_id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
         BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
-        more_info_dialog.sendInfo(obj);
 
         FragmentManager fm = getFragmentManager();
         more_info_dialog.show(fm, "Sample Fragment");
-
     }
     private void populateBrowse() {
         Request.RequestType requestType = Browse.getCurrentRequestType(mViewPager);
         if (requestType != null) {
-            new GetRequestsTask().execute(requestUrl);
+            if (UserDataCache.hasProfile()) {
+                String myRequestUrl = requestUrl + UserDataCache.getCurrentUser().getUserId();
+                new GetRequestsTask().execute(myRequestUrl);
+            }
         } else {
             Toast.makeText(activity, R.string.unable_to_display_requests, Toast.LENGTH_LONG).show();
         }
@@ -133,49 +107,50 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
 
         @Override
         protected void onPostExecute(String result) {
-            final ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
+            if (result != null) {
+                final ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
+                // TODO: uncomment this once there are borrow/lend tabs on the myrequest page
             /*RequestAdapter mAdapter = new RequestAdapter(activity,
                     Request.filterRequestsByType(requests, Browse.getCurrentRequestType(mViewPager)));*/
-            RequestAdapter mAdapter = new RequestAdapter(activity, requests);
-            getListView().setAdapter(mAdapter);
-            getListView().setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                RequestAdapter mAdapter = new RequestAdapter(activity, requests);
+                getListView().setAdapter(mAdapter);
+                getListView().setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        //true if someone has responded to your request otherwise it is "un-clickable"
+                        boolean responded = true;
+                        if(responded) {
+                            Request req = requests.get(position);
 
 
-                    //true if someone has responded to your request otherwise it is "un-clickable"
-                    boolean responded = true;
-                    if(responded){
-                        Request req = requests.get(position);
+                            String time = "Will expire in " + req.getMinutesUntilExpiry() + " minutes.";
+                            String itemName = req.getTitle();
 
+                            String lenderName = "User_0";
+                            String phone_no = "(012) 345-6789";
+                            com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
+                            String fb_id = profile.getId();
 
-                        String time = "Will expire in " + req.getMinutesUntilExpiry() + " minutes.";
-                        String itemName = req.getTitle();
+                            JSONObject obj = new JSONObject();
+                            try {
+                                obj.put("Lender", lenderName);
+                                obj.put("Item", itemName);
+                                obj.put("Exp", time);
+                                obj.put("Phone_No", phone_no);
+                                obj.put("FB_id", fb_id);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
-                        String lenderName = "User_0";
-                        String phone_no = "(012) 345-6789";
-                        com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
-                        String fb_id = profile.getId();
+                            BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
+                            more_info_dialog.sendInfo(obj);
 
-                        JSONObject obj = new JSONObject();
-                        try {
-                            obj.put("Lender", lenderName);
-                            obj.put("Item", itemName);
-                            obj.put("Exp", time);
-                            obj.put("Phone_No", phone_no);
-                            obj.put("FB_id", fb_id);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            FragmentManager fm = getFragmentManager();
+                            more_info_dialog.show(fm, "Sample Fragment");
                         }
-
-                        BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
-                        more_info_dialog.sendInfo(obj);
-
-                        FragmentManager fm = getFragmentManager();
-                        more_info_dialog.show(fm, "Sample Fragment");
                     }
-                }
-            });
+                });
+            }
         }
     }
 }

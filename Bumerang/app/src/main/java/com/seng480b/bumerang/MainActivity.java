@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         }
         //the FacebookSdk needs a 'second' to load the AccessToken
         //This should eventually be turned into an async task
-        SystemClock.sleep(100);
+
         boolean loggedIn = AccessToken.getCurrentAccessToken()!=null;
 
         //If user is already logged in automatically goes to the 'Browse page"

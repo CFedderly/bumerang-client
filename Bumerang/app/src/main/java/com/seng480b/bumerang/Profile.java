@@ -1,71 +1,74 @@
 package com.seng480b.bumerang;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class Profile {
+class Profile {
+    private int userId;
+    private long facebookId;
+    private String deviceId;
     private String firstName;
     private String lastName;
     private String phoneNumber;
     private String description;
-    private String tags;
+    private String tags = "";
+    private int karma;
 
-    public Profile(String firstName,
+    Profile(int userId,
+                   long facebookId,
+                   String deviceId,
+                   String firstName,
                    String lastName,
+                   String phoneNumber,
                    String description,
-                   String tags) {
+                   int karma) {
+        this.userId = userId;
+        this.facebookId = facebookId;
+        this.deviceId = deviceId;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
         this.description = description;
-        this.tags = tags;
+        this.karma = karma;
     }
 
-    public Profile(String JSONString) {
-        try {
-            JSONObject obj = new JSONObject(JSONString);
-            this.firstName = obj.getString("firstname");
-            this.lastName = obj.getString("lastname");
-            this.description = obj.getString("description");
-            this.tags = obj.getString("tags");
-        } catch (JSONException e) {
-            Log.e("ERROR", "Unable to create profile object from JSON string");
-            e.printStackTrace();
-        }
+    Profile(String JSONString) throws JSONException {
+        JSONObject full = new JSONObject(JSONString);
+        JSONObject obj = full.getJSONObject("profile");
+        this.userId = obj.getInt("id");
+        this.facebookId = obj.getLong("facebook_id");
+        this.firstName = obj.getString("first_name");
+        this.lastName = obj.getString("last_name");
+        this.description = obj.getString("description");
+        this.deviceId = obj.getString("device_id");
+        this.phoneNumber = obj.getString("phone_number");
+        this.karma = obj.getInt("karma");
     }
 
-    public String getFirstName() { return this.firstName; }
+    String getFirstName() { return this.firstName; }
 
-    public String getLastName() { return this.lastName; }
+    String getLastName() { return this.lastName; }
+
+    String getPhoneNumber() { return this.phoneNumber; }
+
+    String getTags() { return this.tags; }
+
+    int getUserId() { return this.userId; }
+
+    void setUserId(int id) { this.userId = id; }
 
     public String getDescription() { return this.description; }
 
-    public String getTags() { return this.tags; }
-
-    public HashMap<String, String> getJSONKeyValuePairs() {
+    HashMap<String, String> getJSONKeyValuePairs() {
         HashMap<String, String> keyValue = new HashMap<>();
-        keyValue.put("firstname", firstName);
-        keyValue.put("lastname", lastName);
+        keyValue.put("facebook_id", String.valueOf(facebookId));
+        keyValue.put("device_id", deviceId);
+        keyValue.put("phone_number", phoneNumber);
+        keyValue.put("first_name", firstName);
+        keyValue.put("last_name", lastName);
         keyValue.put("description", description);
-        keyValue.put("tags", tags);
         return keyValue;
-    }
-
-    public String toJSONString() {
-        try {
-            JSONObject json = new JSONObject();
-            json.put("firstname", firstName);
-            json.put("lastname", lastName);
-            json.put("description", description);
-            json.put("tags", tags);
-            return json.toString();
-        } catch (JSONException e) {
-            Log.e("ERROR", "Unable to create JSON string from profile object");
-            e.printStackTrace();
-            return null;
-        }
     }
 }

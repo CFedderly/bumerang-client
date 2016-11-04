@@ -45,13 +45,14 @@ class Request {
     private int distance;
     private RequestType requestType;
 
-    Request(String title,
+    Request(int userId,
+            String title,
             String description,
             int durationHours,
             int durationMinutes,
             int distanceMeters,
             RequestType requestType) {
-        this.userId = UserDataCache.getUserId();
+        this.userId = userId;
         this.title = title;
         this.description = description;
         this.distance = distanceMeters;
