@@ -1,30 +1,28 @@
 package com.seng480b.bumerang;
 
-import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.facebook.login.widget.ProfilePictureView;
-
-import java.io.IOException;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class EditProfileFragment extends Fragment {
     private static final String profileUrl = BuildConfig.SERVER_URL + "/profile/";
     private static final int firstNameField = R.id.editProfile_InputFirstName;
     private static final int lastNameField = R.id.editProfile_InputLastName;
+    private static final int phoneNumberField = R.id.editProfile_InputPhoneNumber;
     private static final int descriptionField = R.id.editProfile_InputBio;
     private static final int tagsField = R.id.editProfile_InputTags;
 
-    private Profile currProfile;
     private View inflatedView;
     private com.facebook.Profile FBProfile = com.facebook.Profile.getCurrentProfile();
 
@@ -32,32 +30,35 @@ public class EditProfileFragment extends Fragment {
     private Fragment back = new ProfilePage();
 
     @Override
-    // Fragment Cancel = new Browse();
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         inflatedView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         ((Home)getActivity()).setActionBarTitle("Edit Profile");
 
 
-
         /* make the tabs invisible */
-        //crashes the app as well - unfortunately for now the tabs are over top of the edit profile page
         ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
         mViewPager.setVisibility(View.GONE);
         tabLayout.setVisibility(View.GONE);
 
         // Check if the user already has a profile
-        if (Connectivity.checkNetworkConnection(getActivity().getApplicationContext())) {
-            new LoadProfileTask().execute(profileUrl);
+        if (UserDataCache.hasProfile()) {
+            String profileUrlWithId = profileUrl + UserDataCache.getCurrentUser().getUserId();
+            if (Connectivity.checkNetworkConnection(getActivity().getApplicationContext())) {
+                // if user has profile, populate profile fields
+                new ProfileUtility.LoadProfileTask().execute(profileUrlWithId);
+                populateFields();
+            }
+        } else {
+            populateFieldsFromFacebook();
         }
+
         // Setup for the Cancel button on screen
         Button cancelButton = (Button) inflatedView.findViewById(R.id.editProfile_ButtonCancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // forward = new Intent(getActivity(), Home.class );
-                // startActivity(forward);
                 changeFragment();
 
             }
@@ -67,90 +68,81 @@ public class EditProfileFragment extends Fragment {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            EditText firstName = (EditText) inflatedView.findViewById(firstNameField);
+            EditText lastName = (EditText) inflatedView.findViewById(lastNameField);
+            EditText description = (EditText) inflatedView.findViewById(descriptionField);
+            EditText phoneNumber = (EditText) inflatedView.findViewById(phoneNumberField);
 
-                //forward = new Intent(getActivity(), Home.class );
+            // Check that all required fields are filled
+            if (isEmpty(firstName) || isEmpty(lastName) || isEmpty(phoneNumber)) {
+                Toast.makeText(getActivity(), R.string.empty_request_field_message, Toast.LENGTH_LONG).show();
+            } else {
+                if (!UserDataCache.hasProfile()) {
 
-                // get the text from the fields
-                currProfile = new Profile(
-                        ((EditText) inflatedView.findViewById(firstNameField)).getText().toString().trim(),
-                        ((EditText) inflatedView.findViewById(lastNameField)).getText().toString().trim(),
-                        ((EditText) inflatedView.findViewById(descriptionField)).getText().toString().trim(),
-                        ((EditText) inflatedView.findViewById(tagsField)).getText().toString().trim());
+                    // create temporary profile from fields
+                    Profile tempProfile = new Profile(
+                            0, Long.parseLong(FBProfile.getId()),
+                            FirebaseInstanceId.getInstance().getToken(),
+                            firstName.getText().toString().trim(),
+                            lastName.getText().toString().trim(),
+                            phoneNumber.getText().toString().trim(),
+                            description.getText().toString().trim(), 0);
+                    // Set temporary profile as current profile in cache
+                    UserDataCache.setCurrentUser(tempProfile);
+                    // If we are connected to the network, send profile object to server
+                    if (Connectivity.checkNetworkConnection(getActivity().getApplicationContext())) {
+                        try {
+                            new ProfileUtility.CreateProfileTask().execute(profileUrl).get();
+                        } catch (Exception e) {
+                            // TODO: this is a hacky solution, will need real error handling
+                        }
+                        changeFragment();
+                    }
 
-                // If we are connected to the network, send profile object to server
-                if (Connectivity.checkNetworkConnection(getActivity().getApplicationContext())) {
-                    Log.d("DEBUG", "Profile JSON to send: " + currProfile.toJSONString());
-                    new CreateProfileTask().execute(profileUrl, currProfile.toJSONString());
-                    //startActivity(forward);
+                } else {
+                    // TODO: implement updating profile if already existing
                     changeFragment();
                 }
-                // TODO: error handling if not connected to internet
-                changeFragment();
-
+            }
             }
         });
-
 
         return inflatedView;
     }
 
+    private void populateFieldsFromFacebook() {
+
+        //grab the profile picture form FB
+        ProfilePictureView profilePicture = (ProfilePictureView) inflatedView.findViewById(R.id.editProfile_ProfilePicture);
+        profilePicture.setProfileId(FBProfile.getId());
+
+        ((EditText) inflatedView.findViewById(firstNameField)).setText(FBProfile.getFirstName());
+        ((EditText) inflatedView.findViewById(lastNameField)).setText(FBProfile.getLastName());
+
+    }
 
     private void populateFields() {
-        //grab the profile picture form FB
-        ProfilePictureView profile_picture = (ProfilePictureView) inflatedView.findViewById(R.id.editProfile_ProfilePicture);
-        profile_picture.setProfileId(FBProfile.getId());
 
+        Profile currProfile = UserDataCache.getCurrentUser();
+
+        //grab the profile picture form FB
+        ProfilePictureView profilePicture = (ProfilePictureView) inflatedView.findViewById(R.id.editProfile_ProfilePicture);
+        profilePicture.setProfileId(FBProfile.getId());
 
         ((EditText) inflatedView.findViewById(firstNameField)).setText(currProfile.getFirstName());
         ((EditText) inflatedView.findViewById(lastNameField)).setText(currProfile.getLastName());
         ((EditText) inflatedView.findViewById(descriptionField)).setText(currProfile.getDescription());
+        ((EditText) inflatedView.findViewById(phoneNumberField)).setText(currProfile.getPhoneNumber());
         ((EditText) inflatedView.findViewById(tagsField)).setText(currProfile.getTags());
-
     }
 
-    private class CreateProfileTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                Connectivity.makeHttpPostRequest(profileUrl, currProfile.getJSONKeyValuePairs());
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.e("ERROR","Unable to create profile. URL may be invalid.");
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-        }
+    private static boolean isEmpty(EditText eText) {
+        return eText.getText().toString().trim().length() == 0;
     }
 
-    public class LoadProfileTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                String result = Connectivity.makeHttpGetRequest(profileUrl);
-                // if response isn't empty attempt to fill the profile fields
-                if (!result.equals("")) {
-                    currProfile = new Profile(result);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.e("ERROR", "Unable to get profile.");
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            populateFields();
-        }
-    }
-
-    public void changeFragment(){
+    private void changeFragment(){
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame,back);
         ft.commit();
     }
-
 }

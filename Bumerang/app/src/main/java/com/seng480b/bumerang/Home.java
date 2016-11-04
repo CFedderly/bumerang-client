@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -50,12 +51,6 @@ public class Home extends AppCompatActivity
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-        //Fragment Browse --> main page
-        /*ListFragment browse = new Browse();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainFrame,browse);
-        ft.commit();*/
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -78,20 +73,13 @@ public class Home extends AppCompatActivity
                 ft.replace(R.id.mainFrame, my_requests);
                 ft.commit();
         } else {
-            /**ADDED THIS**/
-            // Create the adapter that will return a fragment for each of the three
-            // primary sections of the activity.
-            mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-            // Set up the ViewPager with the sections adapter.
-            mViewPager = (ViewPager) findViewById(R.id.container);
-            mViewPager.setAdapter(mSectionsPagerAdapter);
-            tabLayout = (TabLayout) findViewById(R.id.tabs);
-            tabLayout.setupWithViewPager(mViewPager);
 
             //put logic here that will check if they have an account or not
             // currently is just skips to the browse page
             // if you change it to 'true' it will start at the edit profile page
-            loadStartupFragment(false);
+            // If user hasn't logged in before, redirect them to profile edit page
+            boolean isFirst = ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
+            loadStartupFragment(isFirst);
         }
     }
 
@@ -99,7 +87,7 @@ public class Home extends AppCompatActivity
     //will open the edit profile page if it is the first time.
     public void loadStartupFragment(boolean first){
 
-        if(first){
+         if (first) {
             // Hide the Floating action button
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
             p.setAnchorId(View.NO_ID);
@@ -110,7 +98,7 @@ public class Home extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame,editProfileFragment);
             ft.commit();
-        }else{
+        } else {
             // call a blank fragment for the background of the tabs
             Fragment fragment2 = new TestFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
