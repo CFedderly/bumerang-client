@@ -19,7 +19,7 @@ class Request {
 
         private int num;
 
-        private static Map<Integer, RequestType> map = new HashMap<Integer, RequestType>();
+        private static Map<Integer, RequestType> map = new HashMap<>();
 
         static {
             for (RequestType req : RequestType.values()) {
@@ -91,7 +91,7 @@ class Request {
         return (int) TimeUnit.MINUTES.convert(millisUntilExpiry, TimeUnit.MILLISECONDS);
     }
 
-    public int getUserId(){
+    int getUserId(){
         return this.userId;
     }
 
@@ -110,7 +110,7 @@ class Request {
         return keyValue;
     }
 
-    public static ArrayList<Request> filterRequestsByType(ArrayList<Request> original, RequestType type) {
+    static ArrayList<Request> filterRequestsByType(ArrayList<Request> original, RequestType type) {
         ArrayList<Request> newList = new ArrayList<>();
         for (Request request : original) {
             if (request.requestType == type) {
@@ -120,7 +120,7 @@ class Request {
         return newList;
     }
 
-    public static ArrayList<Request> getListOfRequestsFromJSON(String json) {
+    static ArrayList<Request> getListOfRequestsFromJSON(String json) {
         ArrayList<Request> requests = new ArrayList<>();
         try {
             JSONObject obj = new JSONObject(json);

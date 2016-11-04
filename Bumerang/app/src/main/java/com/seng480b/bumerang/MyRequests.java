@@ -19,6 +19,8 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.widget.ListView;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -26,6 +28,7 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
 
     private static final String requestUrl = BuildConfig.SERVER_URL + "/requests/user/";
     private ViewPager mViewPager;
+    private ListView mListView;
     private Activity activity;
 
     public MyRequests() {
@@ -35,20 +38,23 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         if (context instanceof Activity){
             this.activity =(Activity) context;
         }
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_myrequests_list, container, false);
+        return inflater.inflate(R.layout.fragment_myrequests_list, container, false);
+    }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         ((Home) activity ).setActionBarTitle("My Requests");
 
+        mListView = getListView();
         /** make the tabs invisible **/
         mViewPager = (ViewPager) activity.findViewById(R.id.container);
         populateBrowse();
@@ -63,22 +69,12 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
         TabLayout tabLayout = (TabLayout) activity.findViewById(R.id.tabs);
         mViewPager.setVisibility(View.GONE);
         tabLayout.setVisibility(View.GONE);
-
-        return view;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+                            long id) { }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
-
-        FragmentManager fm = getFragmentManager();
-        more_info_dialog.show(fm, "Sample Fragment");
-    }
     private void populateBrowse() {
         Request.RequestType requestType = Browse.getCurrentRequestType(mViewPager);
         if (requestType != null) {

@@ -55,12 +55,13 @@ class Profile {
 
     String getTags() { return this.tags; }
 
-    long getFbId() { return this.facebookId; }
+    long getFacebookId() { return this.facebookId; }
+
+    int getKarma() { return this.karma; }
 
     int getUserId() { return this.userId; }
 
     void setUserId(int id) { this.userId = id; }
-
 
     public String getDescription() { return this.description; }
 

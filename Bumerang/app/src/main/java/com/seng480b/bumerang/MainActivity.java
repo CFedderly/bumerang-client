@@ -82,8 +82,6 @@ public class MainActivity extends AppCompatActivity {
                 googleApiAvailability.getErrorDialog(this, status, PLAY_SERVICES_RESOLUTION_REQUEST).show();
             }
         }
-        //the FacebookSdk needs a 'second' to load the AccessToken
-        //This should eventually be turned into an async task
 
         boolean loggedIn = AccessToken.getCurrentAccessToken()!=null;
 
@@ -146,9 +144,5 @@ public class MainActivity extends AppCompatActivity {
         Log.d("user id ", id);
 
     }
-    public void skipLoginScreen(View view) {
-        //Intent intent = new Intent(this, CreateProfile.class);
-        Intent intent = new Intent(this, Home.class);
-        startActivity(intent);
-    }
+
 }

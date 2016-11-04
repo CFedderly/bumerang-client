@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.facebook.login.widget.ProfilePictureView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class EditProfileFragment extends Fragment {
     private static final String profileUrl = BuildConfig.SERVER_URL + "/profile/";
@@ -81,7 +82,8 @@ public class EditProfileFragment extends Fragment {
 
                     // create temporary profile from fields
                     Profile tempProfile = new Profile(
-                            0, Long.parseLong(FBProfile.getId()), "",
+                            0, Long.parseLong(FBProfile.getId()),
+                            FirebaseInstanceId.getInstance().getToken(),
                             firstName.getText().toString().trim(),
                             lastName.getText().toString().trim(),
                             phoneNumber.getText().toString().trim(),
@@ -90,7 +92,11 @@ public class EditProfileFragment extends Fragment {
                     UserDataCache.setCurrentUser(tempProfile);
                     // If we are connected to the network, send profile object to server
                     if (Connectivity.checkNetworkConnection(getActivity().getApplicationContext())) {
-                        new ProfileUtility.CreateProfileTask().execute(profileUrl);
+                        try {
+                            new ProfileUtility.CreateProfileTask().execute(profileUrl).get();
+                        } catch (Exception e) {
+                            // TODO: this is a hacky solution, will need real error handling
+                        }
                         changeFragment();
                     }
 
@@ -129,7 +135,9 @@ public class EditProfileFragment extends Fragment {
         ((EditText) inflatedView.findViewById(descriptionField)).setText(currProfile.getDescription());
         ((EditText) inflatedView.findViewById(phoneNumberField)).setText(currProfile.getPhoneNumber());
         ((EditText) inflatedView.findViewById(tagsField)).setText(currProfile.getTags());
+
     }
+
 
     private static boolean isEmpty(EditText eText) {
         return eText.getText().toString().trim().length() == 0;

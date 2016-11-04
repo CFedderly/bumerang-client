@@ -1,13 +1,10 @@
 package com.seng480b.bumerang;
 
 import android.os.AsyncTask;
-import android.content.Intent;
-import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,16 +15,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.io.IOException;
 
 public class CreateRequest extends Fragment {
 
+    FirebaseAnalytics mFireBaseAnalytics;
     private static final String requestUrl = BuildConfig.SERVER_URL + "/request/";
     private static final int titleField = R.id.inputTitle;
     private static final int descriptionField = R.id.inputDescription;
@@ -139,7 +140,25 @@ public class CreateRequest extends Fragment {
             }
         });
 
-        Spinner distSpinner = (Spinner) inflatedView.findViewById(R.id.spinnerDistance);
+        final Button adv_options_button = (Button)inflatedView.findViewById(R.id.buttonAdvancedOptions);
+        adv_options_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RelativeLayout advanced_options = (RelativeLayout)inflatedView.findViewById(R.id.layout_advanced_options);
+                if (advanced_options.getVisibility() == View.GONE){
+                    advanced_options.setVisibility(View.VISIBLE);
+                    adv_options_button.setText(R.string.hide_advanced_options);
+                } else {
+                    advanced_options.setVisibility(View.GONE);
+                    adv_options_button.setText(R.string.expand_advanced_options);
+                }
+
+            }
+        });
+
+
+       Spinner distSpinner = (Spinner) inflatedView.findViewById(R.id.spinnerDistance);
+
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.distance_array, android.R.layout.simple_spinner_item);
@@ -169,6 +188,8 @@ public class CreateRequest extends Fragment {
         return inflatedView;
     }
 
+
+
     private Request createRequest() {
 
         EditText title = (EditText) inflatedView.findViewById(titleField);
@@ -188,6 +209,19 @@ public class CreateRequest extends Fragment {
         int minutesInt = Integer.parseInt(minutes.getText().toString().trim());
         if (UserDataCache.hasProfile()) {
             int userId = UserDataCache.getCurrentUser().getUserId();
+
+            //This is where info on what users are entering is collected
+            mFireBaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
+            //Just turn hours into minutes
+            int totalTime = (hoursInt*60)+minutesInt;
+
+            Bundle params = new Bundle();
+            params.putString( FirebaseAnalytics.Param.ITEM_NAME, titleStr);
+            params.putString("Description", descriptionStr);
+            params.putLong(FirebaseAnalytics.Param.VALUE, totalTime);
+            mFireBaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, params);
+
             return new Request(userId, titleStr, descriptionStr, hoursInt, minutesInt, distance, requestType);
         } else {
             alertForRequestNotCreated();
@@ -238,4 +272,5 @@ public class CreateRequest extends Fragment {
             Toast.makeText(getActivity(), R.string.created_request, Toast.LENGTH_LONG).show();
         }
     }
+
 }

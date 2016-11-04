@@ -5,7 +5,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import android.view.LayoutInflater;
@@ -28,56 +27,34 @@ public class ProfilePage extends Fragment {
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
         mViewPager.setVisibility(View.GONE);
         tabLayout.setVisibility(View.GONE);
-        updateProfileInfo();
+        if (UserDataCache.hasProfile()) {
+            updateProfileInfo();
+        }
         setUpButton();
         return myInflatedView;
     }
 
-
-
     //grabs profile info from db
     //currently grabs some data from fb
     public void updateProfileInfo() {
-        com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
-        String fb_id = profile.getId();
+        if (UserDataCache.hasProfile()) {
+            Profile currProfile = UserDataCache.getCurrentUser();
 
-        String user_id;
-        String user_name;
+            // Populate the profile fields
+            TextView profileName = (TextView) myInflatedView.findViewById(R.id.profileName);
+            TextView profileBio = (TextView) myInflatedView.findViewById(R.id.profileBio);
+            TextView profileTags = (TextView) myInflatedView.findViewById(R.id.profileTags);
+            TextView profileNumber = (TextView) myInflatedView.findViewById(R.id.profilePhoneNumber);
+            TextView profileKarma = (TextView) myInflatedView.findViewById(R.id.profileCarma);
+            ProfilePictureView profilePicture = (ProfilePictureView) myInflatedView.findViewById(R.id.profilePicture);
 
-
-        //these are just temp
-        //grab them from the db later
-        String user_tags = "Mac_Book, Power_Cable, Pencil, Calculator, Paper";
-        String user_bio = "I am really awesome, please let me borrow your things!";
-        String user_number = "1-111-111-1111";
-        String user_carma = "0";
-
-        //TEMP! grabbing info from facebook
-        user_id = profile.getId();
-        user_name = profile.getName();
-        Log.d("user id ", user_id);
-        //********* put db requests here *************
-        Log.d("user name ", user_name);
-        //********* put db requests here *************
-        //TODO grab from database: name,bio,tags,carma,phone number
-
-
-
-        //********* assign values to the views *************
-        TextView profile_name = (TextView) myInflatedView.findViewById(R.id.profileName);
-        TextView profile_bio = (TextView) myInflatedView.findViewById(R.id.profileBio);
-        TextView profile_tags = (TextView) myInflatedView.findViewById(R.id.profileTags);
-        TextView profile_number = (TextView) myInflatedView.findViewById(R.id.profilePhoneNumber);
-        TextView profile_carma = (TextView) myInflatedView.findViewById(R.id.profileCarma);
-        ProfilePictureView profile_picture = (ProfilePictureView) myInflatedView.findViewById(R.id.profilePicture);
-
-        profile_carma.setText(user_carma);
-        profile_number.setText(user_number);
-        profile_tags.setText(user_tags);
-        profile_bio.setText(user_bio);
-        profile_picture.setProfileId(fb_id);
-        profile_name.setText(user_name);
-
+            profileKarma.setText(String.valueOf(currProfile.getKarma()));
+            profileNumber.setText(currProfile.getPhoneNumber());
+            profileTags.setText(currProfile.getTags());
+            profileBio.setText(currProfile.getDescription());
+            profilePicture.setProfileId(String.valueOf(currProfile.getFacebookId()));
+            profileName.setText(currProfile.getFirstName() + " " + currProfile.getLastName());
+        }
     }
 
     public void setUpButton(){

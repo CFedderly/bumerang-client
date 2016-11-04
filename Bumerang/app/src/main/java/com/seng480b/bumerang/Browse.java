@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class Browse extends ListFragment implements OnItemClickListener {
 
-    private static final String requestUrl = BuildConfig.SERVER_URL + "/requests/recent/";
+    private static final String requestUrl = BuildConfig.SERVER_URL + "/requests/recent/100";
     private ViewPager viewPager;
     private Activity activity;
 
@@ -44,7 +44,17 @@ public class Browse extends ListFragment implements OnItemClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_browse_list, container, false);
+        return inflater.inflate(R.layout.fragment_browse_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         ((Home)getActivity()).setActionBarTitle("Browse");
 
@@ -63,25 +73,11 @@ public class Browse extends ListFragment implements OnItemClickListener {
         TabLayout tabLayout = (TabLayout) activity.findViewById(R.id.tabs);
         viewPager.setVisibility(View.VISIBLE);
         tabLayout.setVisibility(View.VISIBLE);
-
-        return view;
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        DetailFragment details = new DetailFragment();
-        FragmentManager fm = getFragmentManager();
-        details.show(fm, "Sample Fragment");
-    }
-
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+                            long id) { }
 
     /**
      * The fragment argument representing the section number for this
@@ -145,6 +141,7 @@ public class Browse extends ListFragment implements OnItemClickListener {
         protected void onPostExecute(String result) {
             if (result != null) {
                 final ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
+
                 RequestAdapter mAdapter = new RequestAdapter(activity,
                         Request.filterRequestsByType(requests, getCurrentRequestType(viewPager)));
                 getListView().setAdapter(mAdapter);
@@ -163,7 +160,7 @@ public class Browse extends ListFragment implements OnItemClickListener {
                         String userName = currProfile.getFirstName();
                         String desc = req.getDescription();
 
-                        String fb_id = Long.toString(currProfile.getFbId());
+                        String fb_id = Long.toString(currProfile.getFacebookId());
 
                         String tags = "stuff, things";
 
