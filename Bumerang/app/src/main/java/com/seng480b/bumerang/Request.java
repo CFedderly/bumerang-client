@@ -38,6 +38,7 @@ class Request {
         }
     }
 
+    private int reqId;
     private int userId;
     private String title;
     private String description;
@@ -68,6 +69,7 @@ class Request {
     public Request(String JSONString) {
         try {
             JSONObject obj = new JSONObject(JSONString);
+            this.reqId = obj.getInt("id");
             this.userId = obj.getInt("user_id");
             this.title = obj.getString("title");
             this.description = obj.getString("description");
@@ -85,11 +87,13 @@ class Request {
         }
     }
 
-    private int getMinutesUntilExpiry() {
+    public int getMinutesUntilExpiry() {
         Calendar now = Calendar.getInstance();
         long millisUntilExpiry = expiryTime.getTimeInMillis() - now.getTimeInMillis();
         return (int) TimeUnit.MINUTES.convert(millisUntilExpiry, TimeUnit.MILLISECONDS);
     }
+
+    int getReqId(){ return this.reqId; }
 
     int getUserId(){
         return this.userId;
@@ -133,6 +137,7 @@ class Request {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         return requests;
     }
 }

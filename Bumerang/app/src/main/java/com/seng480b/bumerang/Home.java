@@ -73,7 +73,6 @@ public class Home extends AppCompatActivity
                 ft.replace(R.id.mainFrame, my_requests);
                 ft.commit();
         } else {
-
             //put logic here that will check if they have an account or not
             // currently is just skips to the browse page
             // if you change it to 'true' it will start at the edit profile page
@@ -81,6 +80,7 @@ public class Home extends AppCompatActivity
             boolean isFirst = ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
             loadStartupFragment(isFirst);
         }
+
     }
 
     //will start up the browse fragment if is not the first time opening the app

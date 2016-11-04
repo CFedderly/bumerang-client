@@ -140,8 +140,6 @@ public class CreateRequest extends Fragment {
             }
         });
 
-
-        //
         final Button adv_options_button = (Button)inflatedView.findViewById(R.id.buttonAdvancedOptions);
         adv_options_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,6 +209,7 @@ public class CreateRequest extends Fragment {
         int minutesInt = Integer.parseInt(minutes.getText().toString().trim());
         if (UserDataCache.hasProfile()) {
             int userId = UserDataCache.getCurrentUser().getUserId();
+
             //This is where info on what users are entering is collected
             mFireBaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 

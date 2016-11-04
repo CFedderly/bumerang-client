@@ -14,8 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.widget.ListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,12 +38,10 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         if (context instanceof Activity){
             this.activity =(Activity) context;
         }
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,7 +93,6 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
         protected String doInBackground(String... params) {
             try {
                 return Connectivity.makeHttpGetRequest(params[0]);
-
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e("ERROR", "Unable to retrieve requests");
@@ -103,21 +104,59 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
         @Override
         protected void onPostExecute(String result) {
             if (result != null) {
-                ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
+                final ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
                 // TODO: uncomment this once there are borrow/lend tabs on the myrequest page
             /*RequestAdapter mAdapter = new RequestAdapter(activity,
                     Request.filterRequestsByType(requests, Browse.getCurrentRequestType(mViewPager)));*/
                 RequestAdapter mAdapter = new RequestAdapter(activity, requests);
-                    mListView.setAdapter(mAdapter);
-                    mListView.setOnItemClickListener(new OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getListView().setAdapter(mAdapter);
+                getListView().setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        //true if someone has responded to your request otherwise it is "un-clickable"
+                        boolean responded = true;
+                        if(responded) {
+                            //Temps
+                            com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
+                            String fb_id = profile.getId();
+                            //-----
+                            Request req = requests.get(position);
+                            int reqId = req.getReqId();
+                            Log.d("DEBUG", "Request id: "+Integer.toString(reqId));
+
+                            String time = "Will expire in " + req.getMinutesUntilExpiry() + " minutes.";
+                            String itemName = req.getTitle();
+
+
+                            //String lenderName = offerUser.getFirstName();
+                            String lenderName = "User_0";
+                            String phone_no = "(012) 345-6789";
+
+
+
+
+                            JSONObject obj = new JSONObject();
+                            try {
+                                obj.put("Lender", lenderName);
+                                obj.put("Item", itemName);
+                                obj.put("Exp", time);
+                                obj.put("Phone_No", phone_no);
+                                obj.put("FB_id", fb_id);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                             BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
+                            more_info_dialog.sendInfo(obj);
+
                             FragmentManager fm = getFragmentManager();
                             more_info_dialog.show(fm, "Sample Fragment");
                         }
-                    });
-                }
+                    }
+                });
+            }
         }
+
+
     }
 }

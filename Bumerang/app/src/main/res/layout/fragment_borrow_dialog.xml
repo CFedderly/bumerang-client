@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp" >
@@ -15,65 +17,39 @@
 
     <TextView
         android:id="@+id/item_wanted"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="The Item I Want"
+        android:text="[Item Name]"
         android:textSize="25dp"
         android:textStyle="bold"
-        android:layout_toLeftOf="@id/buttonBorrowDismiss"/>
+        android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:id="@+id/item_desc"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:text="I would like to borrow this item.\nThis is a pretty long description.\nMore information on this line too."
-        android:layout_weight="0.01"
-        android:textSize="15sp"
-        android:layout_below="@id/item_wanted"/>
-
-    <View
-        android:id="@+id/divider_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorPrimary"
-        android:layout_below="@id/item_desc"
-        android:layout_margin="5dp"/>
 
     <TextView
         android:id="@+id/time_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="expires 5:30 pm"
-        android:layout_below="@id/divider_line"
-        android:layout_alignParentLeft="true" />
+        android:layout_below="@id/item_wanted"
+        android:layout_centerHorizontal="true" />
 
-
-
-    <ImageView
+    <com.facebook.login.widget.ProfilePictureView
         android:id="@+id/user_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_menu_slideshow"
-        android:layout_below="@id/divider_line"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="5dp"/>
+        android:layout_below="@+id/divider_line2"
+        facebook:com_facebook_preset_size="small"/>
+
 
     <TextView
-        android:id="@+id/request_description"
+        android:id="@+id/phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="UserName1000"
-        android:textSize="18sp"
-        android:layout_below="@id/divider_line"
-        android:layout_toLeftOf="@id/user_image"/>
-
-
-    <TextView
-        android:id="@+id/temp_text_tags"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="tags, tags, tags, tags"
-        android:layout_below="@id/request_description"/>
+        android:text="(111) 111-1111"
+        android:layout_below="@id/divider_line2"
+        android:phoneNumber="true"
+        android:layout_centerHorizontal="true"/>
 
 
     <View
@@ -82,7 +58,7 @@
         android:layout_height="2dp"
         android:background="@color/colorPrimaryDark"
         android:layout_margin="5dp"
-        android:layout_below="@id/temp_text_tags"/>
+        android:layout_below="@id/time_left"/>
 
     <Button
         android:id="@+id/buttonBorrowAccept"
@@ -91,25 +67,20 @@
         android:text="Accept"
         android:background="@color/colorAccent"
         android:textColor="@color/white"
-        android:layout_below="@id/divider_line2"
-        android:layout_alignParentRight="true"
+        android:layout_below="@id/user_image"
+        android:layout_centerHorizontal="true"
         android:layout_margin="10dp" />
 
     <TextView
         android:id="@+id/borrow_message"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="[User] wants to lend you their [Item]!\n"
+        android:text=" [User]'s got you covered! "
         android:textColor="@color/white"
         android:textStyle="bold"
         android:background="@color/colorPrimary"
-        android:layout_below="@id/divider_line2"
-        android:layout_toLeftOf="@id/buttonBorrowAccept"
-        android:layout_margin="10dp"/>
-
-
-
-
-
+        android:layout_below="@id/phone"
+        android:layout_margin="10dp"
+        android:layout_toRightOf="@+id/user_image"/>
 
 </RelativeLayout>
