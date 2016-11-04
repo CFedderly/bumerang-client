@@ -9,94 +9,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.seng480b.bumerang.ProfilePage">
-
-
-    <View
-        android:id="@+id/profileLine1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:layout_below="@+id/profileName"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:id="@+id/profileTags"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="stuff, things"
-        android:textAlignment="textStart"
-        android:layout_below="@+id/labelProfileTags"
-        android:background="@color/textboxBackground"
-        android:textSize="18sp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tags:"
-        android:textSize="14sp"
-        android:id="@+id/labelProfileTags"
-        android:layout_below="@+id/profileBio"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bio:"
-        android:textSize="14sp"
-        android:id="@+id/labelProfileBio"
-        android:layout_below="@+id/profileLine3"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:id="@+id/profileBio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="bio goes here, blah balh balh"
-        android:textAlignment="textStart"
-        android:layout_below="@+id/labelProfileBio"
-        android:layout_alignParentStart="true"
-        android:background="@color/textboxBackground"
-        android:textSize="18sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="User Name"
-        android:textSize="24sp"
-        android:id="@+id/profileName"
-        android:textAlignment="textStart"
-        android:layout_below="@+id/profilePicture"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="1-234-567-8910"
-        android:textSize="24sp"
-        android:id="@+id/profilePhoneNumber"
-        android:textAlignment="textStart"
-        android:phoneNumber="true"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
-
-    <com.facebook.login.widget.ProfilePictureView
-        android:id="@+id/profilePicture"
-        android:layout_height="175dp"
-        android:layout_width="150dp"
-        android:gravity="center_horizontal"
-        android:layout_gravity="center_horizontal"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
-
-    <View
-        android:id="@+id/profileLine3"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:layout_below="@+id/profilePhoneNumber"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="10dp" />
+    tools:context="com.seng480b.bumerang.ProfilePage"
+    android:elevation="1sp">
 
     <Button
         android:id="@+id/profileButtonEdit"
@@ -108,24 +22,134 @@
         android:elevation="24dp" />
 
     <ImageView
+        android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/messenger_button_send_round_shadow"
-        android:id="@+id/imageView2"
-        android:layout_alignBottom="@+id/profileButtonEdit"
-        android:layout_alignStart="@+id/profileButtonEdit" />
+        android:layout_alignBottom="@id/profileButtonEdit"
+        android:layout_alignStart="@id/profileButtonEdit" />
 
-    <TextView
-        android:id="@+id/profileCarma"
+    <FrameLayout
+        android:id="@+id/profilePictureGroup"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true">
+
+        <com.facebook.login.widget.ProfilePictureView
+            android:id="@+id/profilePicture"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="6dp"/>
+
+        <ImageView
+            android:src="@drawable/rounded_corners"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/KarmaGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0.0"
-        android:textSize="75dp"
-        android:textStyle="bold"
-        android:layout_marginEnd="15dp"
-        android:layout_marginTop="18dp"
-        android:layout_below="@+id/profileButtonEdit"
-        android:layout_toStartOf="@+id/profileButtonEdit" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/profilePictureGroup">
+
+        <ImageView
+            android:src="@drawable/solid_rounded_rectangle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/profileCarma"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="0.0"
+            android:textSize="50sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:layout_marginRight="6sp"
+            android:layout_marginLeft="6sp"/>
+
+    </FrameLayout>
+
+
+    <TextView
+        android:id="@+id/profileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User Name"
+        android:textSize="24sp"
+        android:textAlignment="textStart"
+        android:layout_below="@+id/KarmaGroup"
+        android:layout_centerHorizontal="true" />
+
+    <View
+        android:id="@+id/profileLine1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@+id/profileName"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/profilePhoneNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1-234-567-8910"
+        android:textSize="24sp"
+        android:textAlignment="textStart"
+        android:phoneNumber="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/profileLine1"/>
+
+    <TextView
+        android:id="@+id/labelProfileBio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bio:"
+        android:textSize="14sp"
+        android:layout_below="@+id/profileLine3"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/profileBio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="your bio usually goes here... maybe you don't have one yet?"
+        android:textAlignment="textStart"
+        android:layout_below="@+id/labelProfileBio"
+        android:layout_alignParentStart="true"
+        android:background="@color/white"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/labelProfileTags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tags:"
+        android:textSize="14sp"
+        android:layout_below="@+id/profileBio"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/profileTags"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="stuff, things"
+        android:textAlignment="textStart"
+        android:layout_below="@+id/labelProfileTags"
+        android:background="@color/white"
+        android:textSize="18sp"/>
+
+    <View
+        android:id="@+id/profileLine3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@+id/profilePhoneNumber"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp" />
 
 
 </RelativeLayout>
