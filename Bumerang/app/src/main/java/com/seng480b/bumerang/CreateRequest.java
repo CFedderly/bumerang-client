@@ -30,6 +30,8 @@ public class CreateRequest extends Fragment {
 
     FirebaseAnalytics mFireBaseAnalytics;
     private static final String requestUrl = BuildConfig.SERVER_URL + "/request/";
+    private static final int defaultHours = 120;
+    private static final int defaultMinutes = 0;
     private static final int titleField = R.id.inputTitle;
     private static final int descriptionField = R.id.inputDescription;
     private static final int hoursField = R.id.inputHours;
@@ -198,15 +200,34 @@ public class CreateRequest extends Fragment {
         EditText minutes = (EditText) inflatedView.findViewById(minutesField);
 
         // Check that all fields are filled, return null if not
-        if (isEmpty(title) || isEmpty(description) || isEmpty(hours) || isEmpty(minutes)) {
+        if (isEmpty(title)) {
             alertForEmptyFields();
             return null;
         }
 
         String titleStr = title.getText().toString().trim();
-        String descriptionStr = description.getText().toString().trim();
-        int hoursInt = Integer.parseInt(hours.getText().toString().trim());
-        int minutesInt = Integer.parseInt(minutes.getText().toString().trim());
+        String descriptionStr;
+        int hoursInt;
+        int minutesInt;
+
+        if (!isEmpty(description)) {
+            descriptionStr = description.getText().toString().trim();
+        } else {
+            descriptionStr = "";
+        }
+
+        if (!isEmpty(hours)) {
+            hoursInt = Integer.parseInt(hours.getText().toString().trim());
+        } else {
+            hoursInt = defaultHours;
+        }
+
+        if (!isEmpty(minutes)) {
+            minutesInt = Integer.parseInt(minutes.getText().toString().trim());
+        } else {
+            minutesInt = defaultMinutes;
+        }
+
         if (UserDataCache.hasProfile()) {
             int userId = UserDataCache.getCurrentUser().getUserId();
 
