@@ -30,8 +30,8 @@ public class CreateRequest extends Fragment {
 
     FirebaseAnalytics mFireBaseAnalytics;
     private static final String requestUrl = BuildConfig.SERVER_URL + "/request/";
-    private static final int defaultHours = 120;
-    private static final int defaultMinutes = 0;
+    private static final int defaultHours = 0;
+    private static final int defaultMinutes = 120;
     private static final int titleField = R.id.inputTitle;
     private static final int descriptionField = R.id.inputDescription;
     private static final int hoursField = R.id.inputHours;
