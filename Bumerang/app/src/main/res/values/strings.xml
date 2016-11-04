@@ -42,4 +42,7 @@
     </string-array>
     <string name="title_activity_browse_tabs">BrowseTabs</string>
 
+    <string name="expand_advanced_options">more options</string>
+    <string name="hide_advanced_options">hide</string>
+
 </resources>

@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
@@ -141,7 +142,27 @@ public class CreateRequest extends Fragment {
             }
         });
 
-        Spinner distSpinner = (Spinner) inflatedView.findViewById(R.id.spinnerDistance);
+
+        //
+        final Button adv_options_button = (Button)inflatedView.findViewById(R.id.buttonAdvancedOptions);
+        adv_options_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RelativeLayout advanced_options = (RelativeLayout)inflatedView.findViewById(R.id.layout_advanced_options);
+                if (advanced_options.getVisibility() == View.GONE){
+                    advanced_options.setVisibility(View.VISIBLE);
+                    adv_options_button.setText(R.string.hide_advanced_options);
+                } else {
+                    advanced_options.setVisibility(View.GONE);
+                    adv_options_button.setText(R.string.expand_advanced_options);
+                }
+
+            }
+        });
+
+
+       Spinner distSpinner = (Spinner) inflatedView.findViewById(R.id.spinnerDistance);
+
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.distance_array, android.R.layout.simple_spinner_item);
@@ -170,6 +191,8 @@ public class CreateRequest extends Fragment {
 
         return inflatedView;
     }
+
+
 
     private Request createRequest() {
 
@@ -242,4 +265,5 @@ public class CreateRequest extends Fragment {
             Toast.makeText(getActivity(), R.string.created_request, Toast.LENGTH_LONG).show();
         }
     }
+
 }
