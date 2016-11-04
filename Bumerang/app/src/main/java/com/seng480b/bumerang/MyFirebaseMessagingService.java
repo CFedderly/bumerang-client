@@ -61,7 +61,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.bumerang_umbrella).setContentTitle("Bumerang")
-                .setContentTitle("Someone has accepted your request!")
+                .setContentTitle("Someone has posted a request!")
                 .setContentText(msgData.get("text"))
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setPriority(Notification.PRIORITY_HIGH)
