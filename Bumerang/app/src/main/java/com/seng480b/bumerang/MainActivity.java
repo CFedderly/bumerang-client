@@ -82,8 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 googleApiAvailability.getErrorDialog(this, status, PLAY_SERVICES_RESOLUTION_REQUEST).show();
             }
         }
-        //the FacebookSdk needs a 'second' to load the AccessToken
-        //This should eventually be turned into an async task
+
         boolean loggedIn = AccessToken.getCurrentAccessToken()!=null;
 
         //If user is already logged in automatically goes to the 'Browse page"
