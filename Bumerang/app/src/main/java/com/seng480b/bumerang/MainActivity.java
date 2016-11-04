@@ -144,9 +144,5 @@ public class MainActivity extends AppCompatActivity {
         Log.d("user id ", id);
 
     }
-    public void skipLoginScreen(View view) {
-        //Intent intent = new Intent(this, CreateProfile.class);
-        Intent intent = new Intent(this, Home.class);
-        startActivity(intent);
-    }
+
 }
