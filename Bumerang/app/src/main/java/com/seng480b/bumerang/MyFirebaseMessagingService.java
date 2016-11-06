@@ -22,7 +22,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-
         // Get from sender information from message
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
@@ -36,7 +35,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification());
         }
 
-        // TODO(developer): Handle FCM messages here.
         // If the application is in the foreground handle both data and notification messages here.
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
@@ -56,9 +54,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri sound= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         // Priority of the messages could be either MAX or HIGH. Set to max because they are time critical and urgent.
         // TODO: Update resultPendingIntent for .addAction below to redirect to the proper
+
+        // Set text for the notification based upon which is recieved
+        // 0 - request, 1 - offer.
+        // TODO: Implement changing Content title based upon above number receieved.
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.bumerang_umbrella).setContentTitle("Bumerang")
-                .setContentTitle("Someone has accepted your request!")
+                .setContentTitle("Someone has posted a request!")
                 .setContentText(msgData.get("text"))
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setPriority(Notification.PRIORITY_HIGH)
