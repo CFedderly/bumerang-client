@@ -15,11 +15,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
+import android.widget.ListView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.widget.ListView;
 
 import java.io.IOException;
 import java.util.ArrayList;

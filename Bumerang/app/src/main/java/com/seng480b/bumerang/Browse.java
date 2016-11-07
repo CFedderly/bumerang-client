@@ -155,10 +155,11 @@ public class Browse extends ListFragment implements OnItemClickListener {
                         String itemName = req.getTitle();
                         int userID = req.getUserId();
 
+                        // TODO: this logic seems incorrect? set to null then get the null value?
                         UserDataCache.setRecentUser(null);
                         ProfileUtility.storeRecentUserFromUserId(userID);
 
-                        Profile requestUser = UserDataCache.getRecentUser();;
+                        Profile requestUser = UserDataCache.getRecentUser();
 
                         //TODO: this while loop must go!, it is only temporary
                         boolean correctUser = false;
@@ -166,7 +167,6 @@ public class Browse extends ListFragment implements OnItemClickListener {
                             requestUser = UserDataCache.getRecentUser();
                         }
                         //TODO: it just continually checks to see if teh getRequest has finished
-
 
                         String userName = requestUser.getFirstName();
                         String desc = req.getDescription();

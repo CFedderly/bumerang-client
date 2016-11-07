@@ -2,12 +2,9 @@ package com.seng480b.bumerang;
 
 import android.os.AsyncTask;
 import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
-import java.io.StringReader;
 
 /* This class contains methods for sending profile data to the database */
 class ProfileUtility {

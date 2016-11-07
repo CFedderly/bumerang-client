@@ -2,8 +2,6 @@ package com.seng480b.bumerang;
 
 
 import android.util.Log;
-
-import com.facebook.*;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
