@@ -36,7 +36,7 @@
         </FrameLayout>
 
 
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
@@ -46,7 +46,7 @@
             android:layout_below="@id/profilePictureGroup"
             android:textSize="22sp" />
 
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"

@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Log;
 
 import com.facebook.login.widget.ProfilePictureView;
 
@@ -18,6 +20,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 public class EditProfileFragment extends Fragment {
     private static final String profileUrl = BuildConfig.SERVER_URL + "/profile/";
+    private static final String editProfileUrl = BuildConfig.SERVER_URL + "/profile/edit/";
+
     private static final int firstNameField = R.id.editProfile_InputFirstName;
     private static final int lastNameField = R.id.editProfile_InputLastName;
     private static final int phoneNumberField = R.id.editProfile_InputPhoneNumber;
@@ -69,13 +73,11 @@ public class EditProfileFragment extends Fragment {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            EditText firstName = (EditText) inflatedView.findViewById(firstNameField);
-            EditText lastName = (EditText) inflatedView.findViewById(lastNameField);
             EditText description = (EditText) inflatedView.findViewById(descriptionField);
             EditText phoneNumber = (EditText) inflatedView.findViewById(phoneNumberField);
 
             // Check that all required fields are filled
-            if (isEmpty(firstName) || isEmpty(lastName) || isEmpty(phoneNumber)) {
+            if (isEmpty(phoneNumber)) {
                 Toast.makeText(getActivity(), R.string.empty_request_field_message, Toast.LENGTH_LONG).show();
             } else {
                 if (!UserDataCache.hasProfile()) {
@@ -84,8 +86,8 @@ public class EditProfileFragment extends Fragment {
                     Profile tempProfile = new Profile(
                             0, Long.parseLong(FBProfile.getId()),
                             FirebaseInstanceId.getInstance().getToken(),
-                            firstName.getText().toString().trim(),
-                            lastName.getText().toString().trim(),
+                            FBProfile.getFirstName(),
+                            FBProfile.getLastName(),
                             phoneNumber.getText().toString().trim(),
                             description.getText().toString().trim(), 0);
                     // Set temporary profile as current profile in cache
@@ -101,37 +103,58 @@ public class EditProfileFragment extends Fragment {
                     }
 
                 } else {
-                    // TODO: implement updating profile if already existing
-                    changeFragment();
+                    Profile currProfile = UserDataCache.getCurrentUser();
+                    //create a temp profile with the new inputted data from the editText fields
+                    Profile tempProfile = new Profile(
+                            currProfile.getUserId(),
+                            currProfile.getFacebookId(),
+                            FirebaseInstanceId.getInstance().getToken(),
+                            currProfile.getFirstName(),
+                            currProfile.getLastName(),
+                            phoneNumber.getText().toString().trim(),
+                            description.getText().toString().trim(),
+                            currProfile.getKarma());
+                    // cache the temp profile as the current profile
+                    UserDataCache.setCurrentUser(tempProfile);
+                    // update the database with the new current profile data
+                    if(Connectivity.checkNetworkConnection(getActivity().getApplicationContext())) {
+                        String result = null;
+                        try {
+                            result = new ProfileUtility.EditProfileTask().execute(editProfileUrl).get();
+                        } catch (Exception e) {
+                            // TODO proper error checking
+                        }
+                        if (result != null) {
+                            Toast.makeText(getActivity(), "You profile information has been updated.", Toast.LENGTH_LONG).show();
+                            Log.d("DEBUG", "The Profile was edited too " + result);
+                            changeFragment();
+                        } else {
+                            UserDataCache.setCurrentUser(currProfile);
+                            Toast.makeText(getActivity(), "Oops, something went wrong. Please try again.", Toast.LENGTH_LONG).show();
+                            Log.d("DEBUG", "Oops, something went wrong. Please try again.");
+                        }
+                    }
                 }
             }
             }
         });
-
         return inflatedView;
     }
-
     private void populateFieldsFromFacebook() {
-
         //grab the profile picture form FB
         ProfilePictureView profilePicture = (ProfilePictureView) inflatedView.findViewById(R.id.editProfile_ProfilePicture);
         profilePicture.setProfileId(FBProfile.getId());
-
-        ((EditText) inflatedView.findViewById(firstNameField)).setText(FBProfile.getFirstName());
-        ((EditText) inflatedView.findViewById(lastNameField)).setText(FBProfile.getLastName());
-
+        ((TextView) inflatedView.findViewById(firstNameField)).setText(FBProfile.getFirstName());
+        ((TextView) inflatedView.findViewById(lastNameField)).setText(FBProfile.getLastName());
     }
 
     private void populateFields() {
 
         Profile currProfile = UserDataCache.getCurrentUser();
 
-        //grab the profile picture form FB
-        ProfilePictureView profilePicture = (ProfilePictureView) inflatedView.findViewById(R.id.editProfile_ProfilePicture);
-        profilePicture.setProfileId(FBProfile.getId());
-
-        ((EditText) inflatedView.findViewById(firstNameField)).setText(currProfile.getFirstName());
-        ((EditText) inflatedView.findViewById(lastNameField)).setText(currProfile.getLastName());
+        ((ProfilePictureView) inflatedView.findViewById(R.id.editProfile_ProfilePicture)).setProfileId(String.valueOf(currProfile.getFacebookId()));
+        ((TextView) inflatedView.findViewById(firstNameField)).setText(currProfile.getFirstName());
+        ((TextView) inflatedView.findViewById(lastNameField)).setText(currProfile.getLastName());
         ((EditText) inflatedView.findViewById(descriptionField)).setText(currProfile.getDescription());
         ((EditText) inflatedView.findViewById(phoneNumberField)).setText(currProfile.getPhoneNumber());
         ((EditText) inflatedView.findViewById(tagsField)).setText(currProfile.getTags());

@@ -130,5 +130,30 @@ class ProfileUtility {
         }
 
     }
+
+    /* return null if something went wrong, else will return the JSON string for the edited profile */
+    public static class EditProfileTask extends AsyncTask<String, Void, String>{
+        protected String doInBackground(String... params) {
+            String result = null;
+            try{
+                result = Connectivity.makeHttpPostRequest(
+                        params[0],
+                        UserDataCache.getCurrentUser().getJSONKeyValuePairs());
+                if(result!=null){
+                    Profile profile = new Profile(result);
+                    UserDataCache.setCurrentUser(profile);
+                    Log.d("DEBUG","Edited the current users profile to: " + result);
+                }
+            }catch(IOException | JSONException e){
+                e.printStackTrace();
+                Log.e("ERROR", "Could not edit the current Users Profile in the database.");
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+        }
+    }
 }
 
