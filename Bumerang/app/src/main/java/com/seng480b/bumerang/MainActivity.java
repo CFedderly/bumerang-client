@@ -1,6 +1,5 @@
 package com.seng480b.bumerang;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,9 +21,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import java.util.Arrays;
 
 
-
-
-
 public class MainActivity extends AppCompatActivity {
     CallbackManager callbackManager;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -33,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
-        Dialog errorDialog = null;
 
 
         setContentView(R.layout.activity_main);
@@ -74,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
         //If user is already logged in automatically goes to the 'Browse page"
         if  (loggedIn) {
-            Intent intent = new Intent(this, Home.class);
-            startActivity(intent);
+            Intent browse = new Intent(this, Home.class);
+            startActivity(browse);
         //If user is not logged in they are taken to the Login page.
         } else{
             setContentView(R.layout.activity_main);

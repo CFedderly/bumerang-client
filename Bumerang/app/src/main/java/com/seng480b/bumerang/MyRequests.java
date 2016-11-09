@@ -104,17 +104,17 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
         protected void onPostExecute(String result) {
             if (result != null) {
                 final ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
-                // TODO: uncomment this once there are borrow/lend tabs on the myrequest page
-            /*RequestAdapter mAdapter = new RequestAdapter(activity,
-                    Request.filterRequestsByType(requests, Browse.getCurrentRequestType(mViewPager)));*/
                 RequestAdapter mAdapter = new RequestAdapter(activity, requests);
                 getListView().setAdapter(mAdapter);
                 getListView().setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         //true if someone has responded to your request otherwise it is "un-clickable"
-                        boolean responded = true;
+                        boolean responded;
+                        // TODO: Check if user has a response to their post
+                        responded = checkForResponse();
                         if(responded) {
+                            // TODO: Pull data from server about selected request and display info
                             //Temps
                             com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
                             String fb_id = profile.getId();
@@ -156,6 +156,27 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
             }
         }
 
+        public boolean checkForResponse() {
+            String offerUrl = BuildConfig.SERVER_URL + "/offer/";
+            // Holds the result of the server query
+            String result = null;
+            if (UserDataCache.hasProfile()) {
+                String myRequestUrl = offerUrl + UserDataCache.getCurrentUser().getUserId();
+                try {
+                   result = Connectivity.makeHttpGetRequest(myRequestUrl);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.e("ERROR", "Unable to retrieve requests");
+                    cancel(true);
+                }
+
+                if (result != null) {
+                    // do something with the returned information.
+                }
+            }
+
+            return true;
+        }
 
     }
 }

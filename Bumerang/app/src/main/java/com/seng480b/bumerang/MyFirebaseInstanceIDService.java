@@ -23,7 +23,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
         String user_id = profile.getId();
         if (user_id != null) {
-            // send the device ID to the server paired with the facebook id.
+            // TODO: send the device ID to the server paired with the facebook id.
         }
 
     }

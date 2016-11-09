@@ -2,6 +2,7 @@ package com.seng480b.bumerang;
 
 
 
+import android.content.Context;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.login.widget.ProfilePictureView;
 
@@ -56,8 +58,7 @@ public class DetailFragment extends DialogFragment {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
+                alertResponse();
                 dismiss(v);
             }
         });
@@ -91,7 +92,21 @@ public class DetailFragment extends DialogFragment {
 
     }
 
+    public void alertResponse() {
+        Context context = getActivity().getApplicationContext();
+        CharSequence textMsg = "You've responded to the request!";
+        CharSequence username;
+        try {
+            username = reqObj.getString("Name");
+            textMsg = "You've responded to " + username.toString() + "'s request!";
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        int duration = Toast.LENGTH_LONG;
 
+        Toast toast = Toast.makeText(context, textMsg, duration);
+        toast.show();
+    }
     /** cancel (x) button **/
     public void dismiss(View view){
         getDialog().dismiss();

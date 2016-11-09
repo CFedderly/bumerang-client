@@ -39,7 +39,7 @@ public class Home extends AppCompatActivity
         super.onCreate(savedInstanceState);
         // Firebase Setup here.
         FirebaseMessaging.getInstance().subscribeToTopic("all");
-        // Initalize facebook SDK
+        // Initialize facebook SDK
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_nav_drawer);
         //toolbar/actionbar setup
@@ -181,17 +181,13 @@ public class Home extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Fragment editProfile = new EditProfileFragment();
         Fragment fragment2 = new TestFragment();
 
         Fragment createReq = new CreateRequest();
-        //ListFragment browse = new Browse();
+
         Fragment my_requests = new MyRequests();
 
         Fragment profilePage = new ProfilePage();
-
-        Fragment browse = new Browse();
-
 
         if (id == R.id.nav_createReq) {
             // Hide the Floating action button
@@ -219,11 +215,6 @@ public class Home extends AppCompatActivity
             ft.commit();
 
             loadTabs();
-
-
-            //Intent reload = new Intent(this, Home.class );
-            //startActivity(reload);
-
         } else if (id == R.id.nav_manage) {
             // Hide the Floating action button
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
