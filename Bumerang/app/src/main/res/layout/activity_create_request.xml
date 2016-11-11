@@ -217,14 +217,16 @@
                     android:drawableLeft="@drawable/ic_menu_gallery"
                     android:textAllCaps="false"
                     android:background="@android:color/transparent"
-                    android:text=" Choose An Image"/>
+                    android:text=" Choose An Image"
+                    android:visibility="gone"/>
 
                 <com.seng480b.bumerang.SquareImage
                     android:id="@+id/createRequest_Image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/createRequest_buttonPickImage"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"/>
 
             </RelativeLayout>
 
