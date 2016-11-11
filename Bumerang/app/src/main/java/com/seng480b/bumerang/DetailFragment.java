@@ -1,8 +1,5 @@
 package com.seng480b.bumerang;
 
-
-
-import android.content.Context;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,23 +12,26 @@ import android.widget.Toast;
 
 import com.facebook.login.widget.ProfilePictureView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 public class DetailFragment extends DialogFragment {
     private static final String offerUrl = BuildConfig.SERVER_URL + "/offer/";
     View rootView;
-    JSONObject reqObj;
+    Request request;
     //private Button cancelButton, acceptButton;
     public DetailFragment() {
         // Required empty public constructor
     }
 
-    public void sendInfo(JSONObject obj){
-        this.reqObj = obj;
+    /**
+     * will set the request and cache the requester as the recentUser
+     * @param req
+     */
+   public void setRequest(Request req){
+        this.request = req;
+        int userId = request.getUserId();
+        ProfileUtility.storeRecentUserFromUserId(userId);
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,8 +58,28 @@ public class DetailFragment extends DialogFragment {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertResponse();
-                dismiss(v);
+                // profileId, the id of the user responding to the request.
+                String profileId = String.valueOf(UserDataCache.getCurrentUser().getUserId());
+                String requester = "Nobody";
+                String result = null;
+                try {
+                    //borrowId, the id the request being responded to.
+                    String borrowId = String.valueOf(UserDataCache.getRecentUser().getUserId());
+                    requester =  String.valueOf(UserDataCache.getRecentUser().getFirstName());
+                    result = new OfferUtility.CreateOfferTask().execute(
+                            offerUrl,
+                            profileId,
+                            borrowId
+                    ).get();
+                } catch (Exception e) {
+                    // TODO: this is a hacky solution, will need real error handling
+                }
+                if(result != null){
+                    Toast.makeText(getActivity(), "You've got "+ requester +" covered!", Toast.LENGTH_LONG).show();
+                    dismiss(v);
+                }else{
+                    Toast.makeText(getActivity(), "Oops something went wrong", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -73,40 +93,16 @@ public class DetailFragment extends DialogFragment {
         TextView itemExp = (TextView) rootView.findViewById(R.id.time_left);
         TextView itemDesc = (TextView) rootView.findViewById(R.id.item_desc);
         TextView userName = (TextView) rootView.findViewById(R.id.user_name);
+        ProfilePictureView profilePicture = (ProfilePictureView) rootView.findViewById(R.id.user_image);
 
-        ProfilePictureView profile_picture = (ProfilePictureView) rootView.findViewById(R.id.user_image);
-
-        String exp_time = "there is no time limit.";
-
-        try{
-            itemName.setText(reqObj.getString("Item"));
-
-            exp_time = ""+reqObj.get("Exp");
-            userName.setText(reqObj.getString("Name"));
-            profile_picture.setProfileId(reqObj.getString("FB_id"));
-            itemDesc.setText(reqObj.getString("Description"));
-        }catch (JSONException e) {
-            e.printStackTrace();
-        }
-        itemExp.setText(exp_time);
+        itemName.setText(request.getTitle());
+        itemExp.setText("Will expire in " + request.getMinutesUntilExpiry() + " minutes.");
+        itemDesc.setText(request.getDescription());
+        userName.setText(UserDataCache.getRecentUser().getFirstName());
+        profilePicture.setProfileId(String.valueOf(UserDataCache.getRecentUser().getFacebookId()));
 
     }
 
-    public void alertResponse() {
-        Context context = getActivity().getApplicationContext();
-        CharSequence textMsg = "You've responded to the request!";
-        CharSequence username;
-        try {
-            username = reqObj.getString("Name");
-            textMsg = "You've responded to " + username.toString() + "'s request!";
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        int duration = Toast.LENGTH_LONG;
-
-        Toast toast = Toast.makeText(context, textMsg, duration);
-        toast.show();
-    }
     /** cancel (x) button **/
     public void dismiss(View view){
         getDialog().dismiss();

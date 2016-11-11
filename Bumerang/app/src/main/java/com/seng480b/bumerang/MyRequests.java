@@ -109,29 +109,21 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
                 getListView().setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        // TODO: Check if user has a response to their post
-                        String offerString = checkForResponse(requests.get(position).getReqId());
-                        ArrayList<Request> offers = Request.getListOfRequestsFromJSON(offerString);
-                        if(offers.size() != 0) {
-                            // TODO: Pull data from server about selected request and display info
-                            //Temps
+                        String result = checkForResponse(requests.get(position).getUserId());
+                        if (result != null) {
+                            Offer offer = new Offer(result, requests.get(position));
                             com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
                             String fb_id = profile.getId();
-                            //-----
-                            Request req = requests.get(position);
-                            int reqId = req.getReqId();
-                            Log.d("DEBUG", "Request id: "+Integer.toString(reqId));
+                            int reqId = offer.getRequest_ID();
+                            Log.d("DEBUG", "Request id: "+Integer.toString(offer.getRequest_ID()));
 
-                            String time = "Will expire in " + req.getMinutesUntilExpiry() + " minutes.";
-                            String itemName = req.getTitle();
+                            String time = "Will expire in " + offer.getRequestInfo().getMinutesUntilExpiry() + " minutes.";
+                            String itemName = offer.getRequestInfo().getTitle();
 
-
+                            //TODO: Get information about original poster.
                             //String lenderName = offerUser.getFirstName();
                             String lenderName = "User_0";
                             String phone_no = "(012) 345-6789";
-
-
-
 
                             JSONObject obj = new JSONObject();
                             try {
@@ -170,6 +162,5 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
             }
             return null;
         }
-
     }
 }

@@ -17,9 +17,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -149,44 +146,9 @@ public class Browse extends ListFragment implements OnItemClickListener {
                 getListView().setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                         Request req = requests.get(position);
-
-                        String time = "Will expire in " + req.getMinutesUntilExpiry() + " minutes.";
-                        String itemName = req.getTitle();
-                        int userID = req.getUserId();
-
-                        // TODO: this logic seems incorrect? set to null then get the null value?
-                        UserDataCache.setRecentUser(null);
-                        ProfileUtility.storeRecentUserFromUserId(userID);
-
-                        Profile requestUser = UserDataCache.getRecentUser();
-
-                        //TODO: this while loop must go!, it is only temporary
-                        boolean correctUser = false;
-                        while(requestUser==null){
-                            requestUser = UserDataCache.getRecentUser();
-                        }
-                        //TODO: it just continually checks to see if teh getRequest has finished
-
-                        String userName = requestUser.getFirstName();
-                        String desc = req.getDescription();
-                        String fb_id = Long.toString(requestUser.getFacebookId());
-
-                        JSONObject obj = new JSONObject();
-                        try {
-                            obj.put("Name", userName);
-                            obj.put("Item", itemName);
-                            obj.put("Exp", time);
-                            obj.put("FB_id", fb_id);
-                            obj.put("Description", desc);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
                         DetailFragment details = new DetailFragment();
-
-                        details.sendInfo(obj);
+                        details.setRequest(req);
 
                         FragmentManager fm = getFragmentManager();
                         details.show(fm,"Sample Fragment");
