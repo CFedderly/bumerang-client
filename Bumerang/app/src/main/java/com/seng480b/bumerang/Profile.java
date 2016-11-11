@@ -1,8 +1,10 @@
 package com.seng480b.bumerang;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 class Profile {
@@ -74,5 +76,22 @@ class Profile {
         keyValue.put("last_name", lastName);
         keyValue.put("description", description);
         return keyValue;
+    }
+
+    static ArrayList<Profile> getListOfProfilesFromJSON(String json) {
+        ArrayList<Profile> profiles = new ArrayList<>();
+        try {
+            JSONObject obj = new JSONObject(json);
+            JSONArray results = obj.getJSONArray("results");
+            for (int i = 0; i < results.length() ; i++) {
+                JSONObject result = results.getJSONObject(i).getJSONObject("profile");
+                profiles.add(new Profile(result.toString()));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return profiles;
     }
 }

@@ -7,6 +7,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     private static final String TAG = "FBInstanceID";
+    private static final String Url = BuildConfig.SERVER_URL;
     @Override
     public void onTokenRefresh() {
         // Get updated InstanceID token.

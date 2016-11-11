@@ -139,14 +139,14 @@ public class Browse extends ListFragment implements OnItemClickListener {
         protected void onPostExecute(String result) {
             if (result != null) {
                 final ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
-
+                final ArrayList<Request> reqList = Request.filterRequestsByType(requests, getCurrentRequestType(viewPager));
                 RequestAdapter mAdapter = new RequestAdapter(activity,
                         Request.filterRequestsByType(requests, getCurrentRequestType(viewPager)));
                 getListView().setAdapter(mAdapter);
                 getListView().setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Request req = requests.get(position);
+                        Request req = reqList.get(position);
                         DetailFragment details = new DetailFragment();
                         details.setRequest(req);
 

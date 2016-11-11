@@ -26,6 +26,7 @@ import java.util.ArrayList;
 public class MyRequests extends ListFragment implements OnItemClickListener {
 
     private static final String requestUrl = BuildConfig.SERVER_URL + "/requests/user/";
+    private static final String offerUrl = BuildConfig.SERVER_URL + "/offer/";
     private ViewPager mViewPager;
     private ListView mListView;
     private Activity activity;
@@ -109,58 +110,30 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
                 getListView().setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String result = checkForResponse(requests.get(position).getUserId());
-                        if (result != null) {
-                            Offer offer = new Offer(result, requests.get(position));
-                            com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
-                            String fb_id = profile.getId();
-                            int reqId = offer.getRequest_ID();
-                            Log.d("DEBUG", "Request id: "+Integer.toString(offer.getRequest_ID()));
+                        String myOfferUrl = offerUrl + 4;
+                        String offerResult = null;
+                        try {
+                            offerResult = new getOfferTask.offerTask().execute(myOfferUrl).get();
+                        } catch (Exception e) {
+                            // Error performing get request. display error
+                        }
+                        if (offerResult != null) {
+                            final ArrayList<Profile> offers = Profile.getListOfProfilesFromJSON(offerResult);
+                            // Ensure there are offers available to proceed, else don't do anything.
+                            if (offers.size() != 0) {
+                                Log.d("DEBUG", "Offer from id: " + Integer.toString(offers.get(0).getUserId()));
+                                // Offer has offer_profile and request associated with it.
+                                Offer offer = new Offer(offers.get(0), requests.get(position));
+                                BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
+                                more_info_dialog.setOfferObj(offer);
 
-                            String time = "Will expire in " + offer.getRequestInfo().getMinutesUntilExpiry() + " minutes.";
-                            String itemName = offer.getRequestInfo().getTitle();
-
-                            //TODO: Get information about original poster.
-                            //String lenderName = offerUser.getFirstName();
-                            String lenderName = "User_0";
-                            String phone_no = "(012) 345-6789";
-
-                            JSONObject obj = new JSONObject();
-                            try {
-                                obj.put("Lender", lenderName);
-                                obj.put("Item", itemName);
-                                obj.put("Exp", time);
-                                obj.put("Phone_No", phone_no);
-                                obj.put("FB_id", fb_id);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                FragmentManager fm = getFragmentManager();
+                                more_info_dialog.show(fm, "Sample Fragment");
                             }
-
-                            BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
-                            more_info_dialog.sendInfo(obj);
-
-                            FragmentManager fm = getFragmentManager();
-                            more_info_dialog.show(fm, "Sample Fragment");
                         }
                     }
                 });
             }
-        }
-
-        public String checkForResponse(int requestId) {
-            String offerUrl = BuildConfig.SERVER_URL + "/offer/";
-            // Holds the result of the server query
-            if (UserDataCache.hasProfile()) {
-                String myRequestUrl = offerUrl + Integer.toString(requestId);
-                try {
-                   return Connectivity.makeHttpGetRequest(myRequestUrl);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e("ERROR", "Unable to retrieve requests");
-                    cancel(true);
-                }
-            }
-            return null;
         }
     }
 }
