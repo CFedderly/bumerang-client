@@ -24,7 +24,7 @@ public class DetailFragment extends DialogFragment {
     }
 
     /**
-     * will set the request and cache the requester as the recentUser
+     * will send the request and cache the requester as the recentUser
      * @param req
      */
    public void setRequest(Request req){

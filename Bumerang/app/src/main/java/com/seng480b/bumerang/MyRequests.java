@@ -109,35 +109,13 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
                 getListView().setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String result = checkForResponse(requests.get(position).getUserId());
+                        String result = checkForResponse(requests.get(position).getReqId());
                         if (result != null) {
                             Offer offer = new Offer(result, requests.get(position));
-                            com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
-                            String fb_id = profile.getId();
-                            int reqId = offer.getRequest_ID();
                             Log.d("DEBUG", "Request id: "+Integer.toString(offer.getRequest_ID()));
 
-                            String time = "Will expire in " + offer.getRequestInfo().getMinutesUntilExpiry() + " minutes.";
-                            String itemName = offer.getRequestInfo().getTitle();
-
-                            //TODO: Get information about original poster.
-                            //String lenderName = offerUser.getFirstName();
-                            String lenderName = "User_0";
-                            String phone_no = "(012) 345-6789";
-
-                            JSONObject obj = new JSONObject();
-                            try {
-                                obj.put("Lender", lenderName);
-                                obj.put("Item", itemName);
-                                obj.put("Exp", time);
-                                obj.put("Phone_No", phone_no);
-                                obj.put("FB_id", fb_id);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
                             BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
-                            more_info_dialog.sendInfo(obj);
+                            more_info_dialog.setOfferObj(offer);
 
                             FragmentManager fm = getFragmentManager();
                             more_info_dialog.show(fm, "Sample Fragment");
@@ -148,7 +126,7 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
         }
 
         public String checkForResponse(int requestId) {
-            String offerUrl = BuildConfig.SERVER_URL + "/offer/";
+            String offerUrl =  BuildConfig.SERVER_URL + "/offer/";
             // Holds the result of the server query
             if (UserDataCache.hasProfile()) {
                 String myRequestUrl = offerUrl + Integer.toString(requestId);
