@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListAdapter;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -21,6 +22,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Browse extends ListFragment implements OnItemClickListener {
 
@@ -124,7 +126,6 @@ public class Browse extends ListFragment implements OnItemClickListener {
     }
 
     private class GetRequestsTask extends AsyncTask<String, Void, String> {
-
         @Override
         protected String doInBackground(String... params) {
             try {
