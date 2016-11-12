@@ -28,7 +28,7 @@ public class BorrowDialogFragment extends DialogFragment {
     // Sets the offer object and caches responding user
     public void setOfferObj(Offer offer) {
         this.offer = offer;
-        int userId = offer.getProfile_ID();
+        int userId = offer.getOfferProfile().getUserId();
         ProfileUtility.storeRecentUserFromUserId(userId);
     }
 
@@ -102,7 +102,7 @@ public class BorrowDialogFragment extends DialogFragment {
         // TODO: CODE BELOW SITUATION
         // Change status of the request to matched
         // By sending to server via async
-        // new acceptOffer.execute(offer);
+        // new acceptOffer.execute(offerUrl, offer);
 
     }
     /** cancel (x) button **/
