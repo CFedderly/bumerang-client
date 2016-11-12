@@ -82,8 +82,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 android:layout_below="@+id/inputTitle"
-                android:layout_alignParentStart="true"
-                android:layout_alignEnd="@+id/labelDistanceNum" />
+                android:layout_alignParentStart="true" />
 
             <EditText
                 android:id="@+id/inputDescription"
@@ -209,6 +208,24 @@
                     android:ems="10"
                     android:layout_below="@+id/labelTags"
                     android:layout_alignParentStart="true" />
+
+                <Button
+                    android:id="@+id/createRequest_buttonPickImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/inputTags"
+                    android:drawableLeft="@drawable/ic_menu_gallery"
+                    android:textAllCaps="false"
+                    android:background="@android:color/transparent"
+                    android:text=" Choose An Image"/>
+
+                <com.seng480b.bumerang.SquareImage
+                    android:id="@+id/createRequest_Image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/createRequest_buttonPickImage"
+                    android:scaleType="centerCrop" />
+
             </RelativeLayout>
 
             <RelativeLayout
