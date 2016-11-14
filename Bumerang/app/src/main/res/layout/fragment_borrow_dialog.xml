@@ -46,7 +46,6 @@
         android:id="@+id/phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="(111) 111-1111"
         android:layout_below="@id/divider_line2"
         android:phoneNumber="true"
         android:layout_centerHorizontal="true"/>

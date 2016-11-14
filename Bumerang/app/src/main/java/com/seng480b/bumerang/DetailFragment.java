@@ -75,10 +75,10 @@ public class DetailFragment extends DialogFragment {
                     // TODO: this is a hacky solution, will need real error handling
                 }
                 if(result != null){
-                    Toast.makeText(getActivity(), "You've got "+ requester +" covered!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getString(R.string.you_got_message)+ " " + requester + " " + getString(R.string.you_covered_message), Toast.LENGTH_LONG).show();
                     dismiss(v);
                 }else{
-                    Toast.makeText(getActivity(), "Oops something went wrong", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getString(R.string.error_message), Toast.LENGTH_LONG).show();
                 }
             }
         });

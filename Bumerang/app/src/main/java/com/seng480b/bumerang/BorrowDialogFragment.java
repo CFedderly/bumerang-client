@@ -18,7 +18,6 @@ import com.facebook.login.widget.ProfilePictureView;
 public class BorrowDialogFragment extends DialogFragment {
     private View rootView;
     private Offer offer;
-    private static final String offerUrl = BuildConfig.SERVER_URL + "/offer/";
 
     //private Button cancelButton, acceptButton;
     public BorrowDialogFragment() {
@@ -28,8 +27,6 @@ public class BorrowDialogFragment extends DialogFragment {
     // Sets the offer object and caches responding user
     public void setOfferObj(Offer offer) {
         this.offer = offer;
-        int userId = offer.getOfferProfile().getUserId();
-        ProfileUtility.storeRecentUserFromUserId(userId);
     }
 
     @Override
@@ -62,9 +59,9 @@ public class BorrowDialogFragment extends DialogFragment {
                 //Show dialog box with responders phone number in it.
                 new AlertDialog.Builder(getContext())
                         .setTitle("Accept Lend Offer")
-                        .setMessage(UserDataCache.getRecentUser().getFirstName() +
+                        .setMessage(offer.getOfferProfile().getFirstName() +
                                 "'s phone number: " +
-                                UserDataCache.getRecentUser().getPhoneNumber())
+                                offer.getOfferProfile().getPhoneNumber())
                         .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dismiss();
@@ -95,10 +92,8 @@ public class BorrowDialogFragment extends DialogFragment {
         // Fill text fields with proper user info.
         itemName.setText(offer.getRequestInfo().getTitle());
         itemExp.setText("Will expire in " + offer.getRequestInfo().getMinutesUntilExpiry() + " minutes.");
-        lenderName.setText(UserDataCache.getRecentUser().getFirstName());
-        // Don't set phone text here! Have another dialog box pop up after they have accepted.
-        //phone.setText(UserDataCache.getRecentUser().getPhoneNumber());
-        profile_picture.setProfileId(String.valueOf(UserDataCache.getRecentUser().getFacebookId()));
+        lenderName.setText(offer.getOfferProfile().getFirstName() + getString(R.string.covered_message));
+        profile_picture.setProfileId(String.valueOf(offer.getOfferProfile().getFacebookId()));
         // TODO: CODE BELOW SITUATION
         // Change status of the request to matched
         // By sending to server via async
