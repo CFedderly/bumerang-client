@@ -103,6 +103,8 @@ class Request {
 
     public String getDescription() { return this.description; }
 
+    public RequestType getRequestType() { return this.requestType; }
+
     HashMap<String, String> getJSONKeyValuePairs() {
         HashMap<String, String> keyValue = new HashMap<>();
         keyValue.put("title", title);

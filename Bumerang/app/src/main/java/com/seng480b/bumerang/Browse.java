@@ -143,7 +143,7 @@ public class Browse extends ListFragment implements OnItemClickListener {
                 final ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
 
                 RequestAdapter mAdapter = new RequestAdapter(activity,
-                        Request.filterRequestsByType(requests, getCurrentRequestType(viewPager)));
+                        Request.filterRequestsByType(requests, getCurrentRequestType(viewPager)),false);
                 getListView().setAdapter(mAdapter);
                 getListView().setOnItemClickListener(new OnItemClickListener() {
                     @Override

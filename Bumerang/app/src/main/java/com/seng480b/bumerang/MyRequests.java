@@ -108,7 +108,7 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
                 // TODO: uncomment this once there are borrow/lend tabs on the myrequest page
             /*RequestAdapter mAdapter = new RequestAdapter(activity,
                     Request.filterRequestsByType(requests, Browse.getCurrentRequestType(mViewPager)));*/
-                RequestAdapter mAdapter = new RequestAdapter(activity, requests);
+                RequestAdapter mAdapter = new RequestAdapter(activity, requests, true);
                 getListView().setAdapter(mAdapter);
                 getListView().setOnItemClickListener(new OnItemClickListener() {
                     @Override
