@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -19,12 +18,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
-import com.google.android.gms.vision.text.Text;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.FirebaseInstanceIdService;
+
 import com.google.firebase.messaging.FirebaseMessaging;
 
 
@@ -41,7 +39,7 @@ public class Home extends AppCompatActivity
         super.onCreate(savedInstanceState);
         // Firebase Setup here.
         FirebaseMessaging.getInstance().subscribeToTopic("all");
-        // Initalize facebook SDK
+        // Initialize facebook SDK
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_nav_drawer);
         //toolbar/actionbar setup
@@ -183,17 +181,13 @@ public class Home extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Fragment editProfile = new EditProfileFragment();
         Fragment fragment2 = new TestFragment();
 
         Fragment createReq = new CreateRequest();
-        //ListFragment browse = new Browse();
+
         Fragment my_requests = new MyRequests();
 
         Fragment profilePage = new ProfilePage();
-
-        Fragment browse = new Browse();
-
 
         if (id == R.id.nav_createReq) {
             // Hide the Floating action button
@@ -221,11 +215,6 @@ public class Home extends AppCompatActivity
             ft.commit();
 
             loadTabs();
-
-
-            //Intent reload = new Intent(this, Home.class );
-            //startActivity(reload);
-
         } else if (id == R.id.nav_manage) {
             // Hide the Floating action button
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();

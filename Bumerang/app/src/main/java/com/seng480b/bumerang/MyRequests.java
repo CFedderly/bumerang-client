@@ -15,11 +15,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
+import android.widget.ListView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.widget.ListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +26,7 @@ import java.util.ArrayList;
 public class MyRequests extends ListFragment implements OnItemClickListener {
 
     private static final String requestUrl = BuildConfig.SERVER_URL + "/requests/user/";
+    private static final String offerUrl = BuildConfig.SERVER_URL + "/offer/ids/";
     private ViewPager mViewPager;
     private ListView mListView;
     private Activity activity;
@@ -105,58 +105,37 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
         protected void onPostExecute(String result) {
             if (result != null) {
                 final ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
-                // TODO: uncomment this once there are borrow/lend tabs on the myrequest page
-            /*RequestAdapter mAdapter = new RequestAdapter(activity,
-                    Request.filterRequestsByType(requests, Browse.getCurrentRequestType(mViewPager)));*/
-                RequestAdapter mAdapter = new RequestAdapter(activity, requests);
+                MyRequestAdapter mAdapter = new MyRequestAdapter(activity, requests);
                 getListView().setAdapter(mAdapter);
                 getListView().setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        //true if someone has responded to your request otherwise it is "un-clickable"
-                        boolean responded = true;
-                        if(responded) {
-                            //Temps
-                            com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
-                            String fb_id = profile.getId();
-                            //-----
-                            Request req = requests.get(position);
-                            int reqId = req.getReqId();
-                            Log.d("DEBUG", "Request id: "+Integer.toString(reqId));
+                        Log.d("Request id for offer: ", Integer.toString(requests.get(position).getReqId()));
+                        String myOfferUrl = offerUrl + requests.get(position).getReqId();
+                        String offerResult = null;
+                        try {
+                            offerResult = new getOfferTask.offerTask().execute(myOfferUrl).get();
+                        } catch (Exception e) {
+                            // Error performing get request. display error
+                            Log.e("Error:", "Unable to retrieve offer information!");
+                        }
+                        if (offerResult != null) {
+                            final ArrayList<Offer> offers = Offer.getListOfOffersFromJSON(offerResult);
+                            // Ensure there are offers available to proceed, else don't do anything.
+                            if (offers.size() != 0) {
+                                Log.d("DEBUG", "Offer from id: " + Integer.toString(offers.get(0).getOfferProfile().getUserId()));
+                                // Offer has offer_profile and request associated with it.
+                                BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
+                                // A more elegant solution will be needed. But for now, get the first offer.
+                                more_info_dialog.setOfferObj(offers.get(0));
 
-                            String time = "Will expire in " + req.getMinutesUntilExpiry() + " minutes.";
-                            String itemName = req.getTitle();
-
-
-                            //String lenderName = offerUser.getFirstName();
-                            String lenderName = "User_0";
-                            String phone_no = "(012) 345-6789";
-
-
-
-
-                            JSONObject obj = new JSONObject();
-                            try {
-                                obj.put("Lender", lenderName);
-                                obj.put("Item", itemName);
-                                obj.put("Exp", time);
-                                obj.put("Phone_No", phone_no);
-                                obj.put("FB_id", fb_id);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                FragmentManager fm = getFragmentManager();
+                                more_info_dialog.show(fm, "Sample Fragment");
                             }
-
-                            BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
-                            more_info_dialog.sendInfo(obj);
-
-                            FragmentManager fm = getFragmentManager();
-                            more_info_dialog.show(fm, "Sample Fragment");
                         }
                     }
                 });
             }
         }
-
-
     }
 }

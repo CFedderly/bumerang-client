@@ -1,7 +1,5 @@
 package com.seng480b.bumerang;
 
-import android.util.Log;
-
 /**
  * Static class to store user information for the current session
  */

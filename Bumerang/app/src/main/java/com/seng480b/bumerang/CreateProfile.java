@@ -1,10 +1,8 @@
 package com.seng480b.bumerang;
 
-import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.analytics.FirebaseAnalytics.Event;
 import com.google.firebase.analytics.FirebaseAnalytics.Param;
