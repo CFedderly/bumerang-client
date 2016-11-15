@@ -55,7 +55,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Priority of the messages could be either MAX or HIGH. Set to max because they are time critical and urgent.
         // TODO: Update resultPendingIntent for .addAction below to redirect to the proper
 
-        // Set text for the notification based upon which is recieved
+        // Set text for the notification based upon which is received
         // 0 - request, 1 - offer.
         // TODO: Implement changing Content title based upon above number receieved.
 

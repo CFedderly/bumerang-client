@@ -2,13 +2,12 @@ package com.seng480b.bumerang;
 
 
 import android.util.Log;
-
-import com.facebook.*;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     private static final String TAG = "FBInstanceID";
+    private static final String Url = BuildConfig.SERVER_URL;
     @Override
     public void onTokenRefresh() {
         // Get updated InstanceID token.
@@ -25,7 +24,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
         String user_id = profile.getId();
         if (user_id != null) {
-            // send the device ID to the server paired with the facebook id.
+            // TODO: send the device ID to the server paired with the facebook id.
         }
 
     }
