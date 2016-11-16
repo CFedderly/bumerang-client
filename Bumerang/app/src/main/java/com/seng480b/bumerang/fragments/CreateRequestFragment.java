@@ -1,14 +1,22 @@
 package com.seng480b.bumerang.fragments;
 
+
+import android.app.Activity;
+import android.os.Build;
+import android.support.v4.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
+import android.support.v4.app.DialogFragment;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
@@ -27,6 +36,7 @@ import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.seng480b.bumerang.BuildConfig;
+import com.seng480b.bumerang.DateTimePickerFragment;
 import com.seng480b.bumerang.activities.HomeActivity;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.models.Request;
@@ -44,12 +54,12 @@ public class CreateRequestFragment extends Fragment {
 
     FirebaseAnalytics mFireBaseAnalytics;
     private static final String REQUEST_URL = BuildConfig.SERVER_URL + "/request/";
-    private static final int DEFAULT_HOURS = 0;
     private static final int DEFAULT_MINUTES = 120;
+    //that to :   private static final int defaultMinutes = 100;
     private static final int TITLE_FIELD = R.id.inputTitle;
     private static final int DESCRIPTION_FIELD = R.id.inputDescription;
-    private static final int HOURS_FIELD = R.id.inputHours;
-    private static final int MINUTES_FIELD = R.id.inputMinutes;
+
+    private int durationInMinutes = -1;
 
     private Request currRequest;
     private Request.RequestType requestType;
@@ -57,7 +67,7 @@ public class CreateRequestFragment extends Fragment {
     private int distance;
 
     private TextView distanceText;
-    private int multiplier;
+    private int multiplier = 1;
 
     private static final int PICK_IMAGE = 12345;
     private ImageView chosenImage;
@@ -65,6 +75,10 @@ public class CreateRequestFragment extends Fragment {
     View inflatedView;
     Button cancelButton;
     Button createButton;
+
+    public static final int CREATE_REQUEST_FRAGMENT = 1;
+
+
 
     @Override
     // Fragment Cancel = new BrowseFragment();
@@ -99,6 +113,59 @@ public class CreateRequestFragment extends Fragment {
                         requestType = Request.RequestType.LEND;
                         break;
                 }
+            }
+        });
+
+
+        // Setup for the button to change time and date (ie the time your ad will exist for)
+        Button buttonToSetTime = (Button) inflatedView.findViewById(R.id.buttonToSetTime);
+        buttonToSetTime.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               DateTimePickerFragment dateTimePicker = new DateTimePickerFragment();
+
+               //the link back from the DateTimePickerFragment to access -hours- and -minutes-
+               dateTimePicker.setTargetFragment(CreateRequestFragment.this, CREATE_REQUEST_FRAGMENT);
+
+               FragmentManager fm = getFragmentManager();
+               dateTimePicker.show(fm,"Date and Time Picker");
+           }
+        });
+
+
+        Spinner distSpinner = (Spinner) inflatedView.findViewById(R.id.spinnerDistance);
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.distance_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        distSpinner.setAdapter(adapter);
+
+        //getting distanceText here so we can change it whenever the spinner value is changed
+        distanceText = (TextView) inflatedView.findViewById(R.id.labelDistanceNum);
+        //Set so that NO selection within the spinner is selected before the user selects it
+        distSpinner.setSelection(0,false);
+
+        distSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 1) {
+                    multiplier = 10;
+                    distanceInMeters = true;
+                    int test = Integer.parseInt(distanceText.getText().toString());
+                    distanceText.setText(String.valueOf(test*multiplier));
+                } else {
+                    multiplier = 1;
+                    distanceInMeters = false;
+                    int test = Integer.parseInt(distanceText.getText().toString());
+                    distanceText.setText(String.valueOf(test/10));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
@@ -145,6 +212,7 @@ public class CreateRequestFragment extends Fragment {
             }
         });
 
+        // Setup for the Create button on screen
         createButton = (Button) inflatedView.findViewById(R.id.buttonCreate);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,32 +254,6 @@ public class CreateRequestFragment extends Fragment {
             }
         });
 
-        Spinner distSpinner = (Spinner) inflatedView.findViewById(R.id.spinnerDistance);
-
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.distance_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        distSpinner.setAdapter(adapter);
-
-        distSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 1) {
-                    multiplier = 10;
-                    distanceInMeters = true;
-                } else {
-                    multiplier = 1;
-                    distanceInMeters = false;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
 
         return inflatedView;
     }
@@ -221,8 +263,8 @@ public class CreateRequestFragment extends Fragment {
 
         EditText title = (EditText) inflatedView.findViewById(TITLE_FIELD);
         EditText description = (EditText) inflatedView.findViewById(DESCRIPTION_FIELD);
-        EditText hours = (EditText) inflatedView.findViewById(HOURS_FIELD);
-        EditText minutes = (EditText) inflatedView.findViewById(MINUTES_FIELD);
+        //EditText hours = (EditText) inflatedView.findViewById(hoursField);
+        //EditText minutes = (EditText) inflatedView.findViewById(minutesField);
 
         // Check that all fields are filled, return null if not
         if (isEmpty(title)) {
@@ -232,8 +274,7 @@ public class CreateRequestFragment extends Fragment {
 
         String titleStr = editTextToString(title);
         String descriptionStr;
-        int hoursInt;
-        int minutesInt;
+        int totalTimeInMinutes;
 
         if (!isEmpty(description)) {
             descriptionStr = editTextToString(description);
@@ -241,16 +282,11 @@ public class CreateRequestFragment extends Fragment {
             descriptionStr = "";
         }
 
-        if (!isEmpty(hours)) {
-            hoursInt = Integer.parseInt(editTextToString(hours));
-        } else {
-            hoursInt = DEFAULT_HOURS;
-        }
 
-        if (!isEmpty(minutes)) {
-            minutesInt = Integer.parseInt(editTextToString(minutes));
+        if (durationInMinutes > -1) {
+            totalTimeInMinutes = durationInMinutes;
         } else {
-            minutesInt = DEFAULT_MINUTES;
+            totalTimeInMinutes = DEFAULT_MINUTES;
         }
 
         if (UserDataCache.hasProfile()) {
@@ -259,13 +295,14 @@ public class CreateRequestFragment extends Fragment {
             //This is where info on what users are entering is collected
             mFireBaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
-            //Just turn hours into minutes
-            int totalTime = (hoursInt*60)+minutesInt;
+            //Turn total minutes (durationInMinutes) into hours and minutes
+            int hoursInt = durationInMinutes/60;
+            int minutesInt = durationInMinutes % 60;
 
             Bundle params = new Bundle();
             params.putString( FirebaseAnalytics.Param.ITEM_NAME, titleStr);
             params.putString("Description", descriptionStr);
-            params.putLong(FirebaseAnalytics.Param.VALUE, totalTime);
+            params.putLong(FirebaseAnalytics.Param.VALUE, totalTimeInMinutes);
             mFireBaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, params);
 
             return new Request(userId, titleStr, descriptionStr, hoursInt, minutesInt, distance, requestType);
@@ -289,6 +326,17 @@ public class CreateRequestFragment extends Fragment {
             Uri imageUri = data.getData();
             chosenImage.setImageURI(imageUri);
         }
+
+        //grab data (total duration in minutes) from DateTimePickerFragment
+        switch(requestCode){
+            case CREATE_REQUEST_FRAGMENT:
+                if (resultCode == Activity.RESULT_OK) {
+                    Bundle bundle = data.getExtras();
+                    durationInMinutes = bundle.getInt("durationInMinutes",-1);
+                }
+                break;
+        }
+
     }
 
 

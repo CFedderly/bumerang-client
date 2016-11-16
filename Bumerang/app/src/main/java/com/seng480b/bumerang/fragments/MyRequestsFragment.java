@@ -87,7 +87,8 @@ public class MyRequestsFragment extends ListFragment implements OnItemClickListe
                 new GetRequestsTask().execute(myRequestUrl);
             }
         } else {
-            Toast.makeText(activity, R.string.unable_to_display_requests, Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, R.string.unable_to_display_requests,
+                    Toast.LENGTH_LONG).show();
         }
     }
 

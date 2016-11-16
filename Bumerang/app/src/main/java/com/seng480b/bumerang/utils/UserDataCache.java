@@ -36,4 +36,5 @@ public final class UserDataCache {
         UserDataCache.currentUser.setUserId(id);
     }
 
+
 }
