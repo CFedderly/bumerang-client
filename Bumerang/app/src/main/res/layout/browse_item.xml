@@ -1,54 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="120dp"
+    android:orientation="vertical"
+    android:layout_margin="5dp"
+    android:elevation="3dp"
+    android:background="@drawable/rectangle"
+    android:id="@+id/LinearLayoutBox">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/LinearLayoutBox"
+    <com.seng480b.bumerang.SquareImage
+        android:id="@+id/browseItem_Image"
+        android:layout_marginTop="13dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_alignParentEnd="true"
+        android:background="@color/colorPrimaryDark"
+        android:src="@drawable/bumerang_umbrella"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/request_title"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="2dp"
+        android:layout_toStartOf="@id/browseItem_Image"
+        android:layout_alignParentStart="true"
+        android:textSize="20sp"
+        android:text="Request title: " />
+
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_margin="2.5dp"
-        android:elevation="10dp"
-        android:background="@drawable/rectangle" >
+        android:layout_height="wrap_content"
+        android:text="Name of user "
+        android:layout_marginBottom="2dp"
+        android:layout_marginStart="25dp"
+        android:layout_toStartOf="@id/browseItem_Image"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/request_user"
+        android:visibility = "gone"/>
 
-        <TextView
-            android:id="@+id/request_title"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="5dp"
-            android:textSize="20sp"
-            android:text="Request title: " />
+    <TextView
+        android:id="@+id/request_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="2dp"
+        android:layout_below="@id/request_title"
+        android:layout_above="@id/request_user"
+        android:layout_toStartOf="@id/browseItem_Image"
+        android:layout_alignParentStart="true"
+        android:textSize="17sp"
+        android:text="Request description:" />
 
-        <TextView
-            android:id="@+id/request_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="10dp"
-            android:textSize="17sp"
-            android:text="Request description:" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Name of user "
-            android:layout_marginTop="90dp"
-            android:gravity="center"
-            android:id="@+id/request_user" />
-
-    </LinearLayout>
 
     <ImageButton
         android:id="@+id/buttonReplyWarning"
@@ -57,10 +65,9 @@
         android:src="@drawable/ic_message_alert"
         android:background="@android:color/transparent"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="45dp"
-        android:layout_marginEnd="10dp"
-        android:visibility="invisible" />
-
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="5dp"
+        android:visibility="gone" />
 
 </RelativeLayout>
 

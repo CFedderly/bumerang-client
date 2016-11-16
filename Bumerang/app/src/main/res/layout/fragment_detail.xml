@@ -8,6 +8,14 @@
     android:padding="10dp">
 
 
+    <com.seng480b.bumerang.SquareImage
+        android:id="@+id/browseItemDetail_Image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/bumerang_umbrella"
+        android:visibility="gone"/>
+
     <ImageButton
         android:id="@+id/buttonDetailDismiss"
         android:layout_width="wrap_content"
@@ -23,6 +31,7 @@
         android:text="Item Title and More"
         android:textSize="25dp"
         android:textStyle="bold"
+        android:layout_below="@id/browseItemDetail_Image"
         android:layout_centerHorizontal="true"/>
 
     <TextView

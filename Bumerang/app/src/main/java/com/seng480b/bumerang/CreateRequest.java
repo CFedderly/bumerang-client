@@ -1,6 +1,9 @@
 package com.seng480b.bumerang;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -25,6 +29,8 @@ import android.widget.Toast;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.IOException;
+
+import static android.app.Activity.RESULT_OK;
 
 public class CreateRequest extends Fragment {
 
@@ -44,6 +50,9 @@ public class CreateRequest extends Fragment {
 
     private TextView distanceText;
     private int multiplier;
+
+    private static final int PICK_IMAGE = 12345;
+    private ImageView chosenImage;
 
     View inflatedView;
     Button cancelButton;
@@ -142,6 +151,7 @@ public class CreateRequest extends Fragment {
             }
         });
 
+        //set up button for hiding and expanding advanced options
         final Button adv_options_button = (Button)inflatedView.findViewById(R.id.buttonAdvancedOptions);
         adv_options_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,8 +168,18 @@ public class CreateRequest extends Fragment {
             }
         });
 
+        //Set up button and gallery to pick an image
+        chosenImage = (ImageView) inflatedView.findViewById(R.id.createRequest_Image);
+        Button pickImageButton = (Button) inflatedView.findViewById(R.id.createRequest_buttonPickImage);
+        pickImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery();
+            }
+        });
 
-       Spinner distSpinner = (Spinner) inflatedView.findViewById(R.id.spinnerDistance);
+
+        Spinner distSpinner = (Spinner) inflatedView.findViewById(R.id.spinnerDistance);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
@@ -249,6 +269,23 @@ public class CreateRequest extends Fragment {
             return null;
         }
     }
+
+
+    private void openGallery(){
+        Intent gallery = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery,PICK_IMAGE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+        if(resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
+            Uri imageUri = data.getData();
+            chosenImage.setImageURI(imageUri);
+        }
+    }
+
 
     private void alertForEmptyFields() {
         Toast.makeText(getActivity(), R.string.empty_request_field_message, Toast.LENGTH_LONG).show();

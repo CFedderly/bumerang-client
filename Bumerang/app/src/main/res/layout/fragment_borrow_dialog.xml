@@ -7,6 +7,14 @@
     android:padding="10dp" >
 
 
+    <com.seng480b.bumerang.SquareImage
+        android:id="@+id/borrowDialog_Image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/bumerang_umbrella"
+        android:visibility="gone"/>
+
     <ImageButton
         android:id="@+id/buttonBorrowDismiss"
         android:layout_width="wrap_content"
@@ -19,6 +27,7 @@
         android:id="@+id/item_wanted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/borrowDialog_Image"
         android:text="[Item Name]"
         android:textSize="25dp"
         android:textStyle="bold"
