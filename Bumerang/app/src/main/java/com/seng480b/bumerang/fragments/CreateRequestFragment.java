@@ -6,8 +6,6 @@ import android.os.Build;
 import android.support.v4.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
-import android.support.v4.app.DialogFragment;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
@@ -36,7 +34,9 @@ import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.seng480b.bumerang.BuildConfig;
+import com.seng480b.bumerang.DatePickerFragment;
 import com.seng480b.bumerang.DateTimePickerFragment;
+import com.seng480b.bumerang.TimePickerFragment;
 import com.seng480b.bumerang.activities.HomeActivity;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.models.Request;
@@ -48,7 +48,10 @@ import java.util.Locale;
 
 import static com.seng480b.bumerang.utils.Utility.*;
 
+import java.util.Calendar;
+
 import static android.app.Activity.RESULT_OK;
+
 
 public class CreateRequestFragment extends Fragment {
 
@@ -60,6 +63,7 @@ public class CreateRequestFragment extends Fragment {
     private static final int DESCRIPTION_FIELD = R.id.inputDescription;
 
     private int durationInMinutes = -1;
+    private Calendar setTime;
 
     private Request currRequest;
     private Request.RequestType requestType;
@@ -77,8 +81,6 @@ public class CreateRequestFragment extends Fragment {
     Button createButton;
 
     public static final int CREATE_REQUEST_FRAGMENT = 1;
-
-
 
     @Override
     // Fragment Cancel = new BrowseFragment();
@@ -117,19 +119,54 @@ public class CreateRequestFragment extends Fragment {
         });
 
 
-        // Setup for the button to change time and date (ie the time your ad will exist for)
+        // Setup for the button to change time (ie the time your ad will exist for)
         Button buttonToSetTime = (Button) inflatedView.findViewById(R.id.buttonToSetTime);
         buttonToSetTime.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               DateTimePickerFragment dateTimePicker = new DateTimePickerFragment();
+               Bundle args = new Bundle();
+               args.putInt("minute",0);
+               args.putInt("hour",0);
+               args.putInt("dayOfMonth",1);  //put in current month, OR set month
+               args.putInt("month",1); //same
+               args.putInt("year",1);
 
-               //the link back from the DateTimePickerFragment to access -hours- and -minutes-
-               dateTimePicker.setTargetFragment(CreateRequestFragment.this, CREATE_REQUEST_FRAGMENT);
+               //DateTimePickerFragment dateTimePicker = new DateTimePickerFragment();
+               DialogFragment timePicker = new TimePickerFragment();
+
+               timePicker.setArguments(args);
+
+               //the link back from the timePickerFragment to access -hours- and -minutes-
+               timePicker.setTargetFragment(CreateRequestFragment.this, CREATE_REQUEST_FRAGMENT);
 
                FragmentManager fm = getFragmentManager();
-               dateTimePicker.show(fm,"Date and Time Picker");
+               //dateTimePicker.show(fm,"Date and Time Picker");
+               timePicker.show(fm,"time picker");
            }
+        });
+
+        // Setup for the button to change date (ie the date your ad will exist for)
+        Button buttonToSetDate = (Button) inflatedView.findViewById(R.id.buttonToSetDate);
+        buttonToSetDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle args = new Bundle();
+                args.putInt("minute",0);  //put in current minute, OR set minute
+                args.putInt("hour",0); //same
+                args.putInt("dayOfMonth",1);  //put in current onth, OR set month
+                args.putInt("month",1); //same
+                args.putInt("year",1);
+
+                DialogFragment datePicker = new DatePickerFragment();
+
+                datePicker.setArguments(args);
+
+                //the link back from the DateTimePickerFragment to access -hours- and -minutes-
+                datePicker.setTargetFragment(CreateRequestFragment.this, CREATE_REQUEST_FRAGMENT);
+
+                FragmentManager fm = getFragmentManager();
+                datePicker.show(fm,"date picker");
+            }
         });
 
 
@@ -154,13 +191,13 @@ public class CreateRequestFragment extends Fragment {
                 if (position == 1) {
                     multiplier = 10;
                     distanceInMeters = true;
-                    int test = Integer.parseInt(distanceText.getText().toString());
-                    distanceText.setText(String.valueOf(test*multiplier));
+                    int distanceNum = Integer.parseInt(distanceText.getText().toString());
+                    distanceText.setText(String.valueOf(distanceNum*multiplier));
                 } else {
                     multiplier = 1;
                     distanceInMeters = false;
-                    int test = Integer.parseInt(distanceText.getText().toString());
-                    distanceText.setText(String.valueOf(test/10));
+                    int distanceNum = Integer.parseInt(distanceText.getText().toString());
+                    distanceText.setText(String.valueOf(distanceNum/10));
                 }
             }
 
@@ -260,11 +297,8 @@ public class CreateRequestFragment extends Fragment {
 
 
     private Request createRequest() {
-
         EditText title = (EditText) inflatedView.findViewById(TITLE_FIELD);
         EditText description = (EditText) inflatedView.findViewById(DESCRIPTION_FIELD);
-        //EditText hours = (EditText) inflatedView.findViewById(hoursField);
-        //EditText minutes = (EditText) inflatedView.findViewById(minutesField);
 
         // Check that all fields are filled, return null if not
         if (isEmpty(title)) {
@@ -327,12 +361,15 @@ public class CreateRequestFragment extends Fragment {
             chosenImage.setImageURI(imageUri);
         }
 
-        //grab data (total duration in minutes) from DateTimePickerFragment
+        //grab data (total duration in minutes) from TimePickerFragment
         switch(requestCode){
             case CREATE_REQUEST_FRAGMENT:
                 if (resultCode == Activity.RESULT_OK) {
                     Bundle bundle = data.getExtras();
                     durationInMinutes = bundle.getInt("durationInMinutes",-1);
+
+
+
                 }
                 break;
         }

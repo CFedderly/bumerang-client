@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -32,7 +33,7 @@ public class DateTimePickerFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_date_time_picker, container, false);
-        getDialog().setTitle("-SET DURATION- DIALOG");
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         Calendar today = Calendar.getInstance();
 
@@ -53,10 +54,10 @@ public class DateTimePickerFragment extends DialogFragment {
                 int durationInMinutes = findDuration();
                 int hours = durationInMinutes/60;
                 int minutes = durationInMinutes % 60;
-                String display_text = createHourMinuteMessage(hours,minutes);
+                String displayText = createHourMinuteMessage(hours,minutes);
 
-                TextView time_text = (TextView) getActivity().findViewById(R.id.inputTime);
-                time_text.setText(display_text);
+                TextView timeText = (TextView) getActivity().findViewById(R.id.inputTime);
+                timeText.setText(displayText);
 
                 Intent i = new Intent();
                 i.putExtra("durationInMinutes",durationInMinutes);
@@ -70,8 +71,7 @@ public class DateTimePickerFragment extends DialogFragment {
     }
 
     /**
-     *
-     * @return int[] returns array of 2 ints: 1rst element is hour, 2nd is minute
+     * @return int
      */
     public int findDuration(){
         DatePicker datePicker = (DatePicker) rootView.findViewById(R.id.date_picker);
@@ -112,16 +112,16 @@ public class DateTimePickerFragment extends DialogFragment {
         return (int)diff/(60*1000);
     }
 
-    public String createHourMinuteMessage(int hour_diff, int minute_diff){
-        String hour_text = " hours, ";
-        String minute_text = " minutes";
-        if (hour_diff == 1) {
-            hour_text = " hour, ";
+    public String createHourMinuteMessage(int hourDiff, int minuteDiff){
+        String hourText = " hours, ";
+        String minuteText = " minutes";
+        if (hourDiff == 1) {
+            hourText = " hour, ";
         }
-        if (minute_diff == 1) {
-            minute_text = " minute";
+        if (minuteDiff == 1) {
+            minuteText = " minute";
         }
-        return (hour_diff + hour_text + minute_diff + minute_text);
+        return (hourDiff + hourText + minuteDiff + minuteText);
 
     }
 
