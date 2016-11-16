@@ -77,4 +77,12 @@ class Profile {
         keyValue.put("description", description);
         return keyValue;
     }
+
+    public void addKarma(int karma) {
+        this.karma += karma;
+    }
+    public void removeKarma(int karma){
+        this.karma-= karma;
+    }
+
 }

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.login.widget.ProfilePictureView;
 
@@ -55,6 +56,14 @@ public class BorrowDialogFragment extends DialogFragment {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //give karma to the users
+                boolean success = new KarmaUtility().distributeKarmaForRequest(
+                        UserDataCache.getCurrentUser().getUserId(),
+                        offer.getOfferProfile().getUserId()
+                );
+                if (success){
+                    Toast.makeText(getActivity(), "Congratulations, you got some Karma!", Toast.LENGTH_SHORT).show();
+                }
 
                 //Show dialog box with responders phone number in it.
                 new AlertDialog.Builder(getContext())
