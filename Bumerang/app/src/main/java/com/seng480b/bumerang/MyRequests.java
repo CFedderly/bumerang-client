@@ -17,9 +17,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 import android.widget.ListView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -110,8 +107,8 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
                 getListView().setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Log.d("Request id for offer: ", Integer.toString(requests.get(position).getReqId()));
-                        String myOfferUrl = offerUrl + requests.get(position).getReqId();
+                        Log.d("Request id for offer: ", Integer.toString(requests.get(position).getRequestId()));
+                        String myOfferUrl = offerUrl + requests.get(position).getRequestId();
                         String offerResult = null;
                         try {
                             offerResult = new getOfferTask.offerTask().execute(myOfferUrl).get();

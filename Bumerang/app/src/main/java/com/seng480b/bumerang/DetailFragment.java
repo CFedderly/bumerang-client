@@ -64,7 +64,7 @@ public class DetailFragment extends DialogFragment {
                 String result = null;
                 try {
                     //borrowId, the id the request being responded to.
-                    String borrowId = String.valueOf(UserDataCache.getRecentUser().getUserId());
+                    String borrowId = String.valueOf(request.getRequestId());
                     requester =  String.valueOf(UserDataCache.getRecentUser().getFirstName());
                     result = new OfferUtility.CreateOfferTask().execute(
                             offerUrl,
