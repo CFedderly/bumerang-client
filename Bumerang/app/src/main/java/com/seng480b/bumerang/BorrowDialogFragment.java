@@ -4,37 +4,29 @@ package com.seng480b.bumerang;
 import android.content.DialogInterface;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.facebook.*;
 import com.facebook.login.widget.ProfilePictureView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 
 public class BorrowDialogFragment extends DialogFragment {
-
-    private JSONObject reqObj;
     private View rootView;
+    private Offer offer;
 
     //private Button cancelButton, acceptButton;
     public BorrowDialogFragment() {
+
     }
 
-    public void sendInfo(JSONObject obj){
-        this.reqObj = obj;
+    // Sets the offer object and caches responding user
+    public void setOfferObj(Offer offer) {
+        this.offer = offer;
     }
 
     @Override
@@ -64,18 +56,15 @@ public class BorrowDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
 
-                //alert box -> change strings 'yes' and 'undo' to res/values/strings
+                //Show dialog box with responders phone number in it.
                 new AlertDialog.Builder(getContext())
                         .setTitle("Accept Lend Offer")
-                        .setMessage("Now get in contact.")
+                        .setMessage(offer.getOfferProfile().getFirstName() +
+                                "'s phone number: " +
+                                offer.getOfferProfile().getPhoneNumber())
                         .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
-                        .setNegativeButton("undo", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
+                                dismiss();
                             }
                         })
                         .setIcon(android.R.drawable.ic_dialog_info)
@@ -100,21 +89,15 @@ public class BorrowDialogFragment extends DialogFragment {
 
         ProfilePictureView profile_picture = (ProfilePictureView) rootView.findViewById(R.id.user_image);
 
-
-        String exp_time = "there is no time limit.";
-        String lender_message = "someone's got you covered!";
-
-        try{
-            itemName.setText(reqObj.getString("Item"));
-            exp_time = ""+reqObj.get("Exp");
-            lender_message = " "+reqObj.getString("Lender")+"'s got you covered! ";
-            phone.setText(reqObj.getString("Phone_No"));
-            profile_picture.setProfileId(reqObj.getString("FB_id"));
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-        lenderName.setText(lender_message);
-        itemExp.setText(exp_time);
+        // Fill text fields with proper user info.
+        itemName.setText(offer.getRequestInfo().getTitle());
+        itemExp.setText("Will expire in " + offer.getRequestInfo().getMinutesUntilExpiry() + " minutes.");
+        lenderName.setText(offer.getOfferProfile().getFirstName() + getString(R.string.covered_message));
+        profile_picture.setProfileId(String.valueOf(offer.getOfferProfile().getFacebookId()));
+        // TODO: CODE BELOW SITUATION
+        // Change status of the request to matched
+        // By sending to server via async
+        // new acceptOffer.execute(offerUrl, offer);
 
     }
     /** cancel (x) button **/
