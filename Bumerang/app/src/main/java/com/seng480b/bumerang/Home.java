@@ -82,9 +82,6 @@ public class Home extends AppCompatActivity
                 startActivity(login);
             }
         } else {
-            //put logic here that will check if they have an account or not
-            // currently it just skips to the browse page
-            // if you change it to 'true' it will start at the edit profile page
             // If user hasn't logged in before, redirect them to profile edit page
             boolean isFirst = ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
             loadStartupFragment(isFirst);

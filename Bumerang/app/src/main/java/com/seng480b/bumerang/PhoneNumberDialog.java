@@ -1,8 +1,11 @@
 package com.seng480b.bumerang;
 
+
+import android.content.Intent;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +16,14 @@ import android.widget.TextView;
 import com.facebook.login.widget.ProfilePictureView;
 
 
-public class BorrowDialogFragment extends DialogFragment {
+public class PhoneNumberDialog extends DialogFragment {
     private View rootView;
     private Offer offer;
 
     //private Button cancelButton, acceptButton;
-    public BorrowDialogFragment() {
+    public PhoneNumberDialog() {}
 
-    }
-
-    // Sets the offer object and caches responding user
+    // Sets the offer object
     public void setOfferObj(Offer offer) {
         this.offer = offer;
     }
@@ -30,19 +31,17 @@ public class BorrowDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_borrow_dialog, container, false);
+        rootView = inflater.inflate(R.layout.fragment_phone_dialog, container, false);
         getDialog().setTitle("-MORE INFORMATION- DIALOG");
 
-        ImageButton cancelButton = (ImageButton)rootView.findViewById(R.id.buttonBorrowDismiss);
-        Button acceptButton = (Button)rootView.findViewById(R.id.buttonBorrowAccept);
+        ImageButton cancelButton = (ImageButton)rootView.findViewById(R.id.buttonPhoneDismiss);
+        Button acceptButton = (Button)rootView.findViewById(R.id.buttonPhoneAccept);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,16 +52,22 @@ public class BorrowDialogFragment extends DialogFragment {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PhoneNumberDialog phoneNumberDialog = new PhoneNumberDialog();
-                // A more elegant solution will be needed. But for now, get the first offer.
-                phoneNumberDialog.setOfferObj(offer);
-
-                FragmentManager fm = getFragmentManager();
-                phoneNumberDialog.show(fm, "Sample Fragment");
                 dismiss(v);
             }
         });
 
+        TextView phoneNumber = (TextView)rootView.findViewById(R.id.phonePhoneNumber);
+        phoneNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+                smsIntent.setData(Uri.parse("sms:" + offer.getOfferProfile().getPhoneNumber()));
+                // Line below is for future reference if we want to pre-set a generic message.
+                //smsIntent.putExtra("sms_body", "Body of message");
+                startActivity(smsIntent);
+            }
+        });
+        phoneNumber.setPaintFlags(phoneNumber.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
         populateViews();
 
 
@@ -72,25 +77,22 @@ public class BorrowDialogFragment extends DialogFragment {
     public void populateViews(){
         TextView itemName = (TextView) rootView.findViewById(R.id.item_wanted);
         TextView itemExp = (TextView) rootView.findViewById(R.id.time_left);
-        TextView lenderName = (TextView) rootView.findViewById(R.id.borrow_message);
-        TextView phone = (TextView) rootView.findViewById(R.id.phone);
+        TextView lenderName = (TextView) rootView.findViewById(R.id.phoneTextDisplay);
+        TextView phone = (TextView) rootView.findViewById(R.id.phonePhoneNumber);
 
         ProfilePictureView profile_picture = (ProfilePictureView) rootView.findViewById(R.id.user_image);
 
         // Fill text fields with proper user info.
         itemName.setText(offer.getRequestInfo().getTitle());
         itemExp.setText("Will expire in " + offer.getRequestInfo().getMinutesUntilExpiry() + " minutes.");
-        lenderName.setText(offer.getOfferProfile().getFirstName() + getString(R.string.covered_message));
+        phone.setText(offer.getOfferProfile().getPhoneNumber());
+        lenderName.setText(offer.getOfferProfile().getFirstName() + "'s phone number:");
         profile_picture.setProfileId(String.valueOf(offer.getOfferProfile().getFacebookId()));
-        // TODO: CODE BELOW SITUATION
-        // Change status of the request to matched
-        // By sending to server via async
-        // new acceptOffer.execute(offerUrl, offer);
 
     }
+
     /** cancel (x) button **/
     public void dismiss(View view){
         getDialog().dismiss();
     }
-
 }
