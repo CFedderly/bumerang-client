@@ -5,28 +5,18 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
+import java.util.HashMap;
 
 /* This class contains methods for sending profile data to the database */
 class ProfileUtility {
 
     private static final String profileByUserIdUrl = BuildConfig.SERVER_URL + "/profile/";
-    private static final String profileByFacebookIdUrl = BuildConfig.SERVER_URL
-            + "/profile/facebookid/";
-    private static final String profileByOfferReqId = BuildConfig.SERVER_URL + "/offer/";
+    private static final String profileByFacebookIdUrl = BuildConfig.SERVER_URL + "/profile/facebookid/";
 
     static boolean isFirstLogin(com.facebook.Profile fbProfile) {
         long facebookId = Long.parseLong(fbProfile.getId());
         storeProfileFromFacebookId(facebookId);
         return !UserDataCache.hasProfile();
-    }
-
-    static void storeProfileFromUserId(int userID) {
-        String requestUrl = profileByUserIdUrl + String.valueOf(userID).trim();
-        try {
-            new LoadProfileTask().execute(requestUrl).get();
-        } catch (Exception e) {
-            // TODO: Error handle pls.
-        }
     }
 
     private static void storeProfileFromFacebookId(long facebookId) {
@@ -76,7 +66,7 @@ class ProfileUtility {
     }
 
     /* Returns null if HTTP response was not OK, else returns JSON string for profile record */
-    public static class LoadRecentUserTask extends AsyncTask<String, Void, String>{
+    private static class LoadRecentUserTask extends AsyncTask<String, Void, String>{
 
         @Override
         protected String doInBackground(String... params) {
@@ -105,7 +95,7 @@ class ProfileUtility {
 
 
 
-    public static class CreateProfileTask extends AsyncTask<String, Void, String> {
+    static class CreateProfileTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -129,6 +119,27 @@ class ProfileUtility {
         protected void onPostExecute(String result) {
         }
 
+    }
+
+    static class EditProfileTask extends AsyncTask<String, Void, String>{
+        protected String doInBackground(String... params) {
+            String result = null;
+            try {
+                HashMap<String,String> json = UserDataCache.getCurrentUser()
+                        .getJSONKeyValuePairs("description", "phoneNumber", "deviceId");
+                result = Connectivity.makeHttpPostRequest(params[0], json);
+                if (result != null) {
+                    Log.d("DEBUG","Edited the current users profile using: " + json);
+                }
+            } catch (IOException e) {
+                Log.e("ERROR", "Could not edit the current profile .");
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+        }
     }
 }
 

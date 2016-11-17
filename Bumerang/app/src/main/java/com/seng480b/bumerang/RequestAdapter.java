@@ -21,7 +21,7 @@ class RequestAdapter extends ArrayAdapter<Request> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
 
-        Request request_ticket = getItem(position);
+        Request requestTicket = getItem(position);
 
         //check if existing view is being re-used, otherwise inflate the view
         if (convertView == null){
@@ -34,9 +34,9 @@ class RequestAdapter extends ArrayAdapter<Request> {
         TextView user = (TextView) convertView.findViewById(R.id.request_user);
 
         //populate the data into the template view using data object
-        title.setText(request_ticket.getTitle());
-        description.setText(request_ticket.getDescription());
-        user.setText(Integer.toString(request_ticket.getUserId()));
+        title.setText(requestTicket.getTitle());
+        description.setText(requestTicket.getDescription());
+        user.setText(Integer.toString(requestTicket.getUserId()));
 
         return convertView;
     }

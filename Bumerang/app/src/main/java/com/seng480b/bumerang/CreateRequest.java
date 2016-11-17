@@ -24,11 +24,13 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.IOException;
+import java.util.Locale;
+
+import static com.seng480b.bumerang.Utility.*;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -83,11 +85,11 @@ public class CreateRequest extends Fragment {
                 //checkedId is the radiobutton that was selected
                 switch(checkedId){
                     case R.id.radio_borrow:
-                        Toast.makeText(getActivity(),"Borrow!",Toast.LENGTH_LONG).show();
+                        longToast(getActivity(), "Borrow!");
                         requestType = Request.RequestType.BORROW;
                         break;
                     case R.id.radio_lend:
-                        Toast.makeText(getActivity(),"Lend!",Toast.LENGTH_LONG).show();
+                        longToast(getActivity(), "Lend!");
                         requestType = Request.RequestType.LEND;
                         break;
                 }
@@ -111,7 +113,7 @@ public class CreateRequest extends Fragment {
                  } else {
                      distance = value*1000;
                  }
-                distanceText.setText(Integer.toString(value));
+                distanceText.setText(String.format(Locale.getDefault(),"%d", value));
             }
 
             @Override
@@ -225,25 +227,25 @@ public class CreateRequest extends Fragment {
             return null;
         }
 
-        String titleStr = title.getText().toString().trim();
+        String titleStr = editTextToString(title);
         String descriptionStr;
         int hoursInt;
         int minutesInt;
 
         if (!isEmpty(description)) {
-            descriptionStr = description.getText().toString().trim();
+            descriptionStr = editTextToString(description);
         } else {
             descriptionStr = "";
         }
 
         if (!isEmpty(hours)) {
-            hoursInt = Integer.parseInt(hours.getText().toString().trim());
+            hoursInt = Integer.parseInt(editTextToString(hours));
         } else {
             hoursInt = defaultHours;
         }
 
         if (!isEmpty(minutes)) {
-            minutesInt = Integer.parseInt(minutes.getText().toString().trim());
+            minutesInt = Integer.parseInt(editTextToString(minutes));
         } else {
             minutesInt = defaultMinutes;
         }
@@ -288,15 +290,11 @@ public class CreateRequest extends Fragment {
 
 
     private void alertForEmptyFields() {
-        Toast.makeText(getActivity(), R.string.empty_request_field_message, Toast.LENGTH_LONG).show();
+        longToast(getActivity(), R.string.empty_request_field_message);
     }
 
     private void alertForRequestNotCreated() {
-        Toast.makeText(inflatedView.getContext(), R.string.unable_to_create_request, Toast.LENGTH_LONG).show();
-    }
-
-    private static boolean isEmpty(EditText eText) {
-        return eText.getText().toString().trim().length() == 0;
+        longToast(getActivity(), R.string.unable_to_create_request);
     }
 
     private class CreateRequestTask extends AsyncTask<String, Void, String> {
@@ -327,7 +325,7 @@ public class CreateRequest extends Fragment {
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, myRequests);
             ft.commit();
-            Toast.makeText(getActivity(), R.string.created_request, Toast.LENGTH_LONG).show();
+            longToast(getActivity(), R.string.created_request);
         }
     }
 

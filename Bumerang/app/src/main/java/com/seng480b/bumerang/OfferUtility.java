@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.util.HashMap;
 
 
-public class OfferUtility {
+class OfferUtility {
 
 
-    public static class CreateOfferTask extends AsyncTask<String, Void, String> {
+    static class CreateOfferTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -32,6 +32,28 @@ public class OfferUtility {
         protected void onPostExecute(String result) {
         }
 
+    }
+
+    static class GetOfferTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            // Holds the result of the server query
+            if (UserDataCache.hasProfile()) {
+                try {
+                    return Connectivity.makeHttpGetRequest(params[0]);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.e("ERROR", "Unable to retrieve requests");
+                    cancel(true);
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+        }
     }
 
 }

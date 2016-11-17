@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 class MyRequestAdapter extends ArrayAdapter<Request> {
@@ -35,7 +36,7 @@ class MyRequestAdapter extends ArrayAdapter<Request> {
         //populate the data into the template view using data object
         title.setText(requestTicket.getTitle());
         description.setText(requestTicket.getDescription());
-        user.setText(Integer.toString(requestTicket.getUserId()));
+        user.setText(String.format(Locale.getDefault(), "%d", requestTicket.getUserId()));
 
         //added a button that only appears in the My Requests page -> attaches to each list item
         ImageButton replyWarning = (ImageButton) convertView.findViewById(R.id.buttonReplyWarning);
