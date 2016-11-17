@@ -73,14 +73,22 @@ public class HomeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // isFirst is used to both check if the user has ever logged in
+        // And to set the current user profile if launched from a notification.
+
         if (notifyReceived != null) {
+            boolean loggedIn = AccessToken.getCurrentAccessToken()!=null;
+            // Ensure user is logged into the app. Otherwise launch main page.
+            if (loggedIn) {
+                ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
                 Fragment my_requests = new MyRequestsFragment();
                 ft.replace(R.id.mainFrame, my_requests);
                 ft.commit();
+            } else {
+                Intent login = new Intent(this, MainActivity.class);
+                startActivity(login);
+            }
         } else {
-            //put logic here that will check if they have an account or not
-            // currently is just skips to the browse page
-            // if you change it to 'true' it will start at the edit profile page
             // If user hasn't logged in before, redirect them to profile edit page
             boolean isFirst = ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
             loadStartupFragment(isFirst);
