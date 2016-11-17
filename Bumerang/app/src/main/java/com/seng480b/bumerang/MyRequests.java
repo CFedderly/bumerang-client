@@ -104,8 +104,8 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
                 getListView().setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Log.d("Request id for offer: ", Integer.toString(requests.get(position).getReqId()));
-                        String myOfferUrl = offerUrl + requests.get(position).getReqId();
+                        Log.d("Request id for offer: ", Integer.toString(requests.get(position).getRequestId()));
+                        String myOfferUrl = offerUrl + requests.get(position).getRequestId();
                         String offerResult = null;
                         try {
                             offerResult = new OfferUtility.GetOfferTask().execute(myOfferUrl).get();

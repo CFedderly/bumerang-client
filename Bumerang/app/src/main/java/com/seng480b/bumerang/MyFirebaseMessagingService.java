@@ -65,8 +65,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentText(msgData.get("text"))
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setPriority(Notification.PRIORITY_HIGH)
-                .addAction(R.drawable.ic_check, "Accept", resultPendingIntent)
-                .addAction(R.drawable.ic_cancel, "Decline", resultPendingIntent)
                 .setSound(sound)
                 .setLights(Color.MAGENTA, 2000, 2000);
 

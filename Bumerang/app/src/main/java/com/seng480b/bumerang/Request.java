@@ -38,7 +38,7 @@ class Request {
         }
     }
 
-    private int reqId;
+    private int requestId;
     private int userId;
     private String title;
     private String description;
@@ -69,7 +69,7 @@ class Request {
     public Request(String JSONString) {
         try {
             JSONObject obj = new JSONObject(JSONString);
-            this.reqId = obj.getInt("id");
+            this.requestId = obj.getInt("id");
             this.userId = obj.getInt("user_id");
             this.title = obj.getString("title");
             this.description = obj.getString("description");
@@ -93,7 +93,7 @@ class Request {
         return (int) TimeUnit.MINUTES.convert(millisUntilExpiry, TimeUnit.MILLISECONDS);
     }
 
-    int getReqId(){ return this.reqId; }
+    int getRequestId(){ return this.requestId; }
 
     int getUserId(){
         return this.userId;
