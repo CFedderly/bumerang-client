@@ -1,28 +1,30 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.utils;
+
+import com.seng480b.bumerang.models.Profile;
 
 /**
  * Static class to store user information for the current session
  */
 
-final class UserDataCache {
+public final class UserDataCache {
     static private Profile currentUser = null;
     static private Profile recentUser = null;
 
     private UserDataCache() {}
 
-    static boolean hasProfile() {
+    public static boolean hasProfile() {
         return currentUser != null;
     }
 
-    static Profile getCurrentUser() {
+    public static Profile getCurrentUser() {
         return currentUser;
     }
 
-    static Profile getRecentUser() {
+    public static Profile getRecentUser() {
         return recentUser;
     }
 
-    static void setCurrentUser(Profile currentUser) {
+    public static void setCurrentUser(Profile currentUser) {
         UserDataCache.currentUser = currentUser;
     }
 

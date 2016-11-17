@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.utils;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.util.HashMap;
 
 
-class OfferUtility {
+public class OfferUtility {
 
 
-    static class CreateOfferTask extends AsyncTask<String, Void, String> {
+    public static class CreateOfferTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -19,7 +19,7 @@ class OfferUtility {
                 HashMap<String, String> keyValue = new HashMap<>();
                 keyValue.put("profile_id", params[1]);
                 keyValue.put("borrow_id", params[2]);
-                result = Connectivity.makeHttpPostRequest(params[0], keyValue);
+                result = ConnectivityUtility.makeHttpPostRequest(params[0], keyValue);
                 Log.d("DEBUG", "Created Offer: " + result);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -34,13 +34,13 @@ class OfferUtility {
 
     }
 
-    static class GetOfferTask extends AsyncTask<String, Void, String> {
+    public static class GetOfferTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             // Holds the result of the server query
             if (UserDataCache.hasProfile()) {
                 try {
-                    return Connectivity.makeHttpGetRequest(params[0]);
+                    return ConnectivityUtility.makeHttpGetRequest(params[0]);
                 } catch (IOException e) {
                     e.printStackTrace();
                     Log.e("ERROR", "Unable to retrieve requests");

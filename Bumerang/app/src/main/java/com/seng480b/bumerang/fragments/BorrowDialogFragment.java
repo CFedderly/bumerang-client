@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.fragments;
 
 
 import android.content.DialogInterface;
@@ -13,6 +13,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.facebook.login.widget.ProfilePictureView;
+import com.seng480b.bumerang.models.Offer;
+import com.seng480b.bumerang.R;
+
+import java.util.Locale;
 
 
 public class BorrowDialogFragment extends DialogFragment {
@@ -32,8 +36,6 @@ public class BorrowDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Override
@@ -49,7 +51,7 @@ public class BorrowDialogFragment extends DialogFragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss(v);
+                dismiss();
             }
         });
         acceptButton.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +73,7 @@ public class BorrowDialogFragment extends DialogFragment {
                         .show();
 
 
-                dismiss(v);
+                dismiss();
             }
         });
 
@@ -85,24 +87,21 @@ public class BorrowDialogFragment extends DialogFragment {
         TextView itemName = (TextView) rootView.findViewById(R.id.item_wanted);
         TextView itemExp = (TextView) rootView.findViewById(R.id.time_left);
         TextView lenderName = (TextView) rootView.findViewById(R.id.borrow_message);
-        TextView phone = (TextView) rootView.findViewById(R.id.phone);
 
         ProfilePictureView profile_picture = (ProfilePictureView) rootView.findViewById(R.id.user_image);
 
         // Fill text fields with proper user info.
         itemName.setText(offer.getRequestInfo().getTitle());
         itemExp.setText("Will expire in " + offer.getRequestInfo().getMinutesUntilExpiry() + " minutes.");
-        lenderName.setText(offer.getOfferProfile().getFirstName() + getString(R.string.covered_message));
+        lenderName.setText(String.format(Locale.getDefault(),
+                getResources().getString(R.string.covered_you_message),
+                offer.getOfferProfile().getFirstName()));
         profile_picture.setProfileId(String.valueOf(offer.getOfferProfile().getFacebookId()));
         // TODO: CODE BELOW SITUATION
         // Change status of the request to matched
         // By sending to server via async
         // new acceptOffer.execute(offerUrl, offer);
 
-    }
-    /** cancel (x) button **/
-    public void dismiss(View view){
-        getDialog().dismiss();
     }
 
 }

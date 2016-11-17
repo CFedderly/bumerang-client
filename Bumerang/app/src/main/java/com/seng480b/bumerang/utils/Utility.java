@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.utils;
 
 import android.content.Context;
 import android.telephony.PhoneNumberUtils;
@@ -10,9 +10,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-class Utility {
+public class Utility {
 
-    static Object deepClone(Object object) {
+    public static Object deepClone(Object object) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -27,23 +27,23 @@ class Utility {
         }
     }
 
-    static boolean isEmpty(EditText eText) {
+    public static boolean isEmpty(EditText eText) {
         return editTextToString(eText).length() == 0;
     }
 
-    static void longToast(Context context, int resourceId) {
+    public static void longToast(Context context, int resourceId) {
         Toast.makeText(context, resourceId, Toast.LENGTH_LONG).show();
     }
 
-    static void longToast(Context context, String message) {
+    public static void longToast(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 
-    static String editTextToString(EditText eText) {
+    public static String editTextToString(EditText eText) {
         return eText.getText().toString().trim();
     }
 
-    static String formatPhoneNumber(String phoneNumber) {
+    public static String formatPhoneNumber(String phoneNumber) {
         return PhoneNumberUtils.formatNumber(phoneNumber, "US");
     }
 }

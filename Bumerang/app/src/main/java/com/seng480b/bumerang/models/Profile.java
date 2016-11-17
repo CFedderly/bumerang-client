@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.models;
 
 import android.util.Log;
 
@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.HashMap;
 
-class Profile implements Serializable {
+public class Profile implements Serializable {
     private int userId;
     private long facebookId;
     private String deviceId;
@@ -19,7 +19,7 @@ class Profile implements Serializable {
     private String tags = "";
     private int karma;
 
-    Profile(int userId,
+    public Profile(int userId,
                    long facebookId,
                    String deviceId,
                    String firstName,
@@ -37,7 +37,7 @@ class Profile implements Serializable {
         this.karma = karma;
     }
 
-    Profile(String JSONString) throws JSONException {
+    public Profile(String JSONString) throws JSONException {
         JSONObject full = new JSONObject(JSONString);
         JSONObject obj = full.getJSONObject("profile");
         this.userId = obj.getInt("id");
@@ -50,29 +50,29 @@ class Profile implements Serializable {
         this.karma = obj.getInt("karma");
     }
 
-    String getFirstName() { return this.firstName; }
+    public String getFirstName() { return this.firstName; }
 
-    String getLastName() { return this.lastName; }
+    public String getLastName() { return this.lastName; }
 
-    String getPhoneNumber() { return this.phoneNumber; }
+    public String getPhoneNumber() { return this.phoneNumber; }
 
-    void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
-    String getTags() { return this.tags; }
+    public String getTags() { return this.tags; }
 
-    long getFacebookId() { return this.facebookId; }
+    public long getFacebookId() { return this.facebookId; }
 
-    int getKarma() { return this.karma; }
+    public int getKarma() { return this.karma; }
 
-    int getUserId() { return this.userId; }
+    public int getUserId() { return this.userId; }
 
-    void setUserId(int id) { this.userId = id; }
+    public void setUserId(int id) { this.userId = id; }
 
-    String getDescription() { return this.description; }
+    public String getDescription() { return this.description; }
 
-    void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) { this.description = description; }
 
-    HashMap<String, String> getJSONKeyValuePairs() {
+    public HashMap<String, String> getJSONKeyValuePairs() {
         HashMap<String, String> keyValue = new HashMap<>();
         keyValue.put("facebook_id", String.valueOf(facebookId));
         keyValue.put("device_id", deviceId);
@@ -84,7 +84,7 @@ class Profile implements Serializable {
     }
 
     /* Can specify the data members to be put into json if not all are required */
-    HashMap<String,String> getJSONKeyValuePairs(String... fields) {
+    public HashMap<String,String> getJSONKeyValuePairs(String... fields) {
         HashMap<String,String> keyValue = new HashMap<>();
         for (String field : fields) {
             switch(field) {
