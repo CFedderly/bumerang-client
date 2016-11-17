@@ -7,32 +7,50 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingTop="60dp"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="@color/blue_background"
     tools:context="com.seng480b.bumerang.activities.MainActivity">
+
+    <ImageView
+        android:id="@+id/logoName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:maxWidth="300dp"
+        android:maxHeight="300dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/bumerang_text"
+        android:layout_marginBottom="-30dp"/>
 
     <ImageView
         android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="center"
-        android:src="@drawable/bumerang_umbrella"
-        android:layout_marginBottom="10dp"/>
+        android:adjustViewBounds="true"
+        android:maxWidth="300dp"
+        android:maxHeight="300dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/bumerang_nobackground"
+        android:layout_marginBottom="0dp"/>
 
     <TextView
         android:id="@+id/slogan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="&quot;Somebody's got you covered!&quot;"
-        android:layout_marginBottom="10dp"
-        android:textStyle="italic"
-        android:textColor="@color/colorAccent" />
+        android:layout_marginBottom="20dp"
+        android:textStyle="italic|bold"
+        android:textSize="70px"
+        android:textColor="@color/white" />
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="15sp"
+        android:paddingBottom="15sp"
         android:layout_marginBottom="9dp" />
 
 </LinearLayout>
