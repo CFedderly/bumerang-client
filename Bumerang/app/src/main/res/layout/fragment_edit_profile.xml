@@ -59,7 +59,9 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Phone No.(111) 111-1111"
+            android:hint="Phone number"
+            android:lines="1"
+            android:maxLength="12"
             android:textSize="22sp"
             android:id="@+id/editProfile_InputPhoneNumber"
             android:textAlignment="textStart"

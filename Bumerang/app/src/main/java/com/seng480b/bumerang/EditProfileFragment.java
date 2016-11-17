@@ -5,18 +5,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.telephony.PhoneNumberUtils;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.util.Log;
 
 import com.facebook.login.widget.ProfilePictureView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+
+import static com.seng480b.bumerang.Utility.*;
 
 public class EditProfileFragment extends Fragment {
     private static final String profileUrl = BuildConfig.SERVER_URL + "/profile/";
@@ -76,64 +79,15 @@ public class EditProfileFragment extends Fragment {
             EditText description = (EditText) inflatedView.findViewById(descriptionField);
             EditText phoneNumber = (EditText) inflatedView.findViewById(phoneNumberField);
 
-            // Check that all required fields are filled
             if (isEmpty(phoneNumber)) {
-                Toast.makeText(getActivity(), R.string.empty_request_field_message, Toast.LENGTH_LONG).show();
+                longToast(getActivity(), R.string.empty_phone_number_message);
+            } else if (!isValidPhoneNumber(phoneNumber)) {
+                longToast(getActivity(), R.string.invalid_phone_number_message);
             } else {
                 if (!UserDataCache.hasProfile()) {
-
-                    // create temporary profile from fields
-                    Profile tempProfile = new Profile(
-                            0, Long.parseLong(FBProfile.getId()),
-                            FirebaseInstanceId.getInstance().getToken(),
-                            FBProfile.getFirstName(),
-                            FBProfile.getLastName(),
-                            phoneNumber.getText().toString().trim(),
-                            description.getText().toString().trim(), 0);
-                    // Set temporary profile as current profile in cache
-                    UserDataCache.setCurrentUser(tempProfile);
-                    // If we are connected to the network, send profile object to server
-                    if (Connectivity.checkNetworkConnection(getActivity().getApplicationContext())) {
-                        try {
-                            new ProfileUtility.CreateProfileTask().execute(profileUrl).get();
-                        } catch (Exception e) {
-                            // TODO: this is a hacky solution, will need real error handling
-                        }
-                        changeFragment();
-                    }
-
+                    createNewProfile(phoneNumber, description);
                 } else {
-                    Profile currProfile = UserDataCache.getCurrentUser();
-                    //create a temp profile with the new inputted data from the editText fields
-                    Profile tempProfile = new Profile(
-                            currProfile.getUserId(),
-                            currProfile.getFacebookId(),
-                            FirebaseInstanceId.getInstance().getToken(),
-                            currProfile.getFirstName(),
-                            currProfile.getLastName(),
-                            phoneNumber.getText().toString().trim(),
-                            description.getText().toString().trim(),
-                            currProfile.getKarma());
-                    // cache the temp profile as the current profile
-                    UserDataCache.setCurrentUser(tempProfile);
-                    // update the database with the new current profile data
-                    if(Connectivity.checkNetworkConnection(getActivity().getApplicationContext())) {
-                        String result = null;
-                        try {
-                            result = new ProfileUtility.EditProfileTask().execute(editProfileUrl).get();
-                        } catch (Exception e) {
-                            // TODO proper error checking
-                        }
-                        if (result != null) {
-                            Toast.makeText(getActivity(), "You profile information has been updated.", Toast.LENGTH_LONG).show();
-                            Log.d("DEBUG", "The Profile was edited too " + result);
-                            changeFragment();
-                        } else {
-                            UserDataCache.setCurrentUser(currProfile);
-                            Toast.makeText(getActivity(), "Oops, something went wrong. Please try again.", Toast.LENGTH_LONG).show();
-                            Log.d("DEBUG", "Oops, something went wrong. Please try again.");
-                        }
-                    }
+                    editProfile(phoneNumber, description);
                 }
             }
             }
@@ -161,14 +115,79 @@ public class EditProfileFragment extends Fragment {
 
     }
 
+    private static boolean isValidPhoneNumber(EditText phoneNumber) {
+        String number = editTextToString(phoneNumber);
+        if (TextUtils.isEmpty(number)) {
+            return false;
+        }
+        number = PhoneNumberUtils.stripSeparators(number);
+        if (!number.equals(PhoneNumberUtils.convertKeypadLettersToDigits(number))) {
+            return false;
+        }
+        number = PhoneNumberUtils.extractNetworkPortion(number);
+        return PhoneNumberUtils.isGlobalPhoneNumber(number) && number.length() >= 10;
+    }
 
-    private static boolean isEmpty(EditText eText) {
-        return eText.getText().toString().trim().length() == 0;
+    private static String stripPhoneNumber(EditText phoneNumber) {
+        return PhoneNumberUtils.stripSeparators(editTextToString(phoneNumber));
     }
 
     private void changeFragment(){
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame,back);
         ft.commit();
+    }
+
+    private void createNewProfile(EditText phoneNumber, EditText description) {
+
+        // create temporary profile from fields
+        Profile tempProfile = new Profile(
+                0, Long.parseLong(FBProfile.getId()),
+                FirebaseInstanceId.getInstance().getToken(),
+                FBProfile.getFirstName(),
+                FBProfile.getLastName(),
+                stripPhoneNumber(phoneNumber),
+                editTextToString(description), 0);
+        // Set temporary profile as current profile in cache
+        UserDataCache.setCurrentUser(tempProfile);
+        // If we are connected to the network, send profile object to server
+        if (Connectivity.checkNetworkConnection(getActivity().getApplicationContext())) {
+            try {
+                new ProfileUtility.CreateProfileTask().execute(profileUrl).get();
+            } catch (Exception e) {
+                e.printStackTrace();
+                // TODO: this is a hacky solution, will need real error handling
+            }
+            changeFragment();
+        }
+    }
+
+    private void editProfile(EditText phoneNumber, EditText description) {
+        Profile currProfile = UserDataCache.getCurrentUser();
+
+        Profile tempProfile = (Profile) Utility.deepClone(currProfile);
+        tempProfile.setDescription(editTextToString(description));
+        tempProfile.setPhoneNumber(stripPhoneNumber(phoneNumber));
+        UserDataCache.setCurrentUser(tempProfile);
+
+        String editProfileUrlWithId = editProfileUrl + UserDataCache.getCurrentUser().getUserId();
+        if(Connectivity.checkNetworkConnection(getActivity().getApplicationContext())) {
+            String result = null;
+            try {
+                result = new ProfileUtility.EditProfileTask().execute(editProfileUrlWithId.trim()).get();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (result != null) {
+                longToast(getActivity(), R.string.updated_profile);
+                Log.d("DEBUG", "Profile edited successfully");
+                changeFragment();
+            } else {
+                // Revert to before profile was changed
+                UserDataCache.setCurrentUser(currProfile);
+                longToast(getActivity(), R.string.unable_to_update_profile);
+                Log.d("DEBUG", "Could not edit profile.");
+            }
+        }
     }
 }

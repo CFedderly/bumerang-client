@@ -13,8 +13,7 @@ public class Offer {
     private Profile offerProfile;
     private Request offerReq;
 
-    public Offer(Profile offerProfile,
-                 Request request, int id) {
+    public Offer(Profile offerProfile, Request request, int id) {
         this.offerProfile = offerProfile;
         this.offerReq = request;
         this.offerId = id;

@@ -1,13 +1,14 @@
 package com.seng480b.bumerang;
 
-import org.json.JSONArray;
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.HashMap;
 
-class Profile {
+class Profile implements Serializable {
     private int userId;
     private long facebookId;
     private String deviceId;
@@ -55,6 +56,8 @@ class Profile {
 
     String getPhoneNumber() { return this.phoneNumber; }
 
+    void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+
     String getTags() { return this.tags; }
 
     long getFacebookId() { return this.facebookId; }
@@ -65,7 +68,9 @@ class Profile {
 
     void setUserId(int id) { this.userId = id; }
 
-    public String getDescription() { return this.description; }
+    String getDescription() { return this.description; }
+
+    void setDescription(String description) { this.description = description; }
 
     HashMap<String, String> getJSONKeyValuePairs() {
         HashMap<String, String> keyValue = new HashMap<>();
@@ -75,6 +80,37 @@ class Profile {
         keyValue.put("first_name", firstName);
         keyValue.put("last_name", lastName);
         keyValue.put("description", description);
+        return keyValue;
+    }
+
+    /* Can specify the data members to be put into json if not all are required */
+    HashMap<String,String> getJSONKeyValuePairs(String... fields) {
+        HashMap<String,String> keyValue = new HashMap<>();
+        for (String field : fields) {
+            switch(field) {
+                case "facebook_id":
+                    keyValue.put("facebook_id", String.valueOf(facebookId));
+                    break;
+                case "deviceId":
+                    keyValue.put("device_id", deviceId);
+                    break;
+                case "phoneNumber":
+                    keyValue.put("phone_number", phoneNumber);
+                    break;
+                case "firstName":
+                    keyValue.put("first_name", firstName);
+                    break;
+                case "lastName":
+                    keyValue.put("last_name", lastName);
+                    break;
+                case "description":
+                    keyValue.put("description", description);
+                    break;
+                default:
+                    Log.e("ERROR", "Invalid field provided: " + field);
+                    return null;
+            }
+        }
         return keyValue;
     }
 }

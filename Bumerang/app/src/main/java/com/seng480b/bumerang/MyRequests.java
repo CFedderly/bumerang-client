@@ -15,10 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
-import android.widget.ListView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +24,6 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
     private static final String requestUrl = BuildConfig.SERVER_URL + "/requests/user/";
     private static final String offerUrl = BuildConfig.SERVER_URL + "/offer/ids/";
     private ViewPager mViewPager;
-    private ListView mListView;
     private Activity activity;
 
     public MyRequests() {
@@ -54,7 +49,6 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
         super.onViewCreated(view, savedInstanceState);
         ((Home) activity ).setActionBarTitle("My Requests");
 
-        mListView = getListView();
         /** make the tabs invisible **/
         mViewPager = (ViewPager) activity.findViewById(R.id.container);
         populateBrowse();
@@ -114,9 +108,8 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
                         String myOfferUrl = offerUrl + requests.get(position).getReqId();
                         String offerResult = null;
                         try {
-                            offerResult = new getOfferTask.offerTask().execute(myOfferUrl).get();
+                            offerResult = new OfferUtility.GetOfferTask().execute(myOfferUrl).get();
                         } catch (Exception e) {
-                            // Error performing get request. display error
                             Log.e("Error:", "Unable to retrieve offer information!");
                         }
                         if (offerResult != null) {
@@ -125,12 +118,12 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
                             if (offers.size() != 0) {
                                 Log.d("DEBUG", "Offer from id: " + Integer.toString(offers.get(0).getOfferProfile().getUserId()));
                                 // Offer has offer_profile and request associated with it.
-                                BorrowDialogFragment more_info_dialog = new BorrowDialogFragment();
+                                BorrowDialogFragment moreInfoDialog = new BorrowDialogFragment();
                                 // A more elegant solution will be needed. But for now, get the first offer.
-                                more_info_dialog.setOfferObj(offers.get(0));
+                                moreInfoDialog.setOfferObj(offers.get(0));
 
                                 FragmentManager fm = getFragmentManager();
-                                more_info_dialog.show(fm, "Sample Fragment");
+                                moreInfoDialog.show(fm, "Sample Fragment");
                             }
                         }
                     }

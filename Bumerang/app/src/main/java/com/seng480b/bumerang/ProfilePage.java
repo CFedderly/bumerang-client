@@ -48,7 +48,7 @@ public class ProfilePage extends Fragment {
             ProfilePictureView profilePicture = (ProfilePictureView) myInflatedView.findViewById(R.id.profilePicture);
 
             profileKarma.setText(String.valueOf(currProfile.getKarma()));
-            profileNumber.setText(currProfile.getPhoneNumber());
+            profileNumber.setText(Utility.formatPhoneNumber(currProfile.getPhoneNumber()));
             profileTags.setText(currProfile.getTags());
             profileBio.setText(currProfile.getDescription());
             profilePicture.setProfileId(String.valueOf(currProfile.getFacebookId()));

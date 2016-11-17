@@ -85,6 +85,7 @@ class Connectivity {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
         return result;
     }
@@ -102,7 +103,7 @@ class Connectivity {
     }
 
     private static String httpPost(HttpURLConnection connection, HashMap<String, String> params) throws IOException {
-        String response = "";
+        String response;
 
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
@@ -117,10 +118,12 @@ class Connectivity {
 
         if (status == HttpURLConnection.HTTP_OK) {
             String line;
+            response = "";
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             while ((line = br.readLine()) != null) {
                 response += line;
             }
+            Log.d("DEBUG", "response = " + response);
         } else {
             Log.d("DEBUG", "status = " + status);
             throw new IOException();

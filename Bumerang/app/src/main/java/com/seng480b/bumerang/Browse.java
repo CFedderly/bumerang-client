@@ -14,12 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListAdapter;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+
+import static com.seng480b.bumerang.Utility.*;
 
 public class Browse extends ListFragment implements OnItemClickListener {
 
@@ -101,7 +100,7 @@ public class Browse extends ListFragment implements OnItemClickListener {
         if (requestType != null) {
             new GetRequestsTask().execute(requestUrl);
         } else {
-            Toast.makeText(activity, R.string.unable_to_display_requests, Toast.LENGTH_LONG).show();
+            longToast(getActivity(), R.string.unable_to_display_requests);
         }
     }
 
