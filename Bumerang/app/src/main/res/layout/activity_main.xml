@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context="com.seng480b.bumerang.MainActivity">
+    tools:context="com.seng480b.bumerang.activities.MainActivity">
 
     <ImageView
         android:id="@+id/image"

@@ -1,9 +1,10 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.services;
 
 
 import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.seng480b.bumerang.BuildConfig;
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     private static final String TAG = "FBInstanceID";

@@ -4,10 +4,9 @@
 
     // if your App ID is 1234567, you should use fb1234567
     <string name="fb_login_protocol_scheme">fb1614053472225944</string>
-    <string name="covered_message">\'s got you covered!</string>
-    <string name="you_got_message">You\'ve got </string>
-    <string name="you_covered_message"> covered!</string>
-    <string name="error_message">Oops something went wrong</string>
+    <string name="covered_you_message">%1$s\'s got you covered!</string>
+    <string name="covered_them_message">You\'ve got %1$s covered!</string>
+    <string name="error_message">Oops! Something went wrong. Please try again!</string>
     <string name="button_skip">skip</string>
 
     <string name="title_activity_nav_drawer">Bümerang</string>
@@ -20,7 +19,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hello_test_fragment">Hello TEST fragment</string>
     <string name="browse_text">Gday</string>
-    <string name="details">DETAILS DETAILS</string>
+    <string name="details">DETAILS</string>
 
     <string name="title_activity_splash_screen">SplashScreen</string>
     <string name="dummy_button">Dummy Button</string>

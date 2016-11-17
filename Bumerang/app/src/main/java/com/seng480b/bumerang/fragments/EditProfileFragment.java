@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.fragments;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -18,30 +18,37 @@ import android.util.Log;
 import com.facebook.login.widget.ProfilePictureView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.seng480b.bumerang.BuildConfig;
+import com.seng480b.bumerang.activities.HomeActivity;
+import com.seng480b.bumerang.models.Profile;
+import com.seng480b.bumerang.utils.ProfileUtility;
+import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.utils.UserDataCache;
+import com.seng480b.bumerang.utils.ConnectivityUtility;
 
-import static com.seng480b.bumerang.Utility.*;
+import static com.seng480b.bumerang.utils.Utility.*;
 
 public class EditProfileFragment extends Fragment {
-    private static final String profileUrl = BuildConfig.SERVER_URL + "/profile/";
-    private static final String editProfileUrl = BuildConfig.SERVER_URL + "/profile/edit/";
+    private static final String PROFILE_URL = BuildConfig.SERVER_URL + "/profile/";
+    private static final String EDIT_PROFILE_URL = BuildConfig.SERVER_URL + "/profile/edit/";
 
-    private static final int firstNameField = R.id.editProfile_InputFirstName;
-    private static final int lastNameField = R.id.editProfile_InputLastName;
-    private static final int phoneNumberField = R.id.editProfile_InputPhoneNumber;
-    private static final int descriptionField = R.id.editProfile_InputBio;
-    private static final int tagsField = R.id.editProfile_InputTags;
+    private static final int FIRST_NAME_FIELD = R.id.editProfile_InputFirstName;
+    private static final int LAST_NAME_FIELD = R.id.editProfile_InputLastName;
+    private static final int PHONE_NUMBER_FIELD = R.id.editProfile_InputPhoneNumber;
+    private static final int DESCRIPTION_FIELD = R.id.editProfile_InputBio;
+    private static final int TAGS_FIELD = R.id.editProfile_InputTags;
 
     private View inflatedView;
     private com.facebook.Profile FBProfile = com.facebook.Profile.getCurrentProfile();
 
     //both the create and cancel buttons redirect to the profile page
-    private Fragment back = new ProfilePage();
+    private Fragment back = new ProfilePageFragment();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         inflatedView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
-        ((Home)getActivity()).setActionBarTitle("Edit Profile");
+        ((HomeActivity)getActivity()).setActionBarTitle("Edit Profile");
 
 
         /* make the tabs invisible */
@@ -52,8 +59,8 @@ public class EditProfileFragment extends Fragment {
 
         // Check if the user already has a profile
         if (UserDataCache.hasProfile()) {
-            String profileUrlWithId = profileUrl + UserDataCache.getCurrentUser().getUserId();
-            if (Connectivity.checkNetworkConnection(getActivity().getApplicationContext())) {
+            String profileUrlWithId = PROFILE_URL + UserDataCache.getCurrentUser().getUserId();
+            if (ConnectivityUtility.checkNetworkConnection(getActivity().getApplicationContext())) {
                 // if user has profile, populate profile fields
                 new ProfileUtility.LoadProfileTask().execute(profileUrlWithId);
                 populateFields();
@@ -76,8 +83,8 @@ public class EditProfileFragment extends Fragment {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            EditText description = (EditText) inflatedView.findViewById(descriptionField);
-            EditText phoneNumber = (EditText) inflatedView.findViewById(phoneNumberField);
+            EditText description = (EditText) inflatedView.findViewById(DESCRIPTION_FIELD);
+            EditText phoneNumber = (EditText) inflatedView.findViewById(PHONE_NUMBER_FIELD);
 
             if (isEmpty(phoneNumber)) {
                 longToast(getActivity(), R.string.empty_phone_number_message);
@@ -98,8 +105,8 @@ public class EditProfileFragment extends Fragment {
         //grab the profile picture form FB
         ProfilePictureView profilePicture = (ProfilePictureView) inflatedView.findViewById(R.id.editProfile_ProfilePicture);
         profilePicture.setProfileId(FBProfile.getId());
-        ((TextView) inflatedView.findViewById(firstNameField)).setText(FBProfile.getFirstName());
-        ((TextView) inflatedView.findViewById(lastNameField)).setText(FBProfile.getLastName());
+        ((TextView) inflatedView.findViewById(FIRST_NAME_FIELD)).setText(FBProfile.getFirstName());
+        ((TextView) inflatedView.findViewById(LAST_NAME_FIELD)).setText(FBProfile.getLastName());
     }
 
     private void populateFields() {
@@ -107,11 +114,11 @@ public class EditProfileFragment extends Fragment {
         Profile currProfile = UserDataCache.getCurrentUser();
 
         ((ProfilePictureView) inflatedView.findViewById(R.id.editProfile_ProfilePicture)).setProfileId(String.valueOf(currProfile.getFacebookId()));
-        ((TextView) inflatedView.findViewById(firstNameField)).setText(currProfile.getFirstName());
-        ((TextView) inflatedView.findViewById(lastNameField)).setText(currProfile.getLastName());
-        ((EditText) inflatedView.findViewById(descriptionField)).setText(currProfile.getDescription());
-        ((EditText) inflatedView.findViewById(phoneNumberField)).setText(currProfile.getPhoneNumber());
-        ((EditText) inflatedView.findViewById(tagsField)).setText(currProfile.getTags());
+        ((TextView) inflatedView.findViewById(FIRST_NAME_FIELD)).setText(currProfile.getFirstName());
+        ((TextView) inflatedView.findViewById(LAST_NAME_FIELD)).setText(currProfile.getLastName());
+        ((EditText) inflatedView.findViewById(DESCRIPTION_FIELD)).setText(currProfile.getDescription());
+        ((EditText) inflatedView.findViewById(PHONE_NUMBER_FIELD)).setText(currProfile.getPhoneNumber());
+        ((EditText) inflatedView.findViewById(TAGS_FIELD)).setText(currProfile.getTags());
 
     }
 
@@ -151,9 +158,9 @@ public class EditProfileFragment extends Fragment {
         // Set temporary profile as current profile in cache
         UserDataCache.setCurrentUser(tempProfile);
         // If we are connected to the network, send profile object to server
-        if (Connectivity.checkNetworkConnection(getActivity().getApplicationContext())) {
+        if (ConnectivityUtility.checkNetworkConnection(getActivity().getApplicationContext())) {
             try {
-                new ProfileUtility.CreateProfileTask().execute(profileUrl).get();
+                new ProfileUtility.CreateProfileTask().execute(PROFILE_URL).get();
             } catch (Exception e) {
                 e.printStackTrace();
                 // TODO: this is a hacky solution, will need real error handling
@@ -165,13 +172,13 @@ public class EditProfileFragment extends Fragment {
     private void editProfile(EditText phoneNumber, EditText description) {
         Profile currProfile = UserDataCache.getCurrentUser();
 
-        Profile tempProfile = (Profile) Utility.deepClone(currProfile);
+        Profile tempProfile = (Profile) deepClone(currProfile);
         tempProfile.setDescription(editTextToString(description));
         tempProfile.setPhoneNumber(stripPhoneNumber(phoneNumber));
         UserDataCache.setCurrentUser(tempProfile);
 
-        String editProfileUrlWithId = editProfileUrl + UserDataCache.getCurrentUser().getUserId();
-        if(Connectivity.checkNetworkConnection(getActivity().getApplicationContext())) {
+        String editProfileUrlWithId = EDIT_PROFILE_URL + UserDataCache.getCurrentUser().getUserId();
+        if(ConnectivityUtility.checkNetworkConnection(getActivity().getApplicationContext())) {
             String result = null;
             try {
                 result = new ProfileUtility.EditProfileTask().execute(editProfileUrlWithId.trim()).get();

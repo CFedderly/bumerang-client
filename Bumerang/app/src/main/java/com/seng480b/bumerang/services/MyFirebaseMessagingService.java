@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.services;
 
 
 import android.app.Notification;
@@ -14,6 +14,8 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.activities.HomeActivity;
 
 import java.util.Map;
 
@@ -38,13 +40,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // If the application is in the foreground handle both data and notification messages here.
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
-        Intent resultIntent = new Intent(this, Home.class);
+        Intent resultIntent = new Intent(this, HomeActivity.class);
         // Add information to the extra in order to specify action upon returning to home screen.
-        resultIntent.putExtra("MsgRecieved", "messageRecieved");
+        resultIntent.putExtra("MsgReceived", "messageReceived");
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         // Adds the back stack for the Intent
-        stackBuilder.addParentStack(Home.class);
+        stackBuilder.addParentStack(HomeActivity.class);
         // Adds the intent that starts the activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);

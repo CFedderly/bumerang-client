@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,17 +16,27 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
+import com.seng480b.bumerang.BuildConfig;
+import com.seng480b.bumerang.models.Offer;
+import com.seng480b.bumerang.utils.OfferUtility;
+import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.models.Request;
+import com.seng480b.bumerang.utils.UserDataCache;
+import com.seng480b.bumerang.activities.HomeActivity;
+import com.seng480b.bumerang.adapters.MyRequestAdapter;
+import com.seng480b.bumerang.utils.ConnectivityUtility;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MyRequests extends ListFragment implements OnItemClickListener {
+public class MyRequestsFragment extends ListFragment implements OnItemClickListener {
 
-    private static final String requestUrl = BuildConfig.SERVER_URL + "/requests/user/";
-    private static final String offerUrl = BuildConfig.SERVER_URL + "/offer/ids/";
+    private static final String REQUEST_URL = BuildConfig.SERVER_URL + "/requests/user/";
+    private static final String OFFER_URL = BuildConfig.SERVER_URL + "/offer/ids/";
     private ViewPager mViewPager;
     private Activity activity;
 
-    public MyRequests() {
+    public MyRequestsFragment() {
         // Required empty public constructor
     }
 
@@ -47,7 +57,7 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((Home) activity ).setActionBarTitle("My Requests");
+        ((HomeActivity) activity ).setActionBarTitle("My Requests");
 
         /** make the tabs invisible **/
         mViewPager = (ViewPager) activity.findViewById(R.id.container);
@@ -70,10 +80,10 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
                             long id) { }
 
     private void populateBrowse() {
-        Request.RequestType requestType = Browse.getCurrentRequestType(mViewPager);
+        Request.RequestType requestType = BrowseFragment.getCurrentRequestType(mViewPager);
         if (requestType != null) {
             if (UserDataCache.hasProfile()) {
-                String myRequestUrl = requestUrl + UserDataCache.getCurrentUser().getUserId();
+                String myRequestUrl = REQUEST_URL + UserDataCache.getCurrentUser().getUserId();
                 new GetRequestsTask().execute(myRequestUrl);
             }
         } else {
@@ -86,7 +96,7 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
         @Override
         protected String doInBackground(String... params) {
             try {
-                return Connectivity.makeHttpGetRequest(params[0]);
+                return ConnectivityUtility.makeHttpGetRequest(params[0]);
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e("ERROR", "Unable to retrieve requests");
@@ -105,7 +115,7 @@ public class MyRequests extends ListFragment implements OnItemClickListener {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Log.d("Request id for offer: ", Integer.toString(requests.get(position).getRequestId()));
-                        String myOfferUrl = offerUrl + requests.get(position).getRequestId();
+                        String myOfferUrl = OFFER_URL + requests.get(position).getRequestId();
                         String offerResult = null;
                         try {
                             offerResult = new OfferUtility.GetOfferTask().execute(myOfferUrl).get();

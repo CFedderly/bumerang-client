@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.fragments;
 
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
@@ -8,25 +8,28 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.login.widget.ProfilePictureView;
+import com.seng480b.bumerang.BuildConfig;
+import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.utils.UserDataCache;
+import com.seng480b.bumerang.models.Request;
+import com.seng480b.bumerang.utils.OfferUtility;
+import com.seng480b.bumerang.utils.ProfileUtility;
+import static com.seng480b.bumerang.utils.Utility.*;
+
+import java.util.Locale;
 
 
-
-public class DetailFragment extends DialogFragment {
-    private static final String offerUrl = BuildConfig.SERVER_URL + "/offer/";
+public class RequestDetailFragment extends DialogFragment {
+    private static final String OFFER_URL = BuildConfig.SERVER_URL + "/offer/";
     View rootView;
     Request request;
     //private Button cancelButton, acceptButton;
-    public DetailFragment() {
+    public RequestDetailFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * will send the request and cache the requester as the recentUser
-     * @param req
-     */
    public void setRequest(Request req){
         this.request = req;
         int userId = request.getUserId();
@@ -50,7 +53,7 @@ public class DetailFragment extends DialogFragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss(v);
+                dismiss();
             }
         });
         acceptButton.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +68,7 @@ public class DetailFragment extends DialogFragment {
                     String borrowId = String.valueOf(request.getRequestId());
                     requester =  String.valueOf(UserDataCache.getRecentUser().getFirstName());
                     result = new OfferUtility.CreateOfferTask().execute(
-                            offerUrl,
+                            OFFER_URL,
                             profileId,
                             borrowId
                     ).get();
@@ -73,10 +76,11 @@ public class DetailFragment extends DialogFragment {
                     // TODO: this is a hacky solution, will need real error handling
                 }
                 if(result != null){
-                    Toast.makeText(getActivity(), getString(R.string.you_got_message)+ " " + requester + " " + getString(R.string.you_covered_message), Toast.LENGTH_LONG).show();
-                    dismiss(v);
+                    String message = String.format(Locale.getDefault(), getResources().getString(R.string.covered_them_message), requester);
+                    longToast(getActivity(), message);
+                    dismiss();
                 }else{
-                    Toast.makeText(getActivity(), getString(R.string.error_message), Toast.LENGTH_LONG).show();
+                    longToast(getActivity(), R.string.error_message);
                 }
             }
         });
@@ -100,10 +104,4 @@ public class DetailFragment extends DialogFragment {
         profilePicture.setProfileId(String.valueOf(UserDataCache.getRecentUser().getFacebookId()));
 
     }
-
-    /** cancel (x) button **/
-    public void dismiss(View view){
-        getDialog().dismiss();
-    }
-
 }

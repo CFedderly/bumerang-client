@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.activities;
 
 
 import android.content.Intent;
@@ -24,28 +24,35 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.seng480b.bumerang.fragments.MyRequestsFragment;
+import com.seng480b.bumerang.fragments.ProfilePageFragment;
+import com.seng480b.bumerang.utils.ProfileUtility;
+import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.adapters.SectionsPagerAdapter;
+import com.seng480b.bumerang.fragments.TestFragment;
+import com.seng480b.bumerang.fragments.CreateRequestFragment;
+import com.seng480b.bumerang.fragments.EditProfileFragment;
 
 
-public class Home extends AppCompatActivity
+public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private FloatingActionButton fab;
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    //ViewPager hosts section contents
-    private ViewPager mViewPager;
-    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // Firebase Setup here.
         FirebaseMessaging.getInstance().subscribeToTopic("all");
+
         // Initialize facebook SDK
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_nav_drawer);
+
         //toolbar/actionbar setup
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        String notifyReceived = getIntent().getStringExtra("MsgRecieved");
+        String notifyReceived = getIntent().getStringExtra("MsgReceived");
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
@@ -74,7 +81,7 @@ public class Home extends AppCompatActivity
             // Ensure user is logged into the app. Otherwise launch main page.
             if (loggedIn) {
                 ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
-                Fragment my_requests = new MyRequests();
+                Fragment my_requests = new MyRequestsFragment();
                 ft.replace(R.id.mainFrame, my_requests);
                 ft.commit();
             } else {
@@ -118,11 +125,11 @@ public class Home extends AppCompatActivity
     public void loadTabs(){
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
     }
 
@@ -131,7 +138,7 @@ public class Home extends AppCompatActivity
         p.setAnchorId(View.NO_ID);
         fab.setLayoutParams(p);
         fab.setVisibility(View.GONE);
-        Fragment createReq = new CreateRequest();
+        Fragment createReq = new CreateRequestFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame,createReq);
         ft.commit();
@@ -157,7 +164,7 @@ public class Home extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
+        // automatically handle clicks on the HomeActivity/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
@@ -191,11 +198,11 @@ public class Home extends AppCompatActivity
         int id = item.getItemId();
         Fragment fragment2 = new TestFragment();
 
-        Fragment createReq = new CreateRequest();
+        Fragment createReq = new CreateRequestFragment();
 
-        Fragment my_requests = new MyRequests();
+        Fragment my_requests = new MyRequestsFragment();
 
-        Fragment profilePage = new ProfilePage();
+        Fragment profilePage = new ProfilePageFragment();
 
         if (id == R.id.nav_createReq) {
             // Hide the Floating action button

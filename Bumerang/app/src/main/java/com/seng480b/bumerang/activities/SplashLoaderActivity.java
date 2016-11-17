@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.activities;
 
 import android.content.Intent;
 import android.os.Bundle;

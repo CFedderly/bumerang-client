@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.fragments;
 
 
 import android.content.Intent;
@@ -14,14 +14,16 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.facebook.login.widget.ProfilePictureView;
+import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.models.Offer;
 
 
-public class PhoneNumberDialog extends DialogFragment {
+public class PhoneNumberDialogFragment extends DialogFragment {
     private View rootView;
     private Offer offer;
 
     //private Button cancelButton, acceptButton;
-    public PhoneNumberDialog() {}
+    public PhoneNumberDialogFragment() {}
 
     // Sets the offer object
     public void setOfferObj(Offer offer) {

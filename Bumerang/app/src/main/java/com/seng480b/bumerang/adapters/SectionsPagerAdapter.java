@@ -1,8 +1,10 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.seng480b.bumerang.fragments.BrowseFragment;
 
 /**
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -16,7 +18,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return Browse.newInstance(position+1);
+        return BrowseFragment.newInstance(position+1);
     }
 
     @Override
