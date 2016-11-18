@@ -125,12 +125,21 @@ public class ProfileUtility {
 
     }
 
-    public static class EditProfileTask extends AsyncTask<String, Void, String>{
+    public static String editProfile(String url) throws Exception {
+        return new EditProfileTask().execute(url, "description", "phoneNumber").get();
+    }
+
+    public static String editDeviceId(String url) throws Exception {
+        return new EditProfileTask().execute(url, "deviceId").get();
+    }
+
+    private static class EditProfileTask extends AsyncTask<String, Void, String>{
         protected String doInBackground(String... params) {
             String result = null;
+            String[] keys = new String[params.length-1];
+            System.arraycopy(params, 1, keys, 0, params.length-1);
+            HashMap<String,String> json = UserDataCache.getCurrentUser().getJSONKeyValuePairs(keys);
             try {
-                HashMap<String,String> json = UserDataCache.getCurrentUser()
-                        .getJSONKeyValuePairs("description", "phoneNumber", "deviceId");
                 result = ConnectivityUtility.makeHttpPostRequest(params[0], json);
                 if (result != null) {
                     Log.d("DEBUG","Edited the current users profile using: " + json);
