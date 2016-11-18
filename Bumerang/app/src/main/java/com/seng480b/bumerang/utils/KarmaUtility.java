@@ -1,7 +1,9 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.utils;
 
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.seng480b.bumerang.BuildConfig;
 
 import java.io.IOException;
 
@@ -89,7 +91,7 @@ public class KarmaUtility {
         protected String doInBackground(String... params) {
             String result = null;
             try{
-                result = Connectivity.makeHttpPostRequest(
+                result = ConnectivityUtility.makeHttpPostRequest(
                         params[0],
                         UserDataCache.getCurrentUser().getJSONKeyValuePairs()
                         );

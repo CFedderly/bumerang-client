@@ -30,21 +30,21 @@
             android:resource="@color/colorAccent" />
 
         <service
-            android:name=".MyFirebaseMessagingService">
+            android:name=".services.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
 
         <service
-            android:name=".MyFirebaseInstanceIDService">
+            android:name=".services.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             >
         </activity>
 
@@ -63,18 +63,18 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".CreateProfile" />
+        <activity android:name=".fragments.CreateProfileFragment" />
 
         <!--Get rid of screenOrientation if you want to be able to rotate the phone-->
         <activity
-            android:name=".Home"
+            android:name=".activities.HomeActivity"
             android:label="@string/title_activity_nav_drawer"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".SplashLoaderActivity"
+            android:name=".activities.SplashLoaderActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

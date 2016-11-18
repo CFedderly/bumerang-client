@@ -1,22 +1,21 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.seng480b.bumerang.R;
 
 import java.util.Arrays;
 
@@ -67,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
 
         boolean loggedIn = AccessToken.getCurrentAccessToken()!=null;
 
-        //If user is already logged in automatically goes to the 'Browse page"
+        //If user is already logged in automatically goes to the 'BrowseFragment page"
         if  (loggedIn) {
-            Intent browse = new Intent(this, Home.class);
+            Intent browse = new Intent(this, HomeActivity.class);
             startActivity(browse);
         //If user is not logged in they are taken to the Login page.
         } else{
@@ -104,27 +103,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loginSuccess() {
-        Intent intent = new Intent(this, Home.class );
+        Intent intent = new Intent(this, HomeActivity.class );
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
-        // We will need to retrieve the profile values from facebook and
-        // pass the values to EditText
-        // String profileInfo = GET FACEBOOK DATA VALUES HERE
-        // intent.putExtra(PROFILE_VALUES, profileInfo);
-
-        //grabbing the profile information from facebook
-        //grabFBinfo();
 
         startActivity(intent);
-    }
-
-    public void grabFBinfo(){
-        Profile profile = Profile.getCurrentProfile();
-        String  name=profile.getName();
-        Log.d("user name ", name);
-
-        String id =profile.getId();
-        Log.d("user id ", id);
-
     }
 
 }

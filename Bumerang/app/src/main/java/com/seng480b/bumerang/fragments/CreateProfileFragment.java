@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.fragments;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.analytics.FirebaseAnalytics.Event;
 import com.google.firebase.analytics.FirebaseAnalytics.Param;
 
-public class CreateProfile extends FragmentActivity {
+public class CreateProfileFragment extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +20,7 @@ public class CreateProfile extends FragmentActivity {
         //This would be the array of values which the user enters they are willing to lend out
         String[] stringList = new String[10];
         itemsUserIsWillingToLendOut.putStringArray(Param.VALUE, stringList);
-        FirebaseAnalytics itemsUserIsWillingToLendOutAnalytics = FirebaseAnalytics.getInstance(CreateProfile.this);
+        FirebaseAnalytics itemsUserIsWillingToLendOutAnalytics = FirebaseAnalytics.getInstance(CreateProfileFragment.this);
         itemsUserIsWillingToLendOutAnalytics.logEvent(Event.SELECT_CONTENT, itemsUserIsWillingToLendOut);
 
         if (savedInstanceState == null)

@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.fragments;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -24,24 +24,32 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.seng480b.bumerang.BuildConfig;
+import com.seng480b.bumerang.activities.HomeActivity;
+import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.models.Request;
+import com.seng480b.bumerang.utils.UserDataCache;
+import com.seng480b.bumerang.utils.ConnectivityUtility;
 
 import java.io.IOException;
+import java.util.Locale;
+
+import static com.seng480b.bumerang.utils.Utility.*;
 
 import static android.app.Activity.RESULT_OK;
 
-public class CreateRequest extends Fragment {
+public class CreateRequestFragment extends Fragment {
 
     FirebaseAnalytics mFireBaseAnalytics;
-    private static final String requestUrl = BuildConfig.SERVER_URL + "/request/";
-    private static final int defaultHours = 0;
-    private static final int defaultMinutes = 120;
-    private static final int titleField = R.id.inputTitle;
-    private static final int descriptionField = R.id.inputDescription;
-    private static final int hoursField = R.id.inputHours;
-    private static final int minutesField = R.id.inputMinutes;
+    private static final String REQUEST_URL = BuildConfig.SERVER_URL + "/request/";
+    private static final int DEFAULT_HOURS = 0;
+    private static final int DEFAULT_MINUTES = 120;
+    private static final int TITLE_FIELD = R.id.inputTitle;
+    private static final int DESCRIPTION_FIELD = R.id.inputDescription;
+    private static final int HOURS_FIELD = R.id.inputHours;
+    private static final int MINUTES_FIELD = R.id.inputMinutes;
 
     private Request currRequest;
     private Request.RequestType requestType;
@@ -59,11 +67,11 @@ public class CreateRequest extends Fragment {
     Button createButton;
 
     @Override
-    // Fragment Cancel = new Browse();
+    // Fragment Cancel = new BrowseFragment();
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        ((Home)getActivity()).setActionBarTitle("Create Request");
+        ((HomeActivity)getActivity()).setActionBarTitle("Create Request");
 
         inflatedView = inflater.inflate(R.layout.activity_create_request, container, false);
 
@@ -83,11 +91,11 @@ public class CreateRequest extends Fragment {
                 //checkedId is the radiobutton that was selected
                 switch(checkedId){
                     case R.id.radio_borrow:
-                        Toast.makeText(getActivity(),"Borrow!",Toast.LENGTH_LONG).show();
+                        longToast(getActivity(), "Borrow!");
                         requestType = Request.RequestType.BORROW;
                         break;
                     case R.id.radio_lend:
-                        Toast.makeText(getActivity(),"Lend!",Toast.LENGTH_LONG).show();
+                        longToast(getActivity(), "Lend!");
                         requestType = Request.RequestType.LEND;
                         break;
                 }
@@ -111,7 +119,7 @@ public class CreateRequest extends Fragment {
                  } else {
                      distance = value*1000;
                  }
-                distanceText.setText(Integer.toString(value));
+                distanceText.setText(String.format(Locale.getDefault(),"%d", value));
             }
 
             @Override
@@ -130,7 +138,7 @@ public class CreateRequest extends Fragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment back = new Browse();
+                Fragment back = new BrowseFragment();
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.mainFrame,back);
                 ft.commit();
@@ -144,7 +152,7 @@ public class CreateRequest extends Fragment {
 
                 currRequest = createRequest();
                 if (currRequest != null) {
-                    if (Connectivity.checkNetworkAndShowAlert(getContext(), R.string.no_internet_connection_create_request)) {
+                    if (ConnectivityUtility.checkNetworkAndShowAlert(getContext(), R.string.no_internet_connection_create_request)) {
                         new CreateRequestTask().execute();
                     }
                 }
@@ -214,10 +222,10 @@ public class CreateRequest extends Fragment {
 
     private Request createRequest() {
 
-        EditText title = (EditText) inflatedView.findViewById(titleField);
-        EditText description = (EditText) inflatedView.findViewById(descriptionField);
-        EditText hours = (EditText) inflatedView.findViewById(hoursField);
-        EditText minutes = (EditText) inflatedView.findViewById(minutesField);
+        EditText title = (EditText) inflatedView.findViewById(TITLE_FIELD);
+        EditText description = (EditText) inflatedView.findViewById(DESCRIPTION_FIELD);
+        EditText hours = (EditText) inflatedView.findViewById(HOURS_FIELD);
+        EditText minutes = (EditText) inflatedView.findViewById(MINUTES_FIELD);
 
         // Check that all fields are filled, return null if not
         if (isEmpty(title)) {
@@ -225,27 +233,27 @@ public class CreateRequest extends Fragment {
             return null;
         }
 
-        String titleStr = title.getText().toString().trim();
+        String titleStr = editTextToString(title);
         String descriptionStr;
         int hoursInt;
         int minutesInt;
 
         if (!isEmpty(description)) {
-            descriptionStr = description.getText().toString().trim();
+            descriptionStr = editTextToString(description);
         } else {
             descriptionStr = "";
         }
 
         if (!isEmpty(hours)) {
-            hoursInt = Integer.parseInt(hours.getText().toString().trim());
+            hoursInt = Integer.parseInt(editTextToString(hours));
         } else {
-            hoursInt = defaultHours;
+            hoursInt = DEFAULT_HOURS;
         }
 
         if (!isEmpty(minutes)) {
-            minutesInt = Integer.parseInt(minutes.getText().toString().trim());
+            minutesInt = Integer.parseInt(editTextToString(minutes));
         } else {
-            minutesInt = defaultMinutes;
+            minutesInt = DEFAULT_MINUTES;
         }
 
         if (UserDataCache.hasProfile()) {
@@ -288,22 +296,18 @@ public class CreateRequest extends Fragment {
 
 
     private void alertForEmptyFields() {
-        Toast.makeText(getActivity(), R.string.empty_request_field_message, Toast.LENGTH_LONG).show();
+        longToast(getActivity(), R.string.empty_request_field_message);
     }
 
     private void alertForRequestNotCreated() {
-        Toast.makeText(inflatedView.getContext(), R.string.unable_to_create_request, Toast.LENGTH_LONG).show();
-    }
-
-    private static boolean isEmpty(EditText eText) {
-        return eText.getText().toString().trim().length() == 0;
+        longToast(getActivity(), R.string.unable_to_create_request);
     }
 
     private class CreateRequestTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             try {
-                Connectivity.makeHttpPostRequest(requestUrl, currRequest.getJSONKeyValuePairs());
+                ConnectivityUtility.makeHttpPostRequest(REQUEST_URL, currRequest.getJSONKeyValuePairs());
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e("ERROR","Unable to create request.");
@@ -314,7 +318,7 @@ public class CreateRequest extends Fragment {
 
         @Override
         protected void onCancelled(String result) {
-            Fragment browse = new Browse();
+            Fragment browse = new BrowseFragment();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, browse);
             ft.commit();
@@ -323,11 +327,11 @@ public class CreateRequest extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            Fragment myRequests = new MyRequests();
+            Fragment myRequests = new MyRequestsFragment();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, myRequests);
             ft.commit();
-            Toast.makeText(getActivity(), R.string.created_request, Toast.LENGTH_LONG).show();
+            longToast(getActivity(), R.string.created_request);
         }
     }
 

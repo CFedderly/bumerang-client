@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.adapters;
 
 /* custom adapter for the class -> Request <- Adapts the class so objects can be put into list (setListAdapter) */
 
@@ -9,12 +9,17 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.models.Request;
+
 import java.util.ArrayList;
+import java.util.Locale;
 
 
-class MyRequestAdapter extends ArrayAdapter<Request> {
+public class MyRequestAdapter extends ArrayAdapter<Request> {
 
-    MyRequestAdapter(Context context, ArrayList<Request> requests) {
+    public MyRequestAdapter(Context context, ArrayList<Request> requests) {
         super(context,0,requests);
     }
 
@@ -35,7 +40,7 @@ class MyRequestAdapter extends ArrayAdapter<Request> {
         //populate the data into the template view using data object
         title.setText(requestTicket.getTitle());
         description.setText(requestTicket.getDescription());
-        user.setText(Integer.toString(requestTicket.getUserId()));
+        user.setText(String.format(Locale.getDefault(), "%d", requestTicket.getUserId()));
 
         //added a button that only appears in the My Requests page -> attaches to each list item
         ImageButton replyWarning = (ImageButton) convertView.findViewById(R.id.buttonReplyWarning);

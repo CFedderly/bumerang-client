@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.fragments;
 
 import android.support.v4.app.Fragment;
 import android.support.design.widget.TabLayout;
@@ -12,14 +12,19 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.facebook.login.widget.ProfilePictureView;
+import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.utils.UserDataCache;
+import com.seng480b.bumerang.utils.Utility;
+import com.seng480b.bumerang.activities.HomeActivity;
+import com.seng480b.bumerang.models.Profile;
 
-public class ProfilePage extends Fragment {
+public class ProfilePageFragment extends Fragment {
     private View myInflatedView;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         myInflatedView = inflater.inflate(R.layout.fragment_profile_page, container,false);
         /** set the action bar title **/
-        ((Home)getActivity()).setActionBarTitle("Profile");
+        ((HomeActivity)getActivity()).setActionBarTitle("Profile");
 
         /** make the tabs invisible **/
         ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
@@ -48,7 +53,7 @@ public class ProfilePage extends Fragment {
             ProfilePictureView profilePicture = (ProfilePictureView) myInflatedView.findViewById(R.id.profilePicture);
 
             profileKarma.setText(String.valueOf(currProfile.getKarma()));
-            profileNumber.setText(currProfile.getPhoneNumber());
+            profileNumber.setText(Utility.formatPhoneNumber(currProfile.getPhoneNumber()));
             profileTags.setText(currProfile.getTags());
             profileBio.setText(currProfile.getDescription());
             profilePicture.setProfileId(String.valueOf(currProfile.getFacebookId()));

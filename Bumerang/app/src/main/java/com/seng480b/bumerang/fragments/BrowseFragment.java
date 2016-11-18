@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,20 +14,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListAdapter;
-import android.widget.Toast;
+
+import com.seng480b.bumerang.BuildConfig;
+import com.seng480b.bumerang.utils.ConnectivityUtility;
+import com.seng480b.bumerang.activities.HomeActivity;
+import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.models.Request;
+import com.seng480b.bumerang.adapters.BrowseAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-public class Browse extends ListFragment implements OnItemClickListener {
+import static com.seng480b.bumerang.utils.Utility.*;
 
-    private static final String requestUrl = BuildConfig.SERVER_URL + "/requests/recent/100";
+public class BrowseFragment extends ListFragment implements OnItemClickListener {
+
+    private static final String REQUEST_URL = BuildConfig.SERVER_URL + "/requests/recent/100";
     private ViewPager viewPager;
     private Activity activity;
 
-    public Browse() {
+    public BrowseFragment() {
         // Required empty public constructor
     }
 
@@ -55,7 +61,7 @@ public class Browse extends ListFragment implements OnItemClickListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((Home)getActivity()).setActionBarTitle("Browse");
+        ((HomeActivity)getActivity()).setActionBarTitle("Browse");
 
         // make the tabs visible
         viewPager = (ViewPager) activity.findViewById(R.id.container);
@@ -88,8 +94,8 @@ public class Browse extends ListFragment implements OnItemClickListener {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static Browse newInstance(int sectionNumber) {
-        Browse fragment = new Browse();
+    public static BrowseFragment newInstance(int sectionNumber) {
+        BrowseFragment fragment = new BrowseFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
@@ -99,9 +105,9 @@ public class Browse extends ListFragment implements OnItemClickListener {
     private void populateBrowse() {
         Request.RequestType requestType = getCurrentRequestType(viewPager);
         if (requestType != null) {
-            new GetRequestsTask().execute(requestUrl);
+            new GetRequestsTask().execute(REQUEST_URL);
         } else {
-            Toast.makeText(activity, R.string.unable_to_display_requests, Toast.LENGTH_LONG).show();
+            longToast(getActivity(), R.string.unable_to_display_requests);
         }
     }
 
@@ -126,7 +132,7 @@ public class Browse extends ListFragment implements OnItemClickListener {
         @Override
         protected String doInBackground(String... params) {
             try {
-                return Connectivity.makeHttpGetRequest(params[0]);
+                return ConnectivityUtility.makeHttpGetRequest(params[0]);
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e("ERROR", "Unable to retrieve requests");
@@ -140,14 +146,14 @@ public class Browse extends ListFragment implements OnItemClickListener {
             if (result != null) {
                 final ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
                 final ArrayList<Request> reqList = Request.filterRequestsByType(requests, getCurrentRequestType(viewPager));
-                RequestAdapter mAdapter = new RequestAdapter(activity,
+                BrowseAdapter mAdapter = new BrowseAdapter(activity,
                         Request.filterRequestsByType(requests, getCurrentRequestType(viewPager)));
                 getListView().setAdapter(mAdapter);
                 getListView().setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Request req = reqList.get(position);
-                        DetailFragment details = new DetailFragment();
+                        RequestDetailFragment details = new RequestDetailFragment();
                         details.setRequest(req);
 
                         FragmentManager fm = getFragmentManager();

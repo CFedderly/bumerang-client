@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.models;
 
 import android.util.Log;
 
@@ -13,8 +13,7 @@ public class Offer {
     private Profile offerProfile;
     private Request offerReq;
 
-    public Offer(Profile offerProfile,
-                 Request request, int id) {
+    public Offer(Profile offerProfile, Request request, int id) {
         this.offerProfile = offerProfile;
         this.offerReq = request;
         this.offerId = id;
@@ -42,7 +41,7 @@ public class Offer {
 
     public int getOfferId() {return offerId;}
 
-    static ArrayList<Offer> getListOfOffersFromJSON(String json) {
+    public static ArrayList<Offer> getListOfOffersFromJSON(String json) {
         ArrayList<Offer> offers = new ArrayList<>();
         try {
             JSONObject obj = new JSONObject(json);

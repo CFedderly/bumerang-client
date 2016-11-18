@@ -1,20 +1,20 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
 
-public class SquareImage extends ImageView {
+public class SquareImageView extends ImageView {
 
-    public SquareImage(final Context context){
+    public SquareImageView(final Context context){
         super(context);
     }
 
-    public SquareImage(final Context context,final AttributeSet attributes) {
+    public SquareImageView(final Context context, final AttributeSet attributes) {
         super(context,attributes);
     }
-    public SquareImage(final Context context, final AttributeSet attributes, final int defStyle){
+    public SquareImageView(final Context context, final AttributeSet attributes, final int defStyle){
         super(context,attributes,defStyle);
     }
 
