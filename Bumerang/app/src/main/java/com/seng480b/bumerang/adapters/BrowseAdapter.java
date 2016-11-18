@@ -32,8 +32,13 @@ public class BrowseAdapter extends ArrayAdapter<Request> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.browse_item, parent, false);
         }
 
-        //set colour of list item to -pink-
-        convertView.setBackgroundResource(R.drawable.pink_rectangle);
+        //set colour of list item to -pink- or -blue-
+        Request.RequestType type = requestTicket.getRequestType();
+        if (type == Request.RequestType.BORROW) {
+            convertView.setBackgroundResource(R.drawable.pink_rectangle);
+        } else {
+            convertView.setBackgroundResource(R.drawable.blue_rectangle);
+        }
 
         //look up view for data population
         TextView title = (TextView) convertView.findViewById(R.id.request_title);
