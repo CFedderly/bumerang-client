@@ -4,28 +4,56 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.seng480b.bumerang.BuildConfig;
+import com.seng480b.bumerang.models.Offer;
+import com.seng480b.bumerang.models.Request;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class KarmaUtility {
-    private static final String updateKarmaUrl = BuildConfig.SERVER_URL + "/karma/";
-    int lendMultiplier = 5;
-    int borrowMultiplier = 2;
-    int offenceMultiplier = 10;
+    private static final String updateKarmaUrl = BuildConfig.SERVER_URL + "/profile/karma/edit/";
+    private static final int lendMultiplier = 5;
+    private static final int borrowMultiplier = 2;
+    private static final int offenceMultiplier = 10;
+    private static final int firstLoginKarma = 10;
 
+
+
+    public int giveKarmaForFirstLogin(){
+        String karmaUrl = updateKarmaUrl + UserDataCache.getCurrentUser().getUserId();
+        UserDataCache.getCurrentUser().addKarma(firstLoginKarma);
+        try {
+            new UpdateKarmaTask().execute(
+                    karmaUrl,
+                    "add",
+                    String.valueOf(firstLoginKarma)
+                    ).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // TODO: Error handle pls.
+        }
+        return firstLoginKarma;
+    }
 
     /**
-     * gives karma to the users involved in the completion of a request
-     * @param borrowerId
-     * @param lenderId
+     * gives karma to the users involved in the offer
+     * @param offer
+     * @return
      */
-    public boolean distributeKarmaForRequest(int borrowerId, int lenderId){
-        String a = addKarmaForLending(lenderId);
-        String b = addKarmaForBorrowing(borrowerId);
-        if(a == null | b == null){
-            return false;
+    public int giveKarmaForRequest(Offer offer){
+        Request.RequestType rType = offer.getRequestInfo().getRequestType();
+        if(rType== Request.RequestType.BORROW){
+            addKarmaForLending(offer.getOfferProfile().getUserId());
+            addKarmaForBorrowing(offer.getRequestInfo().getUserId());
+            return borrowMultiplier;
+
+        }else if(rType== Request.RequestType.LEND){
+            addKarmaForLending(offer.getRequestInfo().getUserId());
+            addKarmaForBorrowing(offer.getOfferProfile().getUserId());
+            return lendMultiplier;
+
         }else{
-            return true;
+            return 0;
         }
     }
     /**
@@ -33,17 +61,23 @@ public class KarmaUtility {
      * @param id
      * @return
      */
-    public String addKarmaForLending(int id){
+    private void addKarmaForLending(int id){
+        if(id==UserDataCache.getCurrentUser().getUserId()){
+            UserDataCache.getCurrentUser().addKarma(lendMultiplier);
+        }
         String karmaUrl = updateKarmaUrl + id;
-        String result = null;
         try {
-            result = new UpdateKarmaTask().execute(karmaUrl).get();
+            new UpdateKarmaTask().execute(
+                    karmaUrl,
+                    "add",
+                    String.valueOf(lendMultiplier)
+                    ).get();
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("ERROR","Could not update user " + id + "'s Karma.");
             // TODO: Error handle pls.
         }
-        return result;
+
     }
 
     /**
@@ -51,18 +85,22 @@ public class KarmaUtility {
      * @param id
      * @return
      */
-    public String addKarmaForBorrowing(int id){
+    private void addKarmaForBorrowing(int id){
+        if(id==UserDataCache.getCurrentUser().getUserId()){
+            UserDataCache.getCurrentUser().addKarma(borrowMultiplier);
+        }
         String karmaUrl = updateKarmaUrl + id;
-        UserDataCache.getCurrentUser().addKarma(borrowMultiplier);
-        String result = null;
         try {
-            result = new UpdateKarmaTask().execute(karmaUrl).get();
+            new UpdateKarmaTask().execute(
+                    karmaUrl,
+                    "add",
+                    String.valueOf(borrowMultiplier)
+                    ).get();
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("ERROR", "Could not update Current user's Karma.");
+            Log.e("ERROR","Could not update user " + id + "'s Karma.");
             // TODO: Error handle pls.
         }
-        return result;
     }
 
     /**
@@ -70,32 +108,36 @@ public class KarmaUtility {
      * @param id
      * @return
      */
-    public String removeKarmaForOffence(int id){
+    public void removeKarmaForOffence(int id){
+        if(id==UserDataCache.getCurrentUser().getUserId()){
+            UserDataCache.getCurrentUser().removeKarma(offenceMultiplier);
+        }
         String karmaUrl = updateKarmaUrl + id;
-        UserDataCache.getCurrentUser().removeKarma(offenceMultiplier);
-        String result = null;
         try {
-            result = new UpdateKarmaTask().execute(karmaUrl).get();
+            new UpdateKarmaTask().execute(
+                    karmaUrl,
+                    "sub",
+                    String.valueOf(offenceMultiplier)
+                    ).get();
         } catch (Exception e) {
             e.printStackTrace();
             // TODO: Error handle pls.
         }
-        return result;
     }
 
-
-
-    public static class UpdateKarmaTask extends AsyncTask<String, Void, String> {
+    private static class UpdateKarmaTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
             String result = null;
             try{
-                result = ConnectivityUtility.makeHttpPostRequest(
-                        params[0],
-                        UserDataCache.getCurrentUser().getJSONKeyValuePairs()
-                        );
+                HashMap karmaVal = new HashMap<>();
+                karmaVal.put("method", params[1]);
+                karmaVal.put("amount", Integer.valueOf(params[2]));
+                result = ConnectivityUtility.makeHttpPostRequest(params[0], karmaVal);
+
             }catch(IOException e) {
+                Log.e("ERROR", "Could'nt make request to the server.");
                 e.printStackTrace();
             }
             return result;

@@ -26,12 +26,14 @@ import com.facebook.login.LoginManager;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.seng480b.bumerang.fragments.MyRequestsFragment;
 import com.seng480b.bumerang.fragments.ProfilePageFragment;
+import com.seng480b.bumerang.utils.KarmaUtility;
 import com.seng480b.bumerang.utils.ProfileUtility;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.adapters.SectionsPagerAdapter;
 import com.seng480b.bumerang.fragments.TestFragment;
 import com.seng480b.bumerang.fragments.CreateRequestFragment;
 import com.seng480b.bumerang.fragments.EditProfileFragment;
+import com.seng480b.bumerang.utils.Utility;
 
 
 public class HomeActivity extends AppCompatActivity
@@ -117,7 +119,6 @@ public class HomeActivity extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, fragment2);
             ft.commit();
-
             loadTabs();
         }
     }
@@ -256,5 +257,12 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void giveKarma(){
+        int karma = new KarmaUtility().giveKarmaForFirstLogin();
+        if (karma>0){
+            Utility.karmaToast(this, karma);
+        }
     }
 }

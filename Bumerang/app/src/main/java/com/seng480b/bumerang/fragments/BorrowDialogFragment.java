@@ -9,13 +9,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.login.widget.ProfilePictureView;
 import com.seng480b.bumerang.models.Offer;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.utils.KarmaUtility;
-import com.seng480b.bumerang.utils.UserDataCache;
+import com.seng480b.bumerang.utils.Utility;
 
 import java.util.Locale;
 
@@ -58,14 +57,7 @@ public class BorrowDialogFragment extends DialogFragment {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //give karma to the users
-                boolean success = new KarmaUtility().distributeKarmaForRequest(
-                        UserDataCache.getCurrentUser().getUserId(),
-                        offer.getOfferProfile().getUserId()
-                );
-                if (success){
-                    Toast.makeText(getActivity(), "Congratulations, you got some Karma!", Toast.LENGTH_SHORT).show();
-                }
+                giveKarma();
                 PhoneNumberDialogFragment phoneNumberDialog = new PhoneNumberDialogFragment();
                 // A more elegant solution will be needed. But for now, get the first offer.
                 phoneNumberDialog.setOfferObj(offer);
@@ -101,6 +93,13 @@ public class BorrowDialogFragment extends DialogFragment {
         // By sending to server via async
         // new acceptOffer.execute(offerUrl, offer);
 
+    }
+
+    public void giveKarma(){
+        int karma = new KarmaUtility().giveKarmaForRequest(offer);
+        if (karma>0){
+            Utility.karmaToast(getActivity(), karma);
+        }
     }
 
 }
