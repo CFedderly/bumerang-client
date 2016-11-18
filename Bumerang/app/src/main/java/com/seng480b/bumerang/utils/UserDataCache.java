@@ -1,6 +1,6 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.utils;
 
-import android.util.Log;
+import com.seng480b.bumerang.models.Profile;
 
 /**
  * Static class to store user information for the current session
@@ -28,11 +28,11 @@ public final class UserDataCache {
         UserDataCache.currentUser = currentUser;
     }
 
-    public static void setRecentUser(Profile recentUser) {
+    static void setRecentUser(Profile recentUser) {
         UserDataCache.recentUser = recentUser;
     }
 
-    public static void updateUserId(int id) {
+    static void updateUserId(int id) {
         UserDataCache.currentUser.setUserId(id);
     }
 

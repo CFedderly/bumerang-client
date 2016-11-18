@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.fragments;
 /*a temporary test fragment -currently just displays a message - placeholder*/
 
 import android.support.v4.app.Fragment;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.seng480b.bumerang.R;
 
 public class TestFragment extends Fragment {
 

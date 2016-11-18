@@ -1,10 +1,12 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.seng480b.bumerang.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,9 +21,9 @@ import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
-class Connectivity {
+public class ConnectivityUtility {
 
-    private static final int Timeout = 15000;
+    private static final int TIMEOUT = 15000;
 
     private enum HttpMethod {
         GET,
@@ -39,7 +41,7 @@ class Connectivity {
         return checkNetworkAndShowAlert(context, R.string.no_internet_connection_generic);
     }
 
-    static boolean checkNetworkAndShowAlert(Context context, int alertTextResource) {
+    public static boolean checkNetworkAndShowAlert(Context context, int alertTextResource) {
         boolean isConnected = checkNetworkConnection(context);
         if (!isConnected) {
             Toast.makeText(context, alertTextResource, Toast.LENGTH_LONG).show();
@@ -47,8 +49,8 @@ class Connectivity {
         return isConnected;
     }
 
-    static boolean checkNetworkConnection(Context context) {
-        NetworkInfo netInfo = Connectivity.getNetworkInfo(context);
+    public static boolean checkNetworkConnection(Context context) {
+        NetworkInfo netInfo = ConnectivityUtility.getNetworkInfo(context);
         if (netInfo != null) {
             Log.d("DEBUG", "Network connection: " + netInfo.isConnected());
             return netInfo.isConnected();
@@ -57,11 +59,11 @@ class Connectivity {
         }
     }
 
-    static String makeHttpGetRequest(String requestUrl) throws IOException {
+    public static String makeHttpGetRequest(String requestUrl) throws IOException {
         return makeHttpRequest(requestUrl, HttpMethod.GET, null);
     }
 
-    static String makeHttpPostRequest(String requestUrl, HashMap<String, String> params) throws IOException {
+    public static String makeHttpPostRequest(String requestUrl, HashMap<String, String> params) throws IOException {
         return makeHttpRequest(requestUrl, HttpMethod.POST, params);
     }
 
@@ -71,8 +73,8 @@ class Connectivity {
             URL url = new URL(requestUrl);
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setReadTimeout(Timeout);
-            connection.setConnectTimeout(Timeout);
+            connection.setReadTimeout(TIMEOUT);
+            connection.setConnectTimeout(TIMEOUT);
             switch (method) {
                 case GET:
                     result = httpGet(connection);
@@ -85,6 +87,7 @@ class Connectivity {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
         return result;
     }
@@ -102,7 +105,7 @@ class Connectivity {
     }
 
     private static String httpPost(HttpURLConnection connection, HashMap<String, String> params) throws IOException {
-        String response = "";
+        String response;
 
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
@@ -117,10 +120,12 @@ class Connectivity {
 
         if (status == HttpURLConnection.HTTP_OK) {
             String line;
+            response = "";
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             while ((line = br.readLine()) != null) {
                 response += line;
             }
+            Log.d("DEBUG", "response = " + response);
         } else {
             Log.d("DEBUG", "status = " + status);
             throw new IOException();

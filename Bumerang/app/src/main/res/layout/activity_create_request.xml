@@ -16,7 +16,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context="com.seng480b.bumerang.CreateRequest">
+        tools:context="com.seng480b.bumerang.fragments.CreateRequestFragment">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -184,7 +184,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/barDistance"
-                    android:max="50"
+                    android:max="100"
                     android:progress="5"
                     android:layout_marginTop="32dp"
                     android:layout_below="@+id/textView12"
@@ -217,14 +217,16 @@
                     android:drawableLeft="@drawable/ic_menu_gallery"
                     android:textAllCaps="false"
                     android:background="@android:color/transparent"
-                    android:text=" Choose An Image"/>
+                    android:text=" Choose An Image"
+                    android:visibility="gone"/>
 
-                <com.seng480b.bumerang.SquareImage
+                <com.seng480b.bumerang.views.SquareImageView
                     android:id="@+id/createRequest_Image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/createRequest_buttonPickImage"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"/>
 
             </RelativeLayout>
 

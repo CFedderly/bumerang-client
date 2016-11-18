@@ -1,4 +1,4 @@
-package com.seng480b.bumerang;
+package com.seng480b.bumerang.models;
 
 import android.util.Log;
 
@@ -12,9 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-class Request {
+public class Request {
 
-    enum RequestType {
+    public enum RequestType {
         BORROW(0), LEND(1);
 
         private int num;
@@ -38,7 +38,7 @@ class Request {
         }
     }
 
-    private int reqId;
+    private int requestId;
     private int userId;
     private String title;
     private String description;
@@ -46,13 +46,13 @@ class Request {
     private int distance;
     private RequestType requestType;
 
-    Request(int userId,
-            String title,
-            String description,
-            int durationHours,
-            int durationMinutes,
-            int distanceMeters,
-            RequestType requestType) {
+    public Request(int userId,
+                   String title,
+                   String description,
+                   int durationHours,
+                   int durationMinutes,
+                   int distanceMeters,
+                   RequestType requestType) {
         this.userId = userId;
         this.title = title;
         this.description = description;
@@ -69,7 +69,7 @@ class Request {
     public Request(String JSONString) {
         try {
             JSONObject obj = new JSONObject(JSONString);
-            this.reqId = obj.getInt("id");
+            this.requestId = obj.getInt("id");
             this.userId = obj.getInt("user_id");
             this.title = obj.getString("title");
             this.description = obj.getString("description");
@@ -93,9 +93,9 @@ class Request {
         return (int) TimeUnit.MINUTES.convert(millisUntilExpiry, TimeUnit.MILLISECONDS);
     }
 
-    int getReqId(){ return this.reqId; }
+    public int getRequestId(){ return this.requestId; }
 
-    int getUserId(){
+    public int getUserId(){
         return this.userId;
     }
 
@@ -105,7 +105,7 @@ class Request {
 
     public RequestType getRequestType() { return this.requestType; }
 
-    HashMap<String, String> getJSONKeyValuePairs() {
+    public HashMap<String, String> getJSONKeyValuePairs() {
         HashMap<String, String> keyValue = new HashMap<>();
         keyValue.put("title", title);
         keyValue.put("user_id", String.valueOf(userId));
@@ -116,7 +116,7 @@ class Request {
         return keyValue;
     }
 
-    static ArrayList<Request> filterRequestsByType(ArrayList<Request> original, RequestType type) {
+    public static ArrayList<Request> filterRequestsByType(ArrayList<Request> original, RequestType type) {
         ArrayList<Request> newList = new ArrayList<>();
         for (Request request : original) {
             if (request.requestType == type) {
@@ -126,7 +126,7 @@ class Request {
         return newList;
     }
 
-    static ArrayList<Request> getListOfRequestsFromJSON(String json) {
+    public static ArrayList<Request> getListOfRequestsFromJSON(String json) {
         ArrayList<Request> requests = new ArrayList<>();
         try {
             JSONObject obj = new JSONObject(json);

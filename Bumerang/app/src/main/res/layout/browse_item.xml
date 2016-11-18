@@ -39,7 +39,9 @@
         android:layout_marginStart="25dp"
         android:layout_toStartOf="@id/browseItem_Image"
         android:layout_alignParentBottom="true"
-        android:id="@+id/request_user" />
+        android:id="@+id/request_user"
+        android:visibility = "gone"/>
+
 
     <TextView
         android:id="@+id/request_description"
