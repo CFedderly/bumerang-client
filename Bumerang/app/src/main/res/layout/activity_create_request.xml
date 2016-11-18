@@ -98,72 +98,83 @@
 
             <TextView
                 android:id="@+id/labelDuration"
-                android:text="Duration:"
+                android:text="Expires:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:layout_below="@id/inputDescription"
                 android:textAppearance="@style/TextAppearance.AppCompat" />
-
-            <TextView
-                android:id="@+id/inputDuration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/labelDuration"
-                android:layout_marginStart="10dp"
-                android:layout_below="@id/inputDescription"
-                android:text="heyyyyy"/>
-
-            <TextView
-                android:id="@+id/inputTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="5dp"
-                android:text="2 hours"
-                android:layout_below="@id/labelDuration"
-                android:textAllCaps="false"/>
-
-            <Button
-                android:id="@+id/buttonToSetTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/inputTime"
-                android:layout_alignBottom="@id/inputTime"
-                android:layout_alignTop="@id/inputTime"
-                android:layout_below="@id/labelDuration"
-                android:background="@android:color/transparent"
-                android:textColor="@color/colorAccent"
-                android:text="Change"/>
 
             <TextView
                 android:id="@+id/inputDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="80dp"
+                android:layout_alignParentStart="true"
                 android:text="Today"
-                android:layout_below="@id/inputTime"
+                android:layout_below="@id/labelDuration"
                 android:textAllCaps="false" />
+
+            <TextView
+                android:id="@+id/inputTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Soon"
+                android:layout_marginEnd="80dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/labelDuration"
+                android:textAllCaps="false"/>
 
             <Button
                 android:id="@+id/buttonToSetDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/inputDate"
-                android:layout_alignBottom="@id/inputDate"
-                android:layout_alignTop="@id/inputDate"
-                android:layout_below="@id/buttonToSetTime"
+                android:layout_below="@id/inputDate"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="-10dp"
+                android:layout_marginStart="50dp"
                 android:background="@android:color/transparent"
                 android:textColor="@color/colorAccent"
-                android:text="Change" />
+                android:text="Change Day" />
+
+            <Button
+                android:id="@+id/buttonToSetTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/inputTime"
+                android:layout_marginTop="-10dp"
+                android:layout_marginEnd="50dp"
+                android:layout_alignParentEnd="true"
+                android:background="@android:color/transparent"
+                android:textColor="@color/colorAccent"
+                android:text="Change time"/>
+
+            <TextView
+                android:id="@+id/labelExpiresIn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Expires in "
+                android:layout_marginTop="-10dp"
+                android:textColor="@color/light_blue_text"
+                android:layout_below="@id/buttonToSetTime"
+                android:layout_marginStart="20dp"/>
+
+            <TextView
+                android:id="@+id/inputDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/labelExpiresIn"
+                android:layout_marginTop="-10dp"
+                android:layout_below="@id/buttonToSetTime"
+                android:textColor="@color/light_blue_text"
+                android:text="2 hours"/>
 
 
             <RelativeLayout
                 android:id="@+id/layout_advanced_options"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/buttonToSetDate"
+                android:layout_below="@id/inputDuration"
                 android:visibility="gone"
                 android:layout_marginTop="10dp"
                 android:background="@color/light_gray">
@@ -174,9 +185,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/labelDistance"
+                    android:layout_marginTop="5dp"
                     android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginTop="20dp" />
+                    android:layout_alignParentStart="true" />
 
                 <SeekBar
                     android:layout_width="match_parent"

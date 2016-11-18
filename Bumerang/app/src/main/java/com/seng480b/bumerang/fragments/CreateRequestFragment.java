@@ -2,7 +2,6 @@ package com.seng480b.bumerang.fragments;
 
 
 import android.app.Activity;
-import android.os.Build;
 import android.support.v4.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -14,7 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
@@ -34,9 +32,6 @@ import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.seng480b.bumerang.BuildConfig;
-import com.seng480b.bumerang.DatePickerFragment;
-import com.seng480b.bumerang.DateTimePickerFragment;
-import com.seng480b.bumerang.TimePickerFragment;
 import com.seng480b.bumerang.activities.HomeActivity;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.models.Request;
@@ -45,11 +40,10 @@ import com.seng480b.bumerang.utils.ConnectivityUtility;
 
 import java.io.IOException;
 import java.util.Locale;
-
-import static com.seng480b.bumerang.utils.Utility.*;
-
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import static com.seng480b.bumerang.utils.Utility.*;
 import static android.app.Activity.RESULT_OK;
 
 
@@ -63,7 +57,7 @@ public class CreateRequestFragment extends Fragment {
     private static final int DESCRIPTION_FIELD = R.id.inputDescription;
 
     private int durationInMinutes = -1;
-    private Calendar setTime;
+    private Calendar resultCalendar;
 
     private Request currRequest;
     private Request.RequestType requestType;
@@ -90,6 +84,20 @@ public class CreateRequestFragment extends Fragment {
         ((HomeActivity)getActivity()).setActionBarTitle("Create Request");
 
         inflatedView = inflater.inflate(R.layout.activity_create_request, container, false);
+
+        // set duration texts to current time (plus 2 hours)
+        Calendar today = Calendar.getInstance();
+        TextView dateText=(TextView) inflatedView.findViewById(R.id.inputDate);
+        TextView timeText=(TextView) inflatedView.findViewById(R.id.inputTime);
+        today.add(Calendar.HOUR_OF_DAY,2);
+        //change formatting for date and time so they're readable
+        String formattedTime = "hh:mm aaa";
+        String expiryTime = (String) DateFormat.format(formattedTime,today.getTime());
+        SimpleDateFormat monthFormat = new SimpleDateFormat("LLL", Locale.getDefault());
+        String monthName = monthFormat.format(today.getTime());
+        String expiryDate =  monthName + "." + today.get(Calendar.DAY_OF_MONTH);
+        dateText.setText(expiryDate);
+        timeText.setText(expiryTime);
 
         /** make the tabs invisible **/
         ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
@@ -118,6 +126,8 @@ public class CreateRequestFragment extends Fragment {
             }
         });
 
+        //initialize Calendar to NOW
+        resultCalendar = Calendar.getInstance();
 
         // Setup for the button to change time (ie the time your ad will exist for)
         Button buttonToSetTime = (Button) inflatedView.findViewById(R.id.buttonToSetTime);
@@ -125,13 +135,12 @@ public class CreateRequestFragment extends Fragment {
            @Override
            public void onClick(View v) {
                Bundle args = new Bundle();
-               args.putInt("minute",0);
-               args.putInt("hour",0);
-               args.putInt("dayOfMonth",1);  //put in current month, OR set month
-               args.putInt("month",1); //same
-               args.putInt("year",1);
+               args.putInt("minute",resultCalendar.get(Calendar.MINUTE));
+               args.putInt("hour",resultCalendar.get(Calendar.HOUR_OF_DAY));
+               args.putInt("dayOfMonth",resultCalendar.get(Calendar.DAY_OF_MONTH));
+               args.putInt("month",resultCalendar.get(Calendar.MONTH));
+               args.putInt("year",resultCalendar.get(Calendar.YEAR));
 
-               //DateTimePickerFragment dateTimePicker = new DateTimePickerFragment();
                DialogFragment timePicker = new TimePickerFragment();
 
                timePicker.setArguments(args);
@@ -140,7 +149,6 @@ public class CreateRequestFragment extends Fragment {
                timePicker.setTargetFragment(CreateRequestFragment.this, CREATE_REQUEST_FRAGMENT);
 
                FragmentManager fm = getFragmentManager();
-               //dateTimePicker.show(fm,"Date and Time Picker");
                timePicker.show(fm,"time picker");
            }
         });
@@ -151,17 +159,17 @@ public class CreateRequestFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle args = new Bundle();
-                args.putInt("minute",0);  //put in current minute, OR set minute
-                args.putInt("hour",0); //same
-                args.putInt("dayOfMonth",1);  //put in current onth, OR set month
-                args.putInt("month",1); //same
-                args.putInt("year",1);
+                args.putInt("minute",resultCalendar.get(Calendar.MINUTE));
+                args.putInt("hour",resultCalendar.get(Calendar.HOUR_OF_DAY));
+                args.putInt("dayOfMonth",resultCalendar.get(Calendar.DAY_OF_MONTH));
+                args.putInt("month",resultCalendar.get(Calendar.MONTH));
+                args.putInt("year",resultCalendar.get(Calendar.YEAR));
 
                 DialogFragment datePicker = new DatePickerFragment();
 
                 datePicker.setArguments(args);
 
-                //the link back from the DateTimePickerFragment to access -hours- and -minutes-
+                //the link back from the datePickerFragment to access day/month/year
                 datePicker.setTargetFragment(CreateRequestFragment.this, CREATE_REQUEST_FRAGMENT);
 
                 FragmentManager fm = getFragmentManager();
@@ -277,7 +285,6 @@ public class CreateRequestFragment extends Fragment {
                     advanced_options.setVisibility(View.GONE);
                     adv_options_button.setText(R.string.expand_advanced_options);
                 }
-
             }
         });
 
@@ -366,16 +373,18 @@ public class CreateRequestFragment extends Fragment {
             case CREATE_REQUEST_FRAGMENT:
                 if (resultCode == Activity.RESULT_OK) {
                     Bundle bundle = data.getExtras();
-                    durationInMinutes = bundle.getInt("durationInMinutes",-1);
 
+                    resultCalendar.set(Calendar.MINUTE,bundle.getInt("minute"));
+                    resultCalendar.set(Calendar.HOUR_OF_DAY,bundle.getInt("hour"));
+                    resultCalendar.set(Calendar.DAY_OF_MONTH,bundle.getInt("dayOfMonth"));
+                    resultCalendar.set(Calendar.MONTH,bundle.getInt("month"));
+                    resultCalendar.set(Calendar.YEAR,bundle.getInt("year"));
 
-
+                    durationInMinutes = bundle.getInt("durationInMinutes");
                 }
                 break;
         }
-
     }
-
 
     private void alertForEmptyFields() {
         longToast(getActivity(), R.string.empty_request_field_message);
