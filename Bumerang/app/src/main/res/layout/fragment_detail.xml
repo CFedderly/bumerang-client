@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:padding="10dp">
 
-
     <com.seng480b.bumerang.views.SquareImageView
         android:id="@+id/browseItemDetail_Image"
         android:layout_width="100dp"

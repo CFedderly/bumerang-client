@@ -186,7 +186,6 @@ public class CreateRequestFragment extends Fragment {
             }
         });
 
-
         Spinner distSpinner = (Spinner) inflatedView.findViewById(R.id.spinnerDistance);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -211,13 +210,11 @@ public class CreateRequestFragment extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
         return inflatedView;
     }
-
 
 
     private Request createRequest() {

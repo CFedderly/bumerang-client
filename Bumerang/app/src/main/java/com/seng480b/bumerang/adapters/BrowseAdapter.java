@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 public class BrowseAdapter extends ArrayAdapter<Request> {
 
+
     public BrowseAdapter(Context context, ArrayList<Request> requests) {
         super(context,0,requests);
     }
@@ -30,6 +31,9 @@ public class BrowseAdapter extends ArrayAdapter<Request> {
         if (convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.browse_item, parent, false);
         }
+
+        //set colour of list item to -pink-
+        convertView.setBackgroundResource(R.drawable.pink_rectangle);
 
         //look up view for data population
         TextView title = (TextView) convertView.findViewById(R.id.request_title);
