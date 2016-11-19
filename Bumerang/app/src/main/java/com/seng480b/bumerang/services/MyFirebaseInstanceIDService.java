@@ -1,6 +1,8 @@
 package com.seng480b.bumerang.services;
 
 import android.util.Log;
+
+import com.facebook.AccessToken;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.seng480b.bumerang.BuildConfig;
@@ -19,7 +21,12 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     }
 
     private void sendRegistrationToServer(String refreshedToken) {
-        if (UserDataCache.hasProfile()) {
+        boolean loggedIn = AccessToken.getCurrentAccessToken()!=null;
+        if (loggedIn) {
+            ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
+        }
+
+        if (UserDataCache.getCurrentUser() != null) {
             String result = null;
             Profile profile = UserDataCache.getCurrentUser();
             String profileEditUrlWithId = PROFILE_EDIT_URL + profile.getUserId();
@@ -29,10 +36,10 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
                 result = ProfileUtility.editDeviceId(profileEditUrlWithId);
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.e("ERROR", "Unable to update device id");
+                Log.e("ERROR", "(Service) Unable to update device id");
             }
             if (result != null) {
-                Log.e("DEBUG", "Successfully updated device id to: " + refreshedToken);
+                Log.e("DEBUG", " (Service) Successfully updated device id to: " + refreshedToken);
             } else {
                 profile.setDeviceId(oldDeviceId);
             }

@@ -3,6 +3,7 @@ package com.seng480b.bumerang.utils;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.seng480b.bumerang.BuildConfig;
 import com.seng480b.bumerang.models.Profile;
 
@@ -16,6 +17,7 @@ public class ProfileUtility {
 
     private static final String PROFILE_BY_USER_ID_URL = BuildConfig.SERVER_URL + "/profile/";
     private static final String PROFILE_BY_FACEBOOK_ID_URL = BuildConfig.SERVER_URL + "/profile/facebookid/";
+    private static final String EDIT_PROFILE_URL = BuildConfig.SERVER_URL + "/profile/edit/";
 
     public static boolean isFirstLogin(com.facebook.Profile fbProfile) {
         long facebookId = Long.parseLong(fbProfile.getId());
@@ -42,6 +44,28 @@ public class ProfileUtility {
 
     }
 
+    public static void updateDeviceId(){
+        // Check if the current device_id is out of date with server one.
+        if(!UserDataCache.getCurrentUser().getDeviceId().equals(FirebaseInstanceId.getInstance().getToken())) {
+            String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+            String result = null;
+            Profile profile = UserDataCache.getCurrentUser();
+            String profileEditUrlWithId = EDIT_PROFILE_URL + profile.getUserId();
+            String oldDeviceId = profile.getDeviceId();
+            try {
+                profile.setDeviceId(refreshedToken);
+                result = ProfileUtility.editDeviceId(profileEditUrlWithId);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("ERROR", "Unable to update device id");
+            }
+            if (result != null) {
+                Log.e("DEBUG", "Successfully updated device id to: " + refreshedToken);
+            } else {
+                profile.setDeviceId(oldDeviceId);
+            }
+        }
+    }
     /* Returns null if HTTP response was not OK, else returns JSON string for profile record */
     public static class LoadProfileTask extends AsyncTask<String, Void, String>{
 

@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -32,6 +33,7 @@ import com.seng480b.bumerang.adapters.SectionsPagerAdapter;
 import com.seng480b.bumerang.fragments.TestFragment;
 import com.seng480b.bumerang.fragments.CreateRequestFragment;
 import com.seng480b.bumerang.fragments.EditProfileFragment;
+import com.seng480b.bumerang.utils.UserDataCache;
 
 
 public class HomeActivity extends AppCompatActivity
@@ -81,6 +83,7 @@ public class HomeActivity extends AppCompatActivity
             // Ensure user is logged into the app. Otherwise launch main page.
             if (loggedIn) {
                 ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
+                updateProfileDeviceId();
                 Fragment my_requests = new MyRequestsFragment();
                 ft.replace(R.id.mainFrame, my_requests);
                 ft.commit();
@@ -99,7 +102,6 @@ public class HomeActivity extends AppCompatActivity
     //will start up the browse fragment if is not the first time opening the app
     //will open the edit profile page if it is the first time.
     public void loadStartupFragment(boolean first){
-
          if (first) {
             // Hide the Floating action button
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
@@ -113,6 +115,7 @@ public class HomeActivity extends AppCompatActivity
             ft.commit();
         } else {
             // call a blank fragment for the background of the tabs
+            updateProfileDeviceId();
             Fragment fragment2 = new TestFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, fragment2);
@@ -189,6 +192,14 @@ public class HomeActivity extends AppCompatActivity
             return; //already logged out
         }
         LoginManager.getInstance().logOut();
+    }
+
+    public void updateProfileDeviceId() {
+        if (UserDataCache.getCurrentUser() != null) {
+            ProfileUtility.updateDeviceId();
+        } else {
+            Log.e("ERROR", " User profile does not exist");
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
