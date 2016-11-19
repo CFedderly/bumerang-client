@@ -45,14 +45,24 @@ public class ProfileUtility {
     }
 
     public static void updateDeviceId(){
-        String editProfileUrlWithId = EDIT_PROFILE_URL + UserDataCache.getCurrentUser().getUserId();
-        if(!UserDataCache.getCurrentUser().getDeviceId().equals(FirebaseInstanceId.getInstance().getToken())){
-            UserDataCache.getCurrentUser().setDeviceId(FirebaseInstanceId.getInstance().getToken());
-            try{
-                new ProfileUtility.EditProfileTask().execute(editProfileUrlWithId.trim()).get();
-            }catch(Exception e){
+        // Check if the current device_id is out of date with server one.
+        if(!UserDataCache.getCurrentUser().getDeviceId().equals(FirebaseInstanceId.getInstance().getToken())) {
+            String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+            String result = null;
+            Profile profile = UserDataCache.getCurrentUser();
+            String profileEditUrlWithId = EDIT_PROFILE_URL + profile.getUserId();
+            String oldDeviceId = profile.getDeviceId();
+            try {
+                profile.setDeviceId(refreshedToken);
+                result = ProfileUtility.editDeviceId(profileEditUrlWithId);
+            } catch (Exception e) {
                 e.printStackTrace();
-                //TODO: handle error
+                Log.e("ERROR", "Unable to update device id");
+            }
+            if (result != null) {
+                Log.e("DEBUG", "Successfully updated device id to: " + refreshedToken);
+            } else {
+                profile.setDeviceId(oldDeviceId);
             }
         }
     }
