@@ -76,6 +76,10 @@ public class Profile implements Serializable {
 
     public void setDescription(String description) { this.description = description; }
 
+    public String getDeviceId() { return this.deviceId; }
+
+    public void setDeviceId(String deviceId ) { this.deviceId = deviceId; }
+
     public HashMap<String, String> getJSONKeyValuePairs() {
         HashMap<String, String> keyValue = new HashMap<>();
         keyValue.put("facebook_id", String.valueOf(facebookId));
