@@ -30,6 +30,9 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.seng480b.bumerang.BuildConfig;
 import com.seng480b.bumerang.activities.HomeActivity;
@@ -303,6 +306,7 @@ public class CreateRequestFragment extends Fragment {
     }
 
 
+
     private Request createRequest() {
         EditText title = (EditText) inflatedView.findViewById(TITLE_FIELD);
         EditText description = (EditText) inflatedView.findViewById(DESCRIPTION_FIELD);
@@ -346,6 +350,10 @@ public class CreateRequestFragment extends Fragment {
             params.putLong(FirebaseAnalytics.Param.VALUE, totalTimeInMinutes);
             mFireBaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, params);
 
+           postToFacebook(titleStr, descriptionStr, hoursInt, minutesInt);
+
+
+
             return new Request(userId, titleStr, descriptionStr, hoursInt, minutesInt, distance, requestType);
         } else {
             alertForRequestNotCreated();
@@ -353,6 +361,68 @@ public class CreateRequestFragment extends Fragment {
         }
     }
 
+    private void postToFacebook(String titleStr, String descriptionStr, int hoursInt, int minutesInt){
+        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+        ShareDialog shareDialog = new ShareDialog(getActivity());
+
+        if (minutesInt==120) {
+            minutesInt = minutesInt - 120;
+        }
+
+        //I'm sure there's a more elegant way of doing this but I wasn't sure how to pass data into the ShareLinkContent
+        //This code was found here: https://developers.facebook.com/docs/sharing/android#share_dialog
+
+        //Only title
+        if (hoursInt==0 && minutesInt==0 && descriptionStr==""){
+            if (ShareDialog.canShow(ShareLinkContent.class)) {
+                ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                        .setQuote("Hey everybody, I'm currently looking for " + titleStr + ".")
+                        .setContentUrl(Uri.parse("http://www.bumerangapp.com"))
+                        .build();
+
+                shareDialog.show(linkContent);
+            }
+        }
+        //Title and time
+        else if((hoursInt!=0 || minutesInt!=0)&& descriptionStr==""){
+            Log.e("minutes", String.valueOf(minutesInt));
+            Log.e("Hours", String.valueOf(hoursInt));
+             if (ShareDialog.canShow(ShareLinkContent.class)) {
+                 ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                         .setQuote("Hey everybody, I'm currently looking for " + titleStr + "."+
+                                 " I need it for "+ String.valueOf(hoursInt+((double)minutesInt/60))+ " hours.")
+                         .setContentUrl(Uri.parse("http://www.bumerangapp.com"))
+                         .build();
+
+                 shareDialog.show(linkContent);
+             }
+         }
+        //Title and description
+        else if(hoursInt==0 && minutesInt==0 && descriptionStr!=""){
+             if (ShareDialog.canShow(ShareLinkContent.class)) {
+                 ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                         .setQuote("Hey everybody, I'm currently looking for " + titleStr + "."+
+                                 " I would describe it as " + descriptionStr +".")
+                         .setContentUrl(Uri.parse("http://www.bumerangapp.com"))
+                         .build();
+
+                 shareDialog.show(linkContent);
+             }
+         }
+        //Title description and time.
+        else {
+            if (ShareDialog.canShow(ShareLinkContent.class)) {
+                ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                        .setQuote("Hey everybody, I'm currently looking for " + titleStr + "."+
+                                " I would describe it as " + descriptionStr +". I need it for "+
+                                String.valueOf(hoursInt+((double)minutesInt/60))+ " hours.")
+                        .setContentUrl(Uri.parse("http://www.bumerangapp.com"))
+                        .build();
+
+                shareDialog.show(linkContent);
+            }
+        }
+    }
 
     private void openGallery(){
         Intent gallery = new Intent(Intent.ACTION_PICK,
@@ -425,5 +495,7 @@ public class CreateRequestFragment extends Fragment {
             longToast(getActivity(), R.string.created_request);
         }
     }
+
+
 
 }
