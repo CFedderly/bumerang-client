@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
 
 import com.seng480b.bumerang.BuildConfig;
 import com.seng480b.bumerang.utils.ConnectivityUtility;
@@ -72,6 +73,13 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener 
             @Override
             public void onPageSelected(int position) {
                 populateBrowse();
+                //set the empty messages depending on what tab you're on
+                TextView empty = (TextView) getListView().getEmptyView();
+                if (position == 0) {
+                    empty.setText(R.string.empty_needs_message);
+                } else {
+                    empty.setText(R.string.empty_has_message);
+                }
             }
         });
 

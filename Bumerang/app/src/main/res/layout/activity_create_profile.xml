@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/buttonCancel"
             android:elevation="8dp"
-            android:backgroundTint="@android:color/holo_red_dark"
+            android:backgroundTint="@color/colorPrimary"
             android:onClick="cancelButton"
             android:layout_alignParentBottom="true"
             android:layout_toStartOf="@+id/inputLastName" />
@@ -115,7 +115,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/button5"
             android:elevation="8dp"
-            android:backgroundTint="@android:color/holo_green_light"
+            android:background="@color/colorAccent"
+            android:textColor="@color/white"
             android:onClick="goButton"
             android:layout_marginStart="50dp"
             android:layout_alignParentBottom="true"

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.facebook.login.widget.ProfilePictureView;
 import com.seng480b.bumerang.models.Offer;
 import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.models.Request;
 
 import java.util.Locale;
 
@@ -45,6 +46,13 @@ public class BorrowDialogFragment extends DialogFragment {
 
         ImageButton cancelButton = (ImageButton)rootView.findViewById(R.id.buttonBorrowDismiss);
         Button acceptButton = (Button)rootView.findViewById(R.id.buttonBorrowAccept);
+
+        //set accept button text depending on if your offer is a lend or a borrow
+        if (offer.getRequestInfo().getRequestType() == Request.RequestType.LEND) {
+            acceptButton.setText(getString(R.string.button_start_lending));
+        } else {
+            acceptButton.setText(getString(R.string.button_accept_offer));
+        }
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,10 +88,18 @@ public class BorrowDialogFragment extends DialogFragment {
 
         // Fill text fields with proper user info.
         itemName.setText(offer.getRequestInfo().getTitle());
-        itemExp.setText("Will expire in " + offer.getRequestInfo().getMinutesUntilExpiry() + " minutes.");
-        lenderName.setText(String.format(Locale.getDefault(),
-                getResources().getString(R.string.covered_you_message),
-                offer.getOfferProfile().getFirstName()));
+        itemExp.setText("Expires in " + offer.getRequestInfo().getMinutesUntilExpiry() + " minutes.");
+
+        if (offer.getRequestInfo().getRequestType() == Request.RequestType.LEND) {
+            lenderName.setText(String.format(Locale.getDefault(),
+                    getResources().getString(R.string.covered_me_message),
+                    offer.getOfferProfile().getFirstName()));
+        } else {
+            lenderName.setText(String.format(Locale.getDefault(),
+                    getResources().getString(R.string.covered_you_message),
+                    offer.getOfferProfile().getFirstName()));
+        }
+
         profile_picture.setProfileId(String.valueOf(offer.getOfferProfile().getFacebookId()));
         // TODO: CODE BELOW SITUATION
         // Change status of the request to matched

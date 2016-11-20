@@ -36,6 +36,7 @@ public class BrowseAdapter extends ArrayAdapter<Request> {
         Request.RequestType type = requestTicket.getRequestType();
         if (type == Request.RequestType.BORROW) {
             convertView.setBackgroundResource(R.drawable.pink_rectangle);
+
         } else {
             convertView.setBackgroundResource(R.drawable.blue_rectangle);
         }
