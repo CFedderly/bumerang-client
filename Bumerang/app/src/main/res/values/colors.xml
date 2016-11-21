@@ -17,5 +17,9 @@
 
     <color name="pale_gray">#fff6f9</color>
 
+    <color name="light_gray">#ededed</color>
+
+    <color name="light_blue_text">#7da6b4</color>
+
 
 </resources>

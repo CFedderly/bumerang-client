@@ -31,10 +31,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/buttonCancel"
             android:elevation="8dp"
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@android:color/darker_gray"
             android:onClick="cancelButton"
             android:layout_alignParentBottom="true"
-            android:layout_toStartOf="@+id/inputLastName" />
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="40dp" />
 
         <TextView
             android:text="Enter first and last name:"
@@ -51,7 +52,7 @@
             android:ems="10"
             android:id="@+id/inputFirstName"
             android:layout_width="wrap_content"
-            android:singleLine="true"
+            android:maxLines="1"
             android:selectAllOnFocus="false"
             android:hint="First"
             android:layout_below="@+id/textView3"
@@ -64,7 +65,7 @@
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/inputLastName"
-            android:singleLine="true"
+            android:maxLines="1"
             android:hint="Last"
             android:layout_alignBaseline="@+id/inputFirstName"
             android:layout_alignBottom="@+id/inputFirstName"
@@ -117,10 +118,11 @@
             android:elevation="8dp"
             android:background="@color/colorAccent"
             android:textColor="@color/white"
+            android:backgroundTint="@color/colorAccent"
             android:onClick="goButton"
-            android:layout_marginStart="50dp"
+            android:layout_marginEnd="40dp"
             android:layout_alignParentBottom="true"
-            android:layout_toEndOf="@+id/buttonCancel" />
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 </RelativeLayout>
