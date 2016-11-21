@@ -52,4 +52,11 @@
     <string name="expand_advanced_options">more options</string>
     <string name="hide_advanced_options">hide</string>
 
+    <string name="delete_request_title">Delete request</string>
+    <string name="delete_request_message">Are you sure you want to delete this request?</string>
+    <string name="delete_request_success_message">Request deleted successfully!</string>
+    <string name="delete_request_fail_message">Unable to delete request. Please try again!</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+
 </resources>

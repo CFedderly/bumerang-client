@@ -2,7 +2,7 @@ package com.seng480b.bumerang.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
@@ -14,24 +14,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.seng480b.bumerang.BuildConfig;
-import com.seng480b.bumerang.utils.ConnectivityUtility;
 import com.seng480b.bumerang.activities.HomeActivity;
 import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.interfaces.AsyncTaskHandler;
 import com.seng480b.bumerang.models.Request;
 import com.seng480b.bumerang.adapters.BrowseAdapter;
+import com.seng480b.bumerang.utils.RequestUtility;
+import com.seng480b.bumerang.utils.Utility;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.seng480b.bumerang.utils.Utility.*;
-
-public class BrowseFragment extends ListFragment implements OnItemClickListener {
-
-    private static final String REQUEST_URL = BuildConfig.SERVER_URL + "/requests/recent/100";
+public class BrowseFragment extends ListFragment implements OnItemClickListener, AsyncTaskHandler {
+    private static final String ARG_SECTION_NUMBER = "section_number";
     private ViewPager viewPager;
     private Activity activity;
+    private ProgressBar progressBar;
+    private TextView textView;
+    private ListView listView;
+    private RequestUtility.GetRequestsTask requestsTask;
 
     public BrowseFragment() {
         // Required empty public constructor
@@ -47,14 +52,17 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_browse_list, container, false);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        RelativeLayout rl = (RelativeLayout) inflater.inflate(R.layout.fragment_browse_list, container, false);
+        progressBar = (ProgressBar) rl.findViewById(R.id.progress_bar);
+        textView = (TextView) rl.findViewById(R.id.empty_list);
+        return rl;
     }
 
     @Override
@@ -65,35 +73,36 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener 
 
         // make the tabs visible
         viewPager = (ViewPager) activity.findViewById(R.id.container);
-        populateBrowse();
+        TabLayout tabLayout = (TabLayout) activity.findViewById(R.id.tabs);
+        viewPager.setVisibility(View.VISIBLE);
+        tabLayout.setVisibility(View.VISIBLE);
+        listView = getListView();
+
+        final RequestUtility requestUtility = new RequestUtility<>(this);
+        requestsTask = requestUtility.getRequestsByRecent(getContext());
+
+        if (isAsyncTaskRunning()) {
+            showProgressBar();
+        } else {
+            hideProgressBar();
+        }
+
         // add a listener to reload the browse page once the tab is switched
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 
             @Override
             public void onPageSelected(int position) {
-                populateBrowse();
+                Log.d("DEBUG", "onPageSelected " + position);
+                if (!isAsyncTaskRunning()) {
+                    requestsTask = requestUtility.getRequestsByRecent(getContext());
+                }
             }
         });
-
-        TabLayout tabLayout = (TabLayout) activity.findViewById(R.id.tabs);
-        viewPager.setVisibility(View.VISIBLE);
-        tabLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-                            long id) { }
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) { }
 
-    /**
-     * The fragment argument representing the section number for this
-     * fragment.
-     */
-    private static final String ARG_SECTION_NUMBER = "section_number";
-
-    /**
-     * Returns a new instance of this fragment for the given section
-     * number.
-     */
     public static BrowseFragment newInstance(int sectionNumber) {
         BrowseFragment fragment = new BrowseFragment();
         Bundle args = new Bundle();
@@ -102,52 +111,34 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener 
         return fragment;
     }
 
-    private void populateBrowse() {
-        Request.RequestType requestType = getCurrentRequestType(viewPager);
-        if (requestType != null) {
-            new GetRequestsTask().execute(REQUEST_URL);
-        } else {
-            longToast(getActivity(), R.string.unable_to_display_requests);
+    @Override
+    public boolean isAsyncTaskRunning() {
+        if (requestsTask == null) {
+            return false;
+        } else if (requestsTask.getStatus() == RequestUtility.GetRequestsTask.Status.FINISHED) {
+            return false;
         }
+        return true;
     }
 
-    public static Request.RequestType getCurrentRequestType(ViewPager pager) {
-        int currentTab = pager.getCurrentItem();
-        Request.RequestType requestType;
-        Log.d("DEBUG", "Current tab: " + currentTab);
-        switch(currentTab) {
-            case 0:
-                requestType = Request.RequestType.BORROW;
-                break;
-            case 1:
-                requestType = Request.RequestType.LEND;
-                break;
-            default:
-                requestType = null;
-        }
-        return requestType;
+    @Override
+    public void beforeAsyncTask() {
+        showProgressBar();
     }
 
-    private class GetRequestsTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                return ConnectivityUtility.makeHttpGetRequest(params[0]);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.e("ERROR", "Unable to retrieve requests");
-                cancel(true);
-            }
-            return null;
+    @Override
+    public void afterAsyncTask(String result) {
+        requestsTask = null;
+        hideProgressBar();
+        if (result == null) {
+            Utility.showRequestErrorDialog(getContext());
+            return;
         }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (result != null) {
-                final ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
-                final ArrayList<Request> reqList = Request.filterRequestsByType(requests, getCurrentRequestType(viewPager));
-                BrowseAdapter mAdapter = new BrowseAdapter(activity,
-                        Request.filterRequestsByType(requests, getCurrentRequestType(viewPager)));
+        if (!result.equals("")) {
+            final ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
+            final ArrayList<Request> reqList = Request.filterRequestsByType(requests, Utility.getCurrentRequestType(viewPager));
+            if (reqList.size() > 0) {
+                BrowseAdapter mAdapter = new BrowseAdapter(activity, reqList);
                 getListView().setAdapter(mAdapter);
                 getListView().setOnItemClickListener(new OnItemClickListener() {
                     @Override
@@ -157,10 +148,32 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener 
                         details.setRequest(req);
 
                         FragmentManager fm = getFragmentManager();
-                        details.show(fm,"Sample Fragment");
+                        details.show(fm, "Sample Fragment");
                     }
                 });
+            } else {
+                showEmptyMessage();
             }
+        } else {
+            showEmptyMessage();
         }
+    }
+
+    private void showEmptyMessage() {
+        textView.setVisibility(View.VISIBLE);
+        listView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+        listView.setVisibility(View.GONE);
+        textView.setVisibility(View.GONE);
+    }
+
+    private void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
+        listView.setVisibility(View.VISIBLE);
+        textView.setVisibility(View.GONE);
     }
 }

@@ -2,6 +2,7 @@ package com.seng480b.bumerang.fragments;
 
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.facebook.login.widget.ProfilePictureView;
-import com.seng480b.bumerang.BuildConfig;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.utils.UserDataCache;
 import com.seng480b.bumerang.models.Request;
@@ -22,10 +22,9 @@ import java.util.Locale;
 
 
 public class RequestDetailFragment extends DialogFragment {
-    private static final String OFFER_URL = BuildConfig.SERVER_URL + "/offer/";
     View rootView;
     Request request;
-    //private Button cancelButton, acceptButton;
+
     public RequestDetailFragment() {
         // Required empty public constructor
     }
@@ -61,25 +60,24 @@ public class RequestDetailFragment extends DialogFragment {
             public void onClick(View v) {
                 // profileId, the id of the user responding to the request.
                 String profileId = String.valueOf(UserDataCache.getCurrentUser().getUserId());
-                String requester = "Nobody";
-                String result = null;
+
+                //borrowId, the id the request being responded to.
+                String borrowId = String.valueOf(request.getRequestId());
+                String requester =  String.valueOf(UserDataCache.getRecentUser().getFirstName());
+
+                boolean result;
                 try {
-                    //borrowId, the id the request being responded to.
-                    String borrowId = String.valueOf(request.getRequestId());
-                    requester =  String.valueOf(UserDataCache.getRecentUser().getFirstName());
-                    result = new OfferUtility.CreateOfferTask().execute(
-                            OFFER_URL,
-                            profileId,
-                            borrowId
-                    ).get();
+                    result = OfferUtility.createOffer(getContext(), profileId, borrowId);
                 } catch (Exception e) {
-                    // TODO: this is a hacky solution, will need real error handling
+                    result = false;
+                    e.printStackTrace();
+                    Log.e("ERROR", "Unable to create request");
                 }
-                if(result != null){
+                if (result) {
                     String message = String.format(Locale.getDefault(), getResources().getString(R.string.covered_them_message), requester);
                     longToast(getActivity(), message);
                     dismiss();
-                }else{
+                } else {
                     longToast(getActivity(), R.string.error_message);
                 }
             }
