@@ -342,7 +342,7 @@ public class CreateRequestFragment extends Fragment {
             params.putLong(FirebaseAnalytics.Param.VALUE, durationInMinutes);
             mFireBaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, params);
 
-           postToFacebook(titleStr, descriptionStr, hoursInt, minutesInt);
+            postToFacebook(titleStr, descriptionStr, hoursInt, minutesInt);
 
             return new Request(userId, titleStr, descriptionStr, hoursInt, minutesInt, distance, requestType);
         } else {
@@ -361,19 +361,18 @@ public class CreateRequestFragment extends Fragment {
         } else {
             quote = quote + " I would describe it as a " + descriptionStr + ". I need it within " +
                     String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours please!";
+        }
+        //This code was found here: https://developers.facebook.com/docs/sharing/android#share_dialog
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                    .setQuote(quote)
+                    .setContentUrl(Uri.parse("http://www.bumerangapp.com"))
+                    .build();
+            shareDialog.show(linkContent);
 
-
-            //This code was found here: https://developers.facebook.com/docs/sharing/android#share_dialog
-            if (ShareDialog.canShow(ShareLinkContent.class)) {
-                ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                        .setQuote(quote)
-                        .setContentUrl(Uri.parse("http://www.bumerangapp.com"))
-                        .build();
-                shareDialog.show(linkContent);
-
-            }
         }
     }
+
 
 
     private void openGallery(){
