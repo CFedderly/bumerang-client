@@ -7,6 +7,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -85,6 +86,8 @@ public class HomeActivity extends AppCompatActivity
                 ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
                 updateProfileDeviceId();
                 Fragment my_requests = new MyRequestsFragment();
+                ft.add(my_requests, "my_request");
+                ft.addToBackStack("my_request");
                 ft.replace(R.id.mainFrame, my_requests);
                 ft.commit();
             } else {
@@ -116,11 +119,12 @@ public class HomeActivity extends AppCompatActivity
         } else {
             // call a blank fragment for the background of the tabs
             updateProfileDeviceId();
-            Fragment fragment2 = new TestFragment();
+            /*Fragment fragment2 = new TestFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame, fragment2);
+            ft.addToBackStack(null);
+            ft.replace(R.id.mainFrame, fragment2);&
             ft.commit();
-
+            */
             loadTabs();
         }
     }
@@ -143,6 +147,8 @@ public class HomeActivity extends AppCompatActivity
         fab.setVisibility(View.GONE);
         Fragment createReq = new CreateRequestFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.addToBackStack("create_request");
+        ft.add(createReq, "create_request");
         ft.replace(R.id.mainFrame,createReq);
         ft.commit();
     }
@@ -223,6 +229,8 @@ public class HomeActivity extends AppCompatActivity
             fab.setVisibility(View.GONE);
             // Transition to the create request fragment
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(createReq, "create_request");
+            ft.addToBackStack("create_request");
             ft.replace(R.id.mainFrame,createReq);
             ft.commit();
 
@@ -237,6 +245,8 @@ public class HomeActivity extends AppCompatActivity
 
             // call a blank fragment for the background of the tabs
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(fragment2, "browse");
+            ft.addToBackStack("browse");
             ft.replace(R.id.mainFrame, fragment2);
             ft.commit();
 
@@ -249,10 +259,14 @@ public class HomeActivity extends AppCompatActivity
             fab.setVisibility(View.GONE);
             // Call the Profile Page Fragment
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(profilePage, "profile");
+            ft.addToBackStack("profile");
             ft.replace(R.id.mainFrame,profilePage);
             ft.commit();
         } else if (id == R.id.nav_my_requests){
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(my_requests, "my_requests");
+            ft.addToBackStack("my_requests");
             ft.replace(R.id.mainFrame, my_requests);
             ft.commit();
         } else if (id == R.id.nav_logout) {
