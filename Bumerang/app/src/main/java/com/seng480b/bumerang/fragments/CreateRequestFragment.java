@@ -180,7 +180,6 @@ public class CreateRequestFragment extends Fragment {
             }
         });
 
-
         Spinner distSpinner = (Spinner) inflatedView.findViewById(R.id.spinnerDistance);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -301,11 +300,8 @@ public class CreateRequestFragment extends Fragment {
             }
         });
 
-
         return inflatedView;
     }
-
-
 
     private Request createRequest() {
         EditText title = (EditText) inflatedView.findViewById(TITLE_FIELD);
@@ -319,7 +315,6 @@ public class CreateRequestFragment extends Fragment {
 
         String titleStr = editTextToString(title);
         String descriptionStr;
-        int totalTimeInMinutes;
 
         if (!isEmpty(description)) {
             descriptionStr = editTextToString(description);
@@ -327,11 +322,8 @@ public class CreateRequestFragment extends Fragment {
             descriptionStr = "";
         }
 
-
-        if (durationInMinutes > -1) {
-            totalTimeInMinutes = durationInMinutes;
-        } else {
-            totalTimeInMinutes = DEFAULT_MINUTES;
+        if (durationInMinutes < 0) {
+            durationInMinutes= DEFAULT_MINUTES;
         }
 
         if (UserDataCache.hasProfile()) {
@@ -340,19 +332,17 @@ public class CreateRequestFragment extends Fragment {
             //This is where info on what users are entering is collected
             mFireBaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
-            //Turn total minutes (durationInMinutes) into hours and minutes
+            //Turn total minutes (totalTimeInMinutes) into hours and minutes
             int hoursInt = durationInMinutes/60;
             int minutesInt = durationInMinutes % 60;
 
             Bundle params = new Bundle();
             params.putString( FirebaseAnalytics.Param.ITEM_NAME, titleStr);
             params.putString("Description", descriptionStr);
-            params.putLong(FirebaseAnalytics.Param.VALUE, totalTimeInMinutes);
+            params.putLong(FirebaseAnalytics.Param.VALUE, durationInMinutes);
             mFireBaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, params);
 
            postToFacebook(titleStr, descriptionStr, hoursInt, minutesInt);
-
-
 
             return new Request(userId, titleStr, descriptionStr, hoursInt, minutesInt, distance, requestType);
         } else {
@@ -361,35 +351,30 @@ public class CreateRequestFragment extends Fragment {
         }
     }
 
-    private void postToFacebook(String titleStr, String descriptionStr, int hoursInt, int minutesInt){
+    private void postToFacebook(String titleStr, String descriptionStr, int hoursInt, int minutesInt) {
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         ShareDialog shareDialog = new ShareDialog(getActivity());
 
-        if (minutesInt==120) {
-            minutesInt = minutesInt - 120;
-        }
+        String quote = "Hey everybody, I'm currently looking for a " + titleStr + ".";
+        if (descriptionStr.equals("")) {
+            quote = quote + " I need it within " + String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours please!";
+        } else {
+            quote = quote + " I would describe it as a " + descriptionStr + ". I need it within " +
+                    String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours please!";
 
-        //This code was found here: https://developers.facebook.com/docs/sharing/android#share_dialog
-        String quote = "Hey everybody, I'm currently looking for a " + titleStr +".";
-        if((hoursInt!=0 || minutesInt!=0)&& descriptionStr==""){
-            quote = quote+" I need it in "+ String.valueOf(hoursInt+((double)minutesInt/60))+ " hours.";
-        }
-        else if(hoursInt==0 && minutesInt==0 && descriptionStr!=""){
-            quote = quote + " I would describe it as a " + descriptionStr +".";
-        }
-        else{
-         quote = quote + " I would describe it as a " + descriptionStr +". I need it in "+
-                String.valueOf(hoursInt+((double)minutesInt/60))+ " hours.";
-        }
-        //This code was found here: https://developers.facebook.com/docs/sharing/android#share_dialog
-        if (ShareDialog.canShow(ShareLinkContent.class)) {
-            ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                    .setQuote(quote)
-                    .setContentUrl(Uri.parse("http://www.bumerangapp.com"))
-                    .build();
-            shareDialog.show(linkContent);
+
+            //This code was found here: https://developers.facebook.com/docs/sharing/android#share_dialog
+            if (ShareDialog.canShow(ShareLinkContent.class)) {
+                ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                        .setQuote(quote)
+                        .setContentUrl(Uri.parse("http://www.bumerangapp.com"))
+                        .build();
+                shareDialog.show(linkContent);
+
+            }
         }
     }
+
 
     private void openGallery(){
         Intent gallery = new Intent(Intent.ACTION_PICK,
@@ -418,6 +403,9 @@ public class CreateRequestFragment extends Fragment {
                     resultCalendar.set(Calendar.YEAR,bundle.getInt("year"));
 
                     durationInMinutes = bundle.getInt("durationInMinutes");
+                    if (durationInMinutes<0){
+                        durationInMinutes = DEFAULT_MINUTES;
+                    }
                 }
                 break;
         }
@@ -462,7 +450,4 @@ public class CreateRequestFragment extends Fragment {
             longToast(getActivity(), R.string.created_request);
         }
     }
-
-
-
 }
