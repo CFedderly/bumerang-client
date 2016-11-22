@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_margin="5dp"
     android:elevation="3dp"
-    android:background="@drawable/rectangle"
+    android:background="@drawable/pink_rectangle"
     android:id="@+id/LinearLayoutBox">
 
     <com.seng480b.bumerang.views.SquareImageView
@@ -41,6 +41,7 @@
         android:layout_alignParentBottom="true"
         android:id="@+id/request_user"
         android:visibility = "gone"/>
+
 
     <TextView
         android:id="@+id/request_description"

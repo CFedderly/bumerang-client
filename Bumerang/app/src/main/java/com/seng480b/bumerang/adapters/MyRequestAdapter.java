@@ -32,6 +32,17 @@ public class MyRequestAdapter extends ArrayAdapter<Request> {
         if (convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.browse_item, parent, false);
         }
+
+
+        //set colour of list item depending on if it is a LEND or a BORROW (only in MyRequests)
+        Request.RequestType type = requestTicket.getRequestType();
+        if (type == Request.RequestType.BORROW) {
+            convertView.setBackgroundResource(R.drawable.pink_rectangle);
+        } else {
+            convertView.setBackgroundResource(R.drawable.blue_rectangle);
+        }
+
+
         //look up view for data population
         TextView title = (TextView) convertView.findViewById(R.id.request_title);
         TextView description = (TextView) convertView.findViewById(R.id.request_description);

@@ -98,7 +98,7 @@ public class RequestDetailFragment extends DialogFragment {
         ProfilePictureView profilePicture = (ProfilePictureView) rootView.findViewById(R.id.user_image);
 
         itemName.setText(request.getTitle());
-        itemExp.setText("Will expire in " + request.getMinutesUntilExpiry() + " minutes.");
+        itemExp.setText("Expires in " + request.getMinutesUntilExpiry() + " minutes.");
         itemDesc.setText(request.getDescription());
         userName.setText(UserDataCache.getRecentUser().getFirstName());
         profilePicture.setProfileId(String.valueOf(UserDataCache.getRecentUser().getFacebookId()));

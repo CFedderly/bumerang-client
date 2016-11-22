@@ -10,11 +10,16 @@
 
     <color name="black_overlay">#ce000000</color>
 
-    <color name="buttonPress">#ff758c</color>
+    <color name="buttonPressPink">#ff758c</color>
+    <color name="buttonPressBlue">#73b3ba</color>
 
     <color name="white">#ffffff</color>
 
     <color name="pale_gray">#fff6f9</color>
+
+    <color name="light_gray">#ededed</color>
+
+    <color name="light_blue_text">#7da6b4</color>
 
 
 </resources>

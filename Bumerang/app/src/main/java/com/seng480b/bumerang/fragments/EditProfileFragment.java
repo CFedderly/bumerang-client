@@ -167,7 +167,6 @@ public class EditProfileFragment extends Fragment {
                 e.printStackTrace();
                 // TODO: this is a hacky solution, will need real error handling
             }
-            giveKarma();
             changeFragment();
         }
     }
@@ -184,7 +183,7 @@ public class EditProfileFragment extends Fragment {
         if(ConnectivityUtility.checkNetworkConnection(getActivity().getApplicationContext())) {
             String result = null;
             try {
-                result = new ProfileUtility.EditProfileTask().execute(editProfileUrlWithId.trim()).get();
+                result = ProfileUtility.editProfile(editProfileUrlWithId.trim());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -200,7 +199,6 @@ public class EditProfileFragment extends Fragment {
             }
         }
     }
-
 
     public void giveKarma(){
         int karma = new KarmaUtility().giveKarmaForFirstLogin();

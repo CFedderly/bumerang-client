@@ -5,7 +5,10 @@
     // if your App ID is 1234567, you should use fb1234567
     <string name="fb_login_protocol_scheme">fb1614053472225944</string>
     <string name="covered_you_message">%1$s\'s got you covered!</string>
+    <string name="covered_me_message">You\'ve got %1$s covered!</string>
     <string name="covered_them_message">You\'ve got %1$s covered!</string>
+    <string name="button_start_lending">Start Lending</string>
+    <string name="button_accept_offer">Accept Offer</string>
     <string name="error_message">Oops! Something went wrong. Please try again!</string>
     <string name="button_skip">skip</string>
 
@@ -25,8 +28,8 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
-    <string name="empty_needs_message">Seems like nobody needs anything!</string>
-    <string name="empty_has_message">Looks like nobody has anything to lend!</string>
+    <string name="empty_needs_message">Guess everyone\'s set to go!</string>
+    <string name="empty_has_message">Looks like nobody has anything to lend!\n Wanna lead the way?</string>
     <string name="empty_my_needs_message">Hey, guess you don\'t need anything?</string>
     <string name="empty_my_has_message">Looks like you don\'t have anything to lend!</string>
     <string name="empty_request_field_message">Looks like you forgot to fill in a field!</string>
@@ -51,5 +54,7 @@
 
     <string name="expand_advanced_options">more options</string>
     <string name="hide_advanced_options">hide</string>
+
+    <string name="going_back_in_time_message">Time travel not currently enabled</string>
 
 </resources>

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 public class BrowseAdapter extends ArrayAdapter<Request> {
 
+
     public BrowseAdapter(Context context, ArrayList<Request> requests) {
         super(context,0,requests);
     }
@@ -29,6 +30,15 @@ public class BrowseAdapter extends ArrayAdapter<Request> {
         //check if existing view is being re-used, otherwise inflate the view
         if (convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.browse_item, parent, false);
+        }
+
+        //set colour of list item to -pink- or -blue-
+        Request.RequestType type = requestTicket.getRequestType();
+        if (type == Request.RequestType.BORROW) {
+            convertView.setBackgroundResource(R.drawable.pink_rectangle);
+
+        } else {
+            convertView.setBackgroundResource(R.drawable.blue_rectangle);
         }
 
         //look up view for data population

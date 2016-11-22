@@ -62,6 +62,10 @@ public class Profile implements Serializable {
 
     public long getFacebookId() { return this.facebookId; }
 
+    public String getDeviceId() { return this.deviceId; }
+
+    public void setDeviceId(String deviceId) { this.deviceId = deviceId; }
+
     public int getKarma() { return this.karma; }
 
     public int getUserId() { return this.userId; }
