@@ -37,9 +37,9 @@ public class MyRequestAdapter extends ArrayAdapter<Request> {
         //set colour of list item depending on if it is a LEND or a BORROW (only in MyRequests)
         Request.RequestType type = requestTicket.getRequestType();
         if (type == Request.RequestType.BORROW) {
-            convertView.setBackgroundResource(R.drawable.blue_rectangle);
-        } else {
             convertView.setBackgroundResource(R.drawable.pink_rectangle);
+        } else {
+            convertView.setBackgroundResource(R.drawable.blue_rectangle);
         }
 
 

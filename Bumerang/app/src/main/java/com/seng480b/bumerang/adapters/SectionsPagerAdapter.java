@@ -17,13 +17,11 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public Fragment getItem(int position) {
-        return BrowseFragment.newInstance(position+1);
-    }
+    public Fragment getItem(int position) { return BrowseFragment.newInstance(position+1);}
 
     @Override
     public int getCount() {
-        // Show 3 total pages.
+        // Show 2 total pages.
         return 2;
     }
 

@@ -86,7 +86,7 @@ public class PhoneNumberDialogFragment extends DialogFragment {
 
         // Fill text fields with proper user info.
         itemName.setText(offer.getRequestInfo().getTitle());
-        itemExp.setText("Will expire in " + offer.getRequestInfo().getMinutesUntilExpiry() + " minutes.");
+        itemExp.setText("Expires in " + offer.getRequestInfo().getMinutesUntilExpiry() + " minutes.");
         phone.setText(offer.getOfferProfile().getPhoneNumber());
         lenderName.setText(offer.getOfferProfile().getFirstName() + "'s phone number:");
         profile_picture.setProfileId(String.valueOf(offer.getOfferProfile().getFacebookId()));
