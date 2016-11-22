@@ -369,58 +369,25 @@ public class CreateRequestFragment extends Fragment {
             minutesInt = minutesInt - 120;
         }
 
-        //I'm sure there's a more elegant way of doing this but I wasn't sure how to pass data into the ShareLinkContent
         //This code was found here: https://developers.facebook.com/docs/sharing/android#share_dialog
-
-        //Only title
-        if (hoursInt==0 && minutesInt==0 && descriptionStr==""){
-            if (ShareDialog.canShow(ShareLinkContent.class)) {
-                ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                        .setQuote("Hey everybody, I'm currently looking for " + titleStr + ".")
-                        .setContentUrl(Uri.parse("http://www.bumerangapp.com"))
-                        .build();
-
-                shareDialog.show(linkContent);
-            }
+        String quote = "Hey everybody, I'm currently looking for a " + titleStr +".";
+        if((hoursInt!=0 || minutesInt!=0)&& descriptionStr==""){
+            quote = quote+" I need it in "+ String.valueOf(hoursInt+((double)minutesInt/60))+ " hours.";
         }
-        //Title and time
-        else if((hoursInt!=0 || minutesInt!=0)&& descriptionStr==""){
-            Log.e("minutes", String.valueOf(minutesInt));
-            Log.e("Hours", String.valueOf(hoursInt));
-             if (ShareDialog.canShow(ShareLinkContent.class)) {
-                 ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                         .setQuote("Hey everybody, I'm currently looking for " + titleStr + "."+
-                                 " I need it for "+ String.valueOf(hoursInt+((double)minutesInt/60))+ " hours.")
-                         .setContentUrl(Uri.parse("http://www.bumerangapp.com"))
-                         .build();
-
-                 shareDialog.show(linkContent);
-             }
-         }
-        //Title and description
         else if(hoursInt==0 && minutesInt==0 && descriptionStr!=""){
-             if (ShareDialog.canShow(ShareLinkContent.class)) {
-                 ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                         .setQuote("Hey everybody, I'm currently looking for " + titleStr + "."+
-                                 " I would describe it as " + descriptionStr +".")
-                         .setContentUrl(Uri.parse("http://www.bumerangapp.com"))
-                         .build();
-
-                 shareDialog.show(linkContent);
-             }
-         }
-        //Title description and time.
-        else {
-            if (ShareDialog.canShow(ShareLinkContent.class)) {
-                ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                        .setQuote("Hey everybody, I'm currently looking for " + titleStr + "."+
-                                " I would describe it as " + descriptionStr +". I need it for "+
-                                String.valueOf(hoursInt+((double)minutesInt/60))+ " hours.")
-                        .setContentUrl(Uri.parse("http://www.bumerangapp.com"))
-                        .build();
-
-                shareDialog.show(linkContent);
-            }
+            quote = quote + " I would describe it as a " + descriptionStr +".";
+        }
+        else{
+         quote = quote + " I would describe it as a " + descriptionStr +". I need it in "+
+                String.valueOf(hoursInt+((double)minutesInt/60))+ " hours.";
+        }
+        //This code was found here: https://developers.facebook.com/docs/sharing/android#share_dialog
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                    .setQuote(quote)
+                    .setContentUrl(Uri.parse("http://www.bumerangapp.com"))
+                    .build();
+            shareDialog.show(linkContent);
         }
     }
 
