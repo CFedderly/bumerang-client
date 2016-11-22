@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
@@ -14,6 +15,8 @@ import com.seng480b.bumerang.R;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+
+import static com.seng480b.bumerang.utils.Utility.longToast;
 
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
@@ -71,6 +74,9 @@ public class DatePickerFragment extends DialogFragment
         if (durationInMinutes > -1){
             durationText.setText(createHourMinuteMessage(durationInMinutes));
         } else {
+            TextView expiryText = (TextView) getActivity().findViewById(R.id.labelExpiresIn);
+            expiryText.setVisibility(View.GONE);
+            longToast(getActivity(), "Are you a time traveller?");
             durationText.setText(getString(R.string.going_back_in_time_message));
         }
 

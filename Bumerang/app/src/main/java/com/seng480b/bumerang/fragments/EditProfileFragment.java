@@ -156,7 +156,7 @@ public class EditProfileFragment extends Fragment {
                 FBProfile.getFirstName(),
                 FBProfile.getLastName(),
                 stripPhoneNumber(phoneNumber),
-                editTextToString(description), 0);
+                editTextToString(description), 10);
         // Set temporary profile as current profile in cache
         UserDataCache.setCurrentUser(tempProfile);
         // If we are connected to the network, send profile object to server
@@ -197,13 +197,6 @@ public class EditProfileFragment extends Fragment {
                 longToast(getActivity(), R.string.unable_to_update_profile);
                 Log.d("DEBUG", "Could not edit profile.");
             }
-        }
-    }
-
-    public void giveKarma(){
-        int karma = new KarmaUtility().giveKarmaForFirstLogin();
-        if (karma>0){
-            Utility.karmaToast(getActivity(), karma);
         }
     }
 }

@@ -55,6 +55,6 @@
     <string name="expand_advanced_options">more options</string>
     <string name="hide_advanced_options">hide</string>
 
-    <string name="going_back_in_time_message">Time travel not currently enabled</string>
+    <string name="going_back_in_time_message">Your request will be set for 2 hours.</string>
 
 </resources>
