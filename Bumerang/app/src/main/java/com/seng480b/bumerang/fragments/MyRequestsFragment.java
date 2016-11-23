@@ -89,7 +89,7 @@ public class MyRequestsFragment extends ListFragment implements OnItemClickListe
                             long id) { }
 
     private void populateBrowse() {
-
+        showProgressBar();
         RequestUtility requestUtility = new RequestUtility<>(this);
         Request.RequestType requestType = Utility.getCurrentRequestType(mViewPager);
         if (requestType != null) {
@@ -127,7 +127,7 @@ public class MyRequestsFragment extends ListFragment implements OnItemClickListe
                     } catch (Exception e) {
                         Log.e("Error:", "Unable to retrieve offer information!");
                     }
-                    if (offerResult != null) {
+                    if (offerResult != null && !offerResult.equals("")) {
                         final ArrayList<Offer> offers = Offer.getListOfOffersFromJSON(offerResult);
                         // Ensure there are offers available to proceed, else don't do anything.
                         if (offers.size() != 0) {

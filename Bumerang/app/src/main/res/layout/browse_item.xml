@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:layout_margin="5dp"
     android:elevation="3dp"
+    android:descendantFocusability="blocksDescendants"
     android:background="@drawable/pink_rectangle"
     android:id="@+id/LinearLayoutBox">
 
