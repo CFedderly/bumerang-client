@@ -445,6 +445,7 @@ public class CreateRequestFragment extends Fragment {
             Fragment myRequests = new MyRequestsFragment();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, myRequests);
+            ft.addToBackStack("my_requests");
             ft.commit();
             longToast(getActivity(), R.string.created_request);
         }
