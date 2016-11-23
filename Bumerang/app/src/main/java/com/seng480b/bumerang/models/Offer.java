@@ -36,7 +36,7 @@ public class Offer {
 
     public Profile getOfferProfile() { return offerProfile; }
 
-    public Request getRequestInfo(){
+    public Request getRequest(){
         return offerReq;
     }
 

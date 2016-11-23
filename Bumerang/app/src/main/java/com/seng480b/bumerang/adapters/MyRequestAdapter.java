@@ -63,21 +63,6 @@ public class MyRequestAdapter extends ArrayAdapter<Request> implements AsyncTask
         description.setText(request.getDescription());
         user.setText(String.format(Locale.getDefault(), "%d", request.getUserId()));
 
-        //added a button that only appears in the My Requests page -> attaches to each list item
-        ImageButton replyWarning = (ImageButton) convertView.findViewById(R.id.buttonReplyWarning);
-        replyWarning.setVisibility(View.VISIBLE);
-
-        //this allows both the imagebutton and the row to be clicked (otherwise the row is not clickable)
-        replyWarning.setFocusable(false);
-        replyWarning.setClickable(false);
-
-        replyWarning.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //does nothing at the moment
-            }
-        });
-
         // overflow menu button to hold "delete" option
         ImageButton overflowMenu = (ImageButton) convertView.findViewById(R.id.overflow_menu_button);
         overflowMenu.setVisibility(View.VISIBLE);
@@ -152,6 +137,9 @@ public class MyRequestAdapter extends ArrayAdapter<Request> implements AsyncTask
 
     @Override
     public boolean isAsyncTaskRunning() {
-        return deleteRequestTask.getStatus() == RequestUtility.DeleteRequestTask.Status.FINISHED;
+        if (deleteRequestTask == null) {
+            return false;
+        }
+        return deleteRequestTask.getStatus() != RequestUtility.DeleteRequestTask.Status.FINISHED;
     }
 }
