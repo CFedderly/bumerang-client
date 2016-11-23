@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
+
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -229,6 +230,7 @@ public class MyRequestsFragment extends ListFragment implements OnItemClickListe
             ReplyOnClickListener(Offer offer) {
                 this.offer = offer;
             }
+
             @Override
             public void onClick(View v) {
                 BorrowDialogFragment moreInfoDialog = new BorrowDialogFragment();

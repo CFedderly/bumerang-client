@@ -1,6 +1,5 @@
 package com.seng480b.bumerang.fragments;
 
-import android.os.AsyncTask;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
@@ -65,6 +64,7 @@ public class RequestDetailFragment extends DialogFragment implements AsyncTaskHa
 
                 // profileId, the id of the user responding to the request.
                 String profileId = String.valueOf(UserDataCache.getCurrentUser().getUserId());
+
                 //borrowId, the id the request being responded to.
                 String borrowId = String.valueOf(request.getRequestId());
 
