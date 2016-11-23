@@ -1,8 +1,6 @@
 package com.seng480b.bumerang.activities;
 
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -29,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Makes screen fullscreen
+        getSupportActionBar().hide();
         FacebookSdk.sdkInitialize(getApplicationContext());
 
 
