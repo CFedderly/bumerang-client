@@ -27,7 +27,8 @@ public class ConnectivityUtility {
 
     private enum HttpMethod {
         GET,
-        POST
+        POST,
+        DELETE
     }
 
     private static NetworkInfo getNetworkInfo(Context context) {
@@ -59,7 +60,7 @@ public class ConnectivityUtility {
         }
     }
 
-    public static String makeHttpGetRequest(String requestUrl) throws IOException {
+    static String makeHttpGetRequest(String requestUrl) throws IOException {
         return makeHttpRequest(requestUrl, HttpMethod.GET, null);
     }
 
@@ -67,8 +68,12 @@ public class ConnectivityUtility {
         return makeHttpRequest(requestUrl, HttpMethod.POST, params);
     }
 
+    static String makeHttpDeleteRequest(String requestUrl) throws IOException {
+        return makeHttpRequest(requestUrl, HttpMethod.DELETE, null);
+    }
+
     private static String makeHttpRequest(String requestUrl, HttpMethod method, HashMap<String, String> params) throws IOException {
-        String result = "";
+        String result;
         try {
             URL url = new URL(requestUrl);
 
@@ -82,10 +87,13 @@ public class ConnectivityUtility {
                 case POST:
                     result = httpPost(connection, params);
                     break;
-                default:
+                case DELETE:
+                    result = httpDelete(connection);
                     break;
+                default:
+                    throw new IllegalArgumentException("Invalid HTTP method: " + method);
             }
-        } catch (IOException e) {
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
             return null;
         }
@@ -98,9 +106,28 @@ public class ConnectivityUtility {
         int status = connection.getResponseCode();
         if (status == HttpURLConnection.HTTP_OK) {
             result = streamToString(connection.getInputStream());
+        } else if (status == HttpURLConnection.HTTP_NOT_FOUND) {
+            result = "";
         }
         Log.d("DEBUG", "Response from HTTP GET: " + result);
         Log.d("DEBUG", "Response code: " + status);
+        return result;
+    }
+
+    private static String httpDelete(HttpURLConnection connection) throws IOException {
+        String result = null;
+
+        connection.setDoOutput(true);
+        connection.setRequestProperty("Content-Type", "application/json" );
+        connection.setRequestMethod("DELETE");
+        connection.connect();
+        int status = connection.getResponseCode();
+        if (status == HttpURLConnection.HTTP_OK) {
+            result = streamToString(connection.getInputStream());
+        }
+        Log.d("DEBUG", "Response from HTTP DELETE: " + result);
+        Log.d("DEBUG", "Response code: " + status);
+
         return result;
     }
 

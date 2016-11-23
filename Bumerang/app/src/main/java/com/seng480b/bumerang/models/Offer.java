@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Offer {
     private int offerId;
@@ -24,7 +25,7 @@ public class Offer {
             JSONObject obj = new JSONObject(JSONString);
             this.offerId = obj.getInt("id");
             this.offerProfile = new Profile(obj.getString("profile"));
-            // Line below is needed to prune request from string before creating request object
+
             JSONObject request = obj.getJSONObject("request");
             this.offerReq = new Request(request.getString("request"));
         } catch (JSONException e) {
@@ -39,7 +40,8 @@ public class Offer {
         return offerReq;
     }
 
-    public int getOfferId() {return offerId;}
+    @SuppressWarnings("unused")
+    public int getOfferId() { return offerId; }
 
     public static ArrayList<Offer> getListOfOffersFromJSON(String json) {
         ArrayList<Offer> offers = new ArrayList<>();
@@ -56,5 +58,12 @@ public class Offer {
         }
 
         return offers;
+    }
+
+    public static HashMap<String, String> getJSONForOffer(String profileId, String requestId) {
+        HashMap<String, String> keyValue = new HashMap<>();
+        keyValue.put("profile_id", profileId);
+        keyValue.put("borrow_id", requestId);
+        return keyValue;
     }
 }

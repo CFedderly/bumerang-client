@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:layout_margin="5dp"
     android:elevation="3dp"
+    android:descendantFocusability="blocksDescendants"
     android:background="@drawable/pink_rectangle"
     android:id="@+id/LinearLayoutBox">
 
@@ -53,7 +54,7 @@
         android:layout_marginEnd="2dp"
         android:layout_below="@id/request_title"
         android:layout_above="@id/request_user"
-        android:layout_toStartOf="@id/browseItem_Image"
+        android:layout_toStartOf="@+id/buttonReplyWarning"
         android:layout_alignParentStart="true"
         android:textSize="17sp"
         android:text="Request description:" />
@@ -65,10 +66,21 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_message_alert"
         android:background="@android:color/transparent"
+        android:layout_alignTop="@+id/overflow_menu_button"
+        android:layout_toStartOf="@+id/overflow_menu_button"
+        android:visibility="gone"/>
+
+    <ImageButton
+        android:id="@+id/overflow_menu_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:clickable="true"
+        android:src="@drawable/ic_menu_overflow"
+        android:background="#0000"
+        android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="5dp"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 </RelativeLayout>
 
