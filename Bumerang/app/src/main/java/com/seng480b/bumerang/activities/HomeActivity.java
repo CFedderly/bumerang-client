@@ -119,12 +119,10 @@ public class HomeActivity extends AppCompatActivity
         } else {
             // call a blank fragment for the background of the tabs
             updateProfileDeviceId();
-            /*Fragment fragment2 = new TestFragment();
+            Fragment fragment2 = new TestFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.addToBackStack(null);
-            ft.replace(R.id.mainFrame, fragment2);&
+            ft.replace(R.id.mainFrame, fragment2);
             ft.commit();
-            */
             loadTabs();
         }
     }
@@ -160,6 +158,10 @@ public class HomeActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            FragmentManager ft = getSupportFragmentManager();
+            if (ft.findFragmentById(R.id.tabs) == null && ft.getBackStackEntryCount() == 0) {
+                loadTabs();
+            }
         }
     }
 
@@ -249,7 +251,6 @@ public class HomeActivity extends AppCompatActivity
             ft.addToBackStack("browse");
             ft.replace(R.id.mainFrame, fragment2);
             ft.commit();
-
             loadTabs();
         } else if (id == R.id.nav_manage) {
             // Hide the Floating action button
