@@ -1,14 +1,19 @@
 package com.seng480b.bumerang.fragments;
 
+
+import android.app.Activity;
+import android.support.v4.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +30,9 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.seng480b.bumerang.BuildConfig;
 import com.seng480b.bumerang.activities.HomeActivity;
@@ -35,21 +43,24 @@ import com.seng480b.bumerang.utils.ConnectivityUtility;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import static com.seng480b.bumerang.utils.Utility.*;
-
 import static android.app.Activity.RESULT_OK;
+
 
 public class CreateRequestFragment extends Fragment {
 
     FirebaseAnalytics mFireBaseAnalytics;
     private static final String REQUEST_URL = BuildConfig.SERVER_URL + "/request/";
-    private static final int DEFAULT_HOURS = 0;
     private static final int DEFAULT_MINUTES = 120;
+    //that to :   private static final int defaultMinutes = 100;
     private static final int TITLE_FIELD = R.id.inputTitle;
     private static final int DESCRIPTION_FIELD = R.id.inputDescription;
-    private static final int HOURS_FIELD = R.id.inputHours;
-    private static final int MINUTES_FIELD = R.id.inputMinutes;
+
+    private int durationInMinutes = -1;
+    private Calendar resultCalendar;
 
     private Request currRequest;
     private Request.RequestType requestType;
@@ -57,7 +68,7 @@ public class CreateRequestFragment extends Fragment {
     private int distance;
 
     private TextView distanceText;
-    private int multiplier;
+    private int multiplier = 1;
 
     private static final int PICK_IMAGE = 12345;
     private ImageView chosenImage;
@@ -65,6 +76,8 @@ public class CreateRequestFragment extends Fragment {
     View inflatedView;
     Button cancelButton;
     Button createButton;
+
+    public static final int CREATE_REQUEST_FRAGMENT = 1;
 
     @Override
     // Fragment Cancel = new BrowseFragment();
@@ -74,6 +87,20 @@ public class CreateRequestFragment extends Fragment {
         ((HomeActivity)getActivity()).setActionBarTitle("Create Request");
 
         inflatedView = inflater.inflate(R.layout.activity_create_request, container, false);
+
+        // set duration texts to current time (plus 2 hours)
+        Calendar today = Calendar.getInstance();
+        TextView dateText=(TextView) inflatedView.findViewById(R.id.inputDate);
+        TextView timeText=(TextView) inflatedView.findViewById(R.id.inputTime);
+        today.add(Calendar.HOUR_OF_DAY,2);
+        //change formatting for date and time so they're readable
+        String formattedTime = "hh:mm aaa";
+        String expiryTime = (String) DateFormat.format(formattedTime,today.getTime());
+        SimpleDateFormat monthFormat = new SimpleDateFormat("LLL", Locale.getDefault());
+        String monthName = monthFormat.format(today.getTime());
+        String expiryDate =  monthName + "." + today.get(Calendar.DAY_OF_MONTH);
+        dateText.setText(expiryDate);
+        timeText.setText(expiryTime);
 
         /** make the tabs invisible **/
         ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
@@ -99,6 +126,93 @@ public class CreateRequestFragment extends Fragment {
                         requestType = Request.RequestType.LEND;
                         break;
                 }
+            }
+        });
+
+        //initialize Calendar to NOW
+        resultCalendar = Calendar.getInstance();
+
+        // Setup for the button to change time (ie the time your ad will exist for)
+        Button buttonToSetTime = (Button) inflatedView.findViewById(R.id.buttonToSetTime);
+        buttonToSetTime.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               Bundle args = new Bundle();
+               args.putInt("minute",resultCalendar.get(Calendar.MINUTE));
+               args.putInt("hour",resultCalendar.get(Calendar.HOUR_OF_DAY));
+               args.putInt("dayOfMonth",resultCalendar.get(Calendar.DAY_OF_MONTH));
+               args.putInt("month",resultCalendar.get(Calendar.MONTH));
+               args.putInt("year",resultCalendar.get(Calendar.YEAR));
+
+               DialogFragment timePicker = new TimePickerFragment();
+
+               timePicker.setArguments(args);
+
+               //the link back from the timePickerFragment to access -hours- and -minutes-
+               timePicker.setTargetFragment(CreateRequestFragment.this, CREATE_REQUEST_FRAGMENT);
+
+               FragmentManager fm = getFragmentManager();
+               timePicker.show(fm,"time picker");
+           }
+        });
+
+        // Setup for the button to change date (ie the date your ad will exist for)
+        Button buttonToSetDate = (Button) inflatedView.findViewById(R.id.buttonToSetDate);
+        buttonToSetDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle args = new Bundle();
+                args.putInt("minute",resultCalendar.get(Calendar.MINUTE));
+                args.putInt("hour",resultCalendar.get(Calendar.HOUR_OF_DAY));
+                args.putInt("dayOfMonth",resultCalendar.get(Calendar.DAY_OF_MONTH));
+                args.putInt("month",resultCalendar.get(Calendar.MONTH));
+                args.putInt("year",resultCalendar.get(Calendar.YEAR));
+
+                DialogFragment datePicker = new DatePickerFragment();
+
+                datePicker.setArguments(args);
+
+                //the link back from the datePickerFragment to access day/month/year
+                datePicker.setTargetFragment(CreateRequestFragment.this, CREATE_REQUEST_FRAGMENT);
+
+                FragmentManager fm = getFragmentManager();
+                datePicker.show(fm,"date picker");
+            }
+        });
+
+        Spinner distSpinner = (Spinner) inflatedView.findViewById(R.id.spinnerDistance);
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.distance_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        distSpinner.setAdapter(adapter);
+
+        //getting distanceText here so we can change it whenever the spinner value is changed
+        distanceText = (TextView) inflatedView.findViewById(R.id.labelDistanceNum);
+        //Set so that NO selection within the spinner is selected before the user selects it
+        distSpinner.setSelection(0,false);
+
+        distSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 1) {
+                    multiplier = 10;
+                    distanceInMeters = true;
+                    int distanceNum = Integer.parseInt(distanceText.getText().toString());
+                    distanceText.setText(String.valueOf(distanceNum*multiplier));
+                } else {
+                    multiplier = 1;
+                    distanceInMeters = false;
+                    int distanceNum = Integer.parseInt(distanceText.getText().toString());
+                    distanceText.setText(String.valueOf(distanceNum/10));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
@@ -145,6 +259,7 @@ public class CreateRequestFragment extends Fragment {
             }
         });
 
+        // Setup for the Create button on screen
         createButton = (Button) inflatedView.findViewById(R.id.buttonCreate);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,7 +287,6 @@ public class CreateRequestFragment extends Fragment {
                     advanced_options.setVisibility(View.GONE);
                     adv_options_button.setText(R.string.expand_advanced_options);
                 }
-
             }
         });
 
@@ -186,43 +300,12 @@ public class CreateRequestFragment extends Fragment {
             }
         });
 
-        Spinner distSpinner = (Spinner) inflatedView.findViewById(R.id.spinnerDistance);
-
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.distance_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        distSpinner.setAdapter(adapter);
-
-        distSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 1) {
-                    multiplier = 10;
-                    distanceInMeters = true;
-                } else {
-                    multiplier = 1;
-                    distanceInMeters = false;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
         return inflatedView;
     }
 
-
     private Request createRequest() {
-
         EditText title = (EditText) inflatedView.findViewById(TITLE_FIELD);
         EditText description = (EditText) inflatedView.findViewById(DESCRIPTION_FIELD);
-        EditText hours = (EditText) inflatedView.findViewById(HOURS_FIELD);
-        EditText minutes = (EditText) inflatedView.findViewById(MINUTES_FIELD);
 
         // Check that all fields are filled, return null if not
         if (isEmpty(title)) {
@@ -232,8 +315,6 @@ public class CreateRequestFragment extends Fragment {
 
         String titleStr = editTextToString(title);
         String descriptionStr;
-        int hoursInt;
-        int minutesInt;
 
         if (!isEmpty(description)) {
             descriptionStr = editTextToString(description);
@@ -241,16 +322,8 @@ public class CreateRequestFragment extends Fragment {
             descriptionStr = "";
         }
 
-        if (!isEmpty(hours)) {
-            hoursInt = Integer.parseInt(editTextToString(hours));
-        } else {
-            hoursInt = DEFAULT_HOURS;
-        }
-
-        if (!isEmpty(minutes)) {
-            minutesInt = Integer.parseInt(editTextToString(minutes));
-        } else {
-            minutesInt = DEFAULT_MINUTES;
+        if (durationInMinutes < 0) {
+            durationInMinutes= DEFAULT_MINUTES;
         }
 
         if (UserDataCache.hasProfile()) {
@@ -259,14 +332,17 @@ public class CreateRequestFragment extends Fragment {
             //This is where info on what users are entering is collected
             mFireBaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
-            //Just turn hours into minutes
-            int totalTime = (hoursInt*60)+minutesInt;
+            //Turn total minutes (totalTimeInMinutes) into hours and minutes
+            int hoursInt = durationInMinutes/60;
+            int minutesInt = durationInMinutes % 60;
 
             Bundle params = new Bundle();
             params.putString( FirebaseAnalytics.Param.ITEM_NAME, titleStr);
             params.putString("Description", descriptionStr);
-            params.putLong(FirebaseAnalytics.Param.VALUE, totalTime);
+            params.putLong(FirebaseAnalytics.Param.VALUE, durationInMinutes);
             mFireBaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, params);
+
+            postToFacebook(titleStr, descriptionStr, hoursInt, minutesInt);
 
             return new Request(userId, titleStr, descriptionStr, hoursInt, minutesInt, distance, requestType);
         } else {
@@ -274,6 +350,29 @@ public class CreateRequestFragment extends Fragment {
             return null;
         }
     }
+
+    private void postToFacebook(String titleStr, String descriptionStr, int hoursInt, int minutesInt) {
+        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+        ShareDialog shareDialog = new ShareDialog(getActivity());
+
+        String quote = "Hey everybody, I'm currently looking for a " + titleStr + ".";
+        if (descriptionStr.equals("")) {
+            quote = quote + " I need it within " + String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours please!";
+        } else {
+            quote = quote + " I would describe it as a " + descriptionStr + ". I need it within " +
+                    String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours please!";
+        }
+        //This code was found here: https://developers.facebook.com/docs/sharing/android#share_dialog
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                    .setQuote(quote)
+                    .setContentUrl(Uri.parse("http://www.bumerangapp.com"))
+                    .build();
+            shareDialog.show(linkContent);
+
+        }
+    }
+
 
 
     private void openGallery(){
@@ -289,8 +388,27 @@ public class CreateRequestFragment extends Fragment {
             Uri imageUri = data.getData();
             chosenImage.setImageURI(imageUri);
         }
-    }
 
+        //grab data (total duration in minutes) from TimePickerFragment
+        switch(requestCode){
+            case CREATE_REQUEST_FRAGMENT:
+                if (resultCode == Activity.RESULT_OK) {
+                    Bundle bundle = data.getExtras();
+
+                    resultCalendar.set(Calendar.MINUTE,bundle.getInt("minute"));
+                    resultCalendar.set(Calendar.HOUR_OF_DAY,bundle.getInt("hour"));
+                    resultCalendar.set(Calendar.DAY_OF_MONTH,bundle.getInt("dayOfMonth"));
+                    resultCalendar.set(Calendar.MONTH,bundle.getInt("month"));
+                    resultCalendar.set(Calendar.YEAR,bundle.getInt("year"));
+
+                    durationInMinutes = bundle.getInt("durationInMinutes");
+                    if (durationInMinutes<0){
+                        durationInMinutes = DEFAULT_MINUTES;
+                    }
+                }
+                break;
+        }
+    }
 
     private void alertForEmptyFields() {
         longToast(getActivity(), R.string.empty_request_field_message);
@@ -327,9 +445,9 @@ public class CreateRequestFragment extends Fragment {
             Fragment myRequests = new MyRequestsFragment();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, myRequests);
+            ft.addToBackStack("my_requests");
             ft.commit();
             longToast(getActivity(), R.string.created_request);
         }
     }
-
 }

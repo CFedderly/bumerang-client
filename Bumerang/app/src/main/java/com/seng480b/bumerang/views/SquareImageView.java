@@ -1,4 +1,4 @@
-package com.seng480b.bumerang.ui;
+package com.seng480b.bumerang.views;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -14,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+
 public class Utility {
 
     public static Object deepClone(Object object) {
@@ -45,6 +46,10 @@ public class Utility {
 
     public static void longToast(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    }
+
+    public static void karmaToast(Context context, int karma) {
+        Toast.makeText(context, "+"+karma+" Karma", Toast.LENGTH_SHORT).show();
     }
 
     public static String editTextToString(EditText eText) {

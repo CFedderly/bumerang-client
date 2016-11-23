@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="10dp" >
 
-    <com.seng480b.bumerang.ui.SquareImageView
+    <com.seng480b.bumerang.views.SquareImageView
         android:id="@+id/borrowDialog_Image"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -20,7 +20,8 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_cancel"
         android:background="@color/white"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"/>
 
     <TextView
         android:id="@+id/item_wanted"
@@ -32,7 +33,6 @@
         android:textStyle="bold"
         android:layout_centerHorizontal="true" />
 
-
     <TextView
         android:id="@+id/time_left"
         android:layout_width="wrap_content"
@@ -40,24 +40,6 @@
         android:text="expires 5:30 pm"
         android:layout_below="@id/item_wanted"
         android:layout_centerHorizontal="true" />
-
-    <com.facebook.login.widget.ProfilePictureView
-        android:id="@+id/user_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_menu_slideshow"
-        android:layout_below="@+id/divider_line2"
-        facebook:com_facebook_preset_size="small"/>
-
-
-    <TextView
-        android:id="@+id/phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/divider_line2"
-        android:phoneNumber="true"
-        android:layout_centerHorizontal="true"/>
-
 
     <View
         android:id="@+id/divider_line2"
@@ -67,6 +49,38 @@
         android:layout_margin="5dp"
         android:layout_below="@id/time_left"/>
 
+    <FrameLayout
+        android:id="@+id/profilePictureGroup"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_below="@id/divider_line2">
+
+        <com.facebook.login.widget.ProfilePictureView
+            android:id="@+id/user_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_menu_slideshow"
+            android:padding="6dp"/>
+
+        <ImageView
+            android:src="@drawable/rounded_corners"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/borrow_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" Someone's got you covered!"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        android:layout_below="@id/divider_line2"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@id/profilePictureGroup"
+        android:padding="5dp"
+        android:layout_alignParentEnd="true"/>
+
     <Button
         android:id="@+id/buttonBorrowAccept"
         android:layout_width="wrap_content"
@@ -74,20 +88,20 @@
         android:text="Accept"
         android:background="@color/colorAccent"
         android:textColor="@color/white"
-        android:layout_below="@id/user_image"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dp" />
+        android:layout_below="@id/borrow_message"
+        android:layout_alignParentEnd="true"
+        android:textAllCaps="false"
+        android:padding="10dp"
+        android:drawableEnd="@drawable/ic_talk"
+        android:drawablePadding="5dp"
+        android:layout_margin="5dp" />
 
-    <TextView
-        android:id="@+id/borrow_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=" [User]'s got you covered! "
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:background="@color/colorPrimary"
-        android:layout_below="@id/phone"
-        android:layout_margin="10dp"
-        android:layout_toRightOf="@+id/user_image"/>
+    <View
+        android:id="@+id/divider_line3"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/colorPrimaryDark"
+        android:layout_margin="5dp"
+        android:layout_below="@id/profilePictureGroup"/>
 
 </RelativeLayout>

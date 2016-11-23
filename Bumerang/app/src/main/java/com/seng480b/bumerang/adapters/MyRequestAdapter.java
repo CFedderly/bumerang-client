@@ -48,9 +48,9 @@ public class MyRequestAdapter extends ArrayAdapter<Request> implements AsyncTask
         //set colour of list item depending on if it is a LEND or a BORROW (only in MyRequests)
         Request.RequestType type = request.getRequestType();
         if (type == Request.RequestType.BORROW) {
-            convertView.setBackgroundResource(R.drawable.blue_rectangle);
-        } else {
             convertView.setBackgroundResource(R.drawable.pink_rectangle);
+        } else {
+            convertView.setBackgroundResource(R.drawable.blue_rectangle);
         }
 
         //look up view for data population

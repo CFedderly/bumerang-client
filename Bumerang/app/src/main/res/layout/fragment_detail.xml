@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:padding="10dp">
 
-    <com.seng480b.bumerang.ui.SquareImageView
+    <com.seng480b.bumerang.views.SquareImageView
         android:id="@+id/browseItemDetail_Image"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -37,7 +37,7 @@
         android:id="@+id/item_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="I would like to borrow this item.This is a pretty long description.More information on this line too."
+        android:text="This is a description I guess"
         android:layout_weight="0.01"
         android:textSize="15sp"
         android:layout_below="@id/request_title"

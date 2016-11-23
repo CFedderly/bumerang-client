@@ -7,9 +7,11 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -26,12 +28,15 @@ import com.facebook.login.LoginManager;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.seng480b.bumerang.fragments.MyRequestsFragment;
 import com.seng480b.bumerang.fragments.ProfilePageFragment;
+import com.seng480b.bumerang.utils.KarmaUtility;
 import com.seng480b.bumerang.utils.ProfileUtility;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.adapters.SectionsPagerAdapter;
 import com.seng480b.bumerang.fragments.TestFragment;
 import com.seng480b.bumerang.fragments.CreateRequestFragment;
 import com.seng480b.bumerang.fragments.EditProfileFragment;
+import com.seng480b.bumerang.utils.Utility;
+import com.seng480b.bumerang.utils.UserDataCache;
 
 
 public class HomeActivity extends AppCompatActivity
@@ -81,7 +86,10 @@ public class HomeActivity extends AppCompatActivity
             // Ensure user is logged into the app. Otherwise launch main page.
             if (loggedIn) {
                 ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
+                updateProfileDeviceId();
                 Fragment my_requests = new MyRequestsFragment();
+                ft.add(my_requests, "my_request");
+                ft.addToBackStack("my_request");
                 ft.replace(R.id.mainFrame, my_requests);
                 ft.commit();
             } else {
@@ -99,7 +107,6 @@ public class HomeActivity extends AppCompatActivity
     //will start up the browse fragment if is not the first time opening the app
     //will open the edit profile page if it is the first time.
     public void loadStartupFragment(boolean first){
-
          if (first) {
             // Hide the Floating action button
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
@@ -113,11 +120,11 @@ public class HomeActivity extends AppCompatActivity
             ft.commit();
         } else {
             // call a blank fragment for the background of the tabs
+            updateProfileDeviceId();
             Fragment fragment2 = new TestFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, fragment2);
             ft.commit();
-
             loadTabs();
         }
     }
@@ -140,6 +147,8 @@ public class HomeActivity extends AppCompatActivity
         fab.setVisibility(View.GONE);
         Fragment createReq = new CreateRequestFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.addToBackStack("create_request");
+        ft.add(createReq, "create_request");
         ft.replace(R.id.mainFrame,createReq);
         ft.commit();
     }
@@ -151,6 +160,10 @@ public class HomeActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            FragmentManager ft = getSupportFragmentManager();
+            if (ft.findFragmentById(R.id.tabs) == null && ft.getBackStackEntryCount() == 0) {
+                loadTabs();
+            }
         }
     }
 
@@ -191,6 +204,14 @@ public class HomeActivity extends AppCompatActivity
         LoginManager.getInstance().logOut();
     }
 
+    public void updateProfileDeviceId() {
+        if (UserDataCache.getCurrentUser() != null) {
+            ProfileUtility.updateDeviceId();
+        } else {
+            Log.e("ERROR", " User profile does not exist");
+        }
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -212,6 +233,8 @@ public class HomeActivity extends AppCompatActivity
             fab.setVisibility(View.GONE);
             // Transition to the create request fragment
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(createReq, "create_request");
+            ft.addToBackStack("create_request");
             ft.replace(R.id.mainFrame,createReq);
             ft.commit();
 
@@ -226,9 +249,10 @@ public class HomeActivity extends AppCompatActivity
 
             // call a blank fragment for the background of the tabs
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(fragment2, "browse");
+            ft.addToBackStack("browse");
             ft.replace(R.id.mainFrame, fragment2);
             ft.commit();
-
             loadTabs();
         } else if (id == R.id.nav_manage) {
             // Hide the Floating action button
@@ -238,10 +262,14 @@ public class HomeActivity extends AppCompatActivity
             fab.setVisibility(View.GONE);
             // Call the Profile Page Fragment
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(profilePage, "profile");
+            ft.addToBackStack("profile");
             ft.replace(R.id.mainFrame,profilePage);
             ft.commit();
         } else if (id == R.id.nav_my_requests){
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(my_requests, "my_requests");
+            ft.addToBackStack("my_requests");
             ft.replace(R.id.mainFrame, my_requests);
             ft.commit();
         } else if (id == R.id.nav_logout) {

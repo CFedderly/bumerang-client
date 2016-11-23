@@ -62,6 +62,10 @@ public class Profile implements Serializable {
 
     public long getFacebookId() { return this.facebookId; }
 
+    public String getDeviceId() { return this.deviceId; }
+
+    public void setDeviceId(String deviceId) { this.deviceId = deviceId; }
+
     public int getKarma() { return this.karma; }
 
     public int getUserId() { return this.userId; }
@@ -106,6 +110,8 @@ public class Profile implements Serializable {
                 case "description":
                     keyValue.put("description", description);
                     break;
+                case "karma":
+                    keyValue.put("karma", String.valueOf(karma));
                 default:
                     Log.e("ERROR", "Invalid field provided: " + field);
                     return null;
@@ -113,4 +119,13 @@ public class Profile implements Serializable {
         }
         return keyValue;
     }
+
+
+    public void addKarma(int karma) {
+        this.karma += karma;
+    }
+    public void removeKarma(int karma){
+        this.karma-= karma;
+    }
+
 }

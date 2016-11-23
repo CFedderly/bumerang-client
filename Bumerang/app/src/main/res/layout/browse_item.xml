@@ -8,7 +8,7 @@
     android:background="@drawable/pink_rectangle"
     android:id="@+id/LinearLayoutBox">
 
-    <com.seng480b.bumerang.ui.SquareImageView
+    <com.seng480b.bumerang.views.SquareImageView
         android:id="@+id/browseItem_Image"
         android:layout_marginTop="13dp"
         android:layout_width="90dp"

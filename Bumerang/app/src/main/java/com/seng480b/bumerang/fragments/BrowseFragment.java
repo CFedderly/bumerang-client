@@ -17,6 +17,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
 import android.widget.TextView;
 
 import com.seng480b.bumerang.activities.HomeActivity;
@@ -163,6 +164,12 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
         textView.setVisibility(View.VISIBLE);
         listView.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
+
+        if (Utility.getCurrentRequestType(viewPager) == Request.RequestType.BORROW) {
+            textView.setText(R.string.empty_needs_message);
+        } else {
+            textView.setText(R.string.empty_has_message);
+        }
     }
 
     private void showProgressBar() {

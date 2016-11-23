@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#7da8c2</color>
-    <color name="colorPrimaryDark">#6592ac</color>
-    <color name="colorAccent">#FF4081</color>
-
-    <color name="textboxBackground">#66cec9c9</color>
-
-    <color name="colorNavBar">#ffffff</color>
 
     <color name="black_overlay">#ce000000</color>
 
-    <color name="buttonPressPink">#ff758c</color>
+    <color name="blue_background">#BAE6E9</color>
+
+    <color name="buttonPress">#ff758c</color>
+
     <color name="buttonPressBlue">#73b3ba</color>
 
-    <color name="white">#ffffff</color>
+    <color name="buttonPressPink">#ff758c</color>
+
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="colorNavBar">#ffffff</color>
+
+    <color name="colorPrimary">#7da8c2</color>
+
+    <color name="colorPrimaryDark">#6592ac</color>
+
+    <color name="light_blue_text">#7da6b4</color>
+
+    <color name="light_gray">#ededed</color>
 
     <color name="pale_gray">#fff6f9</color>
 
+    <color name="textboxBackground">#66cec9c9</color>
+
+    <color name="white">#ffffff</color>
 
 </resources>
