@@ -27,12 +27,14 @@ import com.facebook.login.LoginManager;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.seng480b.bumerang.fragments.MyRequestsFragment;
 import com.seng480b.bumerang.fragments.ProfilePageFragment;
+import com.seng480b.bumerang.utils.KarmaUtility;
 import com.seng480b.bumerang.utils.ProfileUtility;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.adapters.SectionsPagerAdapter;
 import com.seng480b.bumerang.fragments.TestFragment;
 import com.seng480b.bumerang.fragments.CreateRequestFragment;
 import com.seng480b.bumerang.fragments.EditProfileFragment;
+import com.seng480b.bumerang.utils.Utility;
 import com.seng480b.bumerang.utils.UserDataCache;
 
 
@@ -120,7 +122,6 @@ public class HomeActivity extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, fragment2);
             ft.commit();
-
             loadTabs();
         }
     }

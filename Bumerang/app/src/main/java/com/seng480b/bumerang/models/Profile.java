@@ -110,6 +110,8 @@ public class Profile implements Serializable {
                 case "description":
                     keyValue.put("description", description);
                     break;
+                case "karma":
+                    keyValue.put("karma", String.valueOf(karma));
                 default:
                     Log.e("ERROR", "Invalid field provided: " + field);
                     return null;
@@ -117,4 +119,13 @@ public class Profile implements Serializable {
         }
         return keyValue;
     }
+
+
+    public void addKarma(int karma) {
+        this.karma += karma;
+    }
+    public void removeKarma(int karma){
+        this.karma-= karma;
+    }
+
 }

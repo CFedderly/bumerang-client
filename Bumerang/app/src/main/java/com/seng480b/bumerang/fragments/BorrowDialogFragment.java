@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.facebook.login.widget.ProfilePictureView;
 import com.seng480b.bumerang.models.Offer;
 import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.utils.KarmaUtility;
+import com.seng480b.bumerang.utils.Utility;
 import com.seng480b.bumerang.models.Request;
 
 import java.util.Locale;
@@ -63,6 +65,7 @@ public class BorrowDialogFragment extends DialogFragment {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                giveKarma();
                 PhoneNumberDialogFragment phoneNumberDialog = new PhoneNumberDialogFragment();
                 // A more elegant solution will be needed. But for now, get the first offer.
                 phoneNumberDialog.setOfferObj(offer);
@@ -106,6 +109,13 @@ public class BorrowDialogFragment extends DialogFragment {
         // By sending to server via async
         // new acceptOffer.execute(offerUrl, offer);
 
+    }
+
+    public void giveKarma(){
+        int karma = new KarmaUtility().giveKarmaForRequest(offer);
+        if (karma>0){
+            Utility.karmaToast(getActivity(), karma);
+        }
     }
 
 }

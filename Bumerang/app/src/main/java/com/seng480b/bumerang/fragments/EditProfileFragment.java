@@ -21,10 +21,12 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.seng480b.bumerang.BuildConfig;
 import com.seng480b.bumerang.activities.HomeActivity;
 import com.seng480b.bumerang.models.Profile;
+import com.seng480b.bumerang.utils.KarmaUtility;
 import com.seng480b.bumerang.utils.ProfileUtility;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.utils.UserDataCache;
 import com.seng480b.bumerang.utils.ConnectivityUtility;
+import com.seng480b.bumerang.utils.Utility;
 
 import static com.seng480b.bumerang.utils.Utility.*;
 
@@ -154,7 +156,7 @@ public class EditProfileFragment extends Fragment {
                 FBProfile.getFirstName(),
                 FBProfile.getLastName(),
                 stripPhoneNumber(phoneNumber),
-                editTextToString(description), 0);
+                editTextToString(description), 10);
         // Set temporary profile as current profile in cache
         UserDataCache.setCurrentUser(tempProfile);
         // If we are connected to the network, send profile object to server
