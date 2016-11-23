@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Makes screen fullscreen
+        getSupportActionBar().hide();
         FacebookSdk.sdkInitialize(getApplicationContext());
 
 
