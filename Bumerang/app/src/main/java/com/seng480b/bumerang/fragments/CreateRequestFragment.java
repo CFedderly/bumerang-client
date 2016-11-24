@@ -123,10 +123,14 @@ public class CreateRequestFragment extends Fragment {
                     case R.id.radio_borrow:
                         longToast(getActivity(), "Borrow!");
                         requestType = Request.RequestType.BORROW;
+                        TextView postToFacebookMessage=(TextView) inflatedView.findViewById(R.id.labelPostToFacebookCheckbox);
+                        postToFacebookMessage.setText(R.string.post_to_facebook_message_borrow);
                         break;
                     case R.id.radio_lend:
                         longToast(getActivity(), "Lend!");
                         requestType = Request.RequestType.LEND;
+                        TextView postToFacebookMessageLend=(TextView) inflatedView.findViewById(R.id.labelPostToFacebookCheckbox);
+                        postToFacebookMessageLend.setText(R.string.post_to_facebook_message_lend);
                         break;
                 }
             }

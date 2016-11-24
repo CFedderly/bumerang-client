@@ -195,7 +195,7 @@
                 android:layout_alignBottom="@id/checkbox_enablePostToFacebook"
                 android:layout_alignTop="@id/checkbox_enablePostToFacebook"
                 android:layout_toEndOf="@id/checkbox_enablePostToFacebook"
-                android:text="@string/post_to_facebook_message" />
+                android:text="@string/post_to_facebook_message_borrow" />
 
 
             <RelativeLayout
@@ -213,7 +213,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/labelDistance"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:layout_alignParentStart="true" />
 
@@ -232,19 +232,21 @@
                     android:text="2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/spinnerDistance"
                     android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:layout_marginTop="12dp"
                     android:layout_above="@id/barDistance"
-                    android:layout_toEndOf="@id/labelDistance"
-                    android:layout_marginStart="20dp"/>
+                    android:textSize="17sp"/>
 
                 <Spinner
                     android:id="@+id/spinnerDistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/barDistance"
-                    android:layout_toEndOf="@id/labelDistanceNum"
-                    android:layout_marginStart="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="30dp"
                     android:dropDownWidth="60dp"
+                    android:layout_marginTop="6dp"
                     android:gravity="end" />
 
                 <TextView
