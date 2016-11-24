@@ -1,8 +1,10 @@
 package com.seng480b.bumerang.activities;
 
 import android.content.Intent;
+import android.net.http.HttpResponseCache;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -19,16 +21,24 @@ import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.utils.ConnectivityUtility;
 import com.seng480b.bumerang.utils.Utility;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 
 public class MainActivity extends AppCompatActivity {
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final long CACHE_SIZE = 10 * 1024 * 1024;
+
     CallbackManager callbackManager;
     private FirebaseAnalytics mFirebaseAnalytics;
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        initializeCaching();
+
         //Makes screen fullscreen
         getSupportActionBar().hide();
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -57,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
                 });
         AppEventsLogger.activateApp(this);
         //This should collect basic analytics as described here
-        // https://codelabs.developers.google.com/codelabs/firebase-android/#11
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         // Check for Google play services API is available and updated.
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
@@ -74,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         //If user is already logged in automatically goes to the 'BrowseFragment page"
         if  (loggedIn) {
             // Ensure that the user can connect to the internet
-            if (ConnectivityUtility.checkNetworkConnection(this) == true) {
+            if (ConnectivityUtility.checkNetworkConnection(this)) {
                 Intent browse = new Intent(this, HomeActivity.class);
                 startActivity(browse);
             } else {
@@ -97,11 +106,29 @@ public class MainActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        HttpResponseCache cache = HttpResponseCache.getInstalled();
+        if (cache != null) {
+            cache.flush();
+        }
+    }
+
     public void loginSuccess() {
         Intent intent = new Intent(this, HomeActivity.class );
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
 
         startActivity(intent);
+    }
+
+    private void initializeCaching() {
+        try {
+            File httpCacheDir = new File(getCacheDir(), "http");
+            HttpResponseCache.install(httpCacheDir, CACHE_SIZE);
+        } catch (IOException e) {
+            Log.e("ERROR", "HTTP response cache installation failed:" + e);
+        }
     }
 
 }

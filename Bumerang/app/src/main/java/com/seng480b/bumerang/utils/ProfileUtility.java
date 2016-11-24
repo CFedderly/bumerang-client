@@ -132,7 +132,7 @@ public class ProfileUtility {
             try {
                 result = ConnectivityUtility.makeHttpPostRequest(params[0],
                         UserDataCache.getCurrentUser().getJSONKeyValuePairs());
-                Log.e("DEBUG", "" + result);
+                Log.e("DEBUG", result);
                 if (result != null) {
                     JSONObject json = new JSONObject(result);
                     int id = json.getInt("id");
