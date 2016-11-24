@@ -5,47 +5,74 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.seng480b.bumerang.BuildConfig;
+
+import com.seng480b.bumerang.interfaces.AsyncTaskHandler;
 import com.seng480b.bumerang.models.Offer;
+import com.seng480b.bumerang.models.Request;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class OfferUtility {
+public class OfferUtility<T extends AsyncTaskHandler> {
     private static final String GET_OFFER_URL = BuildConfig.SERVER_URL + "/offer/ids/";
     private static final String CREATE_OFFER_URL = BuildConfig.SERVER_URL + "/offer/";
 
-    public static String getOffers(Context context, int requestId) {
-        String getOfferUrlWithId = GET_OFFER_URL + requestId;
-        String result = null;
-        if (ConnectivityUtility.checkNetworkConnection(context)) {
-            try {
-                result = new GetOfferTask().execute(getOfferUrlWithId.trim()).get();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-        return result;
+    private T container;
+
+    public OfferUtility(T container) {
+        this.container = container;
     }
 
-    public static boolean createOffer(Context context, String profileId, String requestId) {
+    public GetOfferTask getOffers(Context context, ArrayList<Request> requests) {
+        String getOfferUrlWithId = GET_OFFER_URL + getRequestIdString(requests);
         if (ConnectivityUtility.checkNetworkConnection(context)) {
-            try {
-                return new CreateOfferTask().execute(CREATE_OFFER_URL, profileId, requestId).get();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-        } else {
-            return false;
+            GetOfferTask getOfferTask = new GetOfferTask(container);
+            getOfferTask.execute(getOfferUrlWithId.trim());
+            return getOfferTask;
         }
+        return null;
     }
 
-    private static class CreateOfferTask extends AsyncTask<String, Void, Boolean> {
+    public CreateOfferTask createOffer(Context context, String profileId, String requestId) {
+        if (ConnectivityUtility.checkNetworkConnection(context)) {
+            CreateOfferTask createOfferTask = new CreateOfferTask(container);
+            createOfferTask.execute(CREATE_OFFER_URL, profileId, requestId);
+            return createOfferTask;
+        }
+        return null;
+    }
+
+    private static String getRequestIdString(ArrayList<Request> requests) {
+        StringBuilder idList = new StringBuilder();
+        boolean first = true;
+        for (Request req : requests) {
+            if (!first) {
+                idList.append(",");
+            } else {
+                first = false;
+            }
+            idList.append(req.getRequestId());
+        }
+        return idList.toString();
+    }
+
+    public class CreateOfferTask extends AsyncTask<String, Void, String> {
+        private T container;
+
+        CreateOfferTask(T container) {
+            this.container = container;
+        }
 
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected void onPreExecute() {
+            super.onPreExecute();
+            container.beforeAsyncTask();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
             String result;
             try {
                 HashMap<String, String> json = Offer.getJSONForOffer(params[1], params[2]);
@@ -54,18 +81,35 @@ public class OfferUtility {
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e("ERROR", "something went wrong with the post request");
-                return false;
+                return null;
             }
-            return result != null;
+            return result;
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (container!=null) {
+                container.afterAsyncTask(result);
+                this.container = null;
+            }
         }
 
     }
 
-    private static class GetOfferTask extends AsyncTask<String, Void, String> {
+    public class GetOfferTask extends AsyncTask<String, Void, String> {
+        private T container;
+
+        GetOfferTask(T container) {
+            this.container = container;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            container.beforeAsyncTask();
+        }
+
         @Override
         protected String doInBackground(String... params) {
             if (UserDataCache.hasProfile()) {
@@ -81,7 +125,11 @@ public class OfferUtility {
 
         @Override
         protected void onPostExecute(String result) {
-
+            super.onPostExecute(result);
+            if (container!=null) {
+                container.afterAsyncTask(result);
+                this.container = null;
+            }
         }
     }
 
