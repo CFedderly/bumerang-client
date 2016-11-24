@@ -7,12 +7,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageButton;
+
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -28,6 +29,7 @@ import com.seng480b.bumerang.utils.UserDataCache;
 import com.seng480b.bumerang.activities.HomeActivity;
 import com.seng480b.bumerang.adapters.MyRequestAdapter;
 import com.seng480b.bumerang.utils.Utility;
+
 
 import java.util.ArrayList;
 
@@ -116,33 +118,11 @@ public class MyRequestsFragment extends ListFragment implements OnItemClickListe
         }
         if (!result.equals("")) {
             final ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
+            ListView listView = getListView();
             MyRequestAdapter mAdapter = new MyRequestAdapter(activity, requests);
-            getListView().setAdapter(mAdapter);
-            getListView().setOnItemClickListener(new OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String offerResult = null;
-                    try {
-                        offerResult = OfferUtility.getOffers(getContext(), requests.get(position).getRequestId());
-                    } catch (Exception e) {
-                        Log.e("Error:", "Unable to retrieve offer information!");
-                    }
-                    if (offerResult != null && !offerResult.equals("")) {
-                        final ArrayList<Offer> offers = Offer.getListOfOffersFromJSON(offerResult);
-                        // Ensure there are offers available to proceed, else don't do anything.
-                        if (offers.size() != 0) {
-                            Log.d("DEBUG", "Offer from id: " + Integer.toString(offers.get(0).getOfferProfile().getUserId()));
-                            // Offer has offer_profile and request associated with it.
-                            BorrowDialogFragment moreInfoDialog = new BorrowDialogFragment();
-                            // A more elegant solution will be needed. But for now, get the first offer.
-                            moreInfoDialog.setOfferObj(offers.get(0));
-
-                            FragmentManager fm = getFragmentManager();
-                            moreInfoDialog.show(fm, "Sample Fragment");
-                        }
-                    }
-                }
-            });
+            listView.setAdapter(mAdapter);
+            GetOffersAsyncTaskHandler offerHandler = new GetOffersAsyncTaskHandler(listView, getContext());
+            offerHandler.getOffers(requests);
         } else {
             showEmptyMessage();
         }
@@ -150,7 +130,10 @@ public class MyRequestsFragment extends ListFragment implements OnItemClickListe
 
     @Override
     public boolean isAsyncTaskRunning() {
-        return (requestsTask.getStatus() == RequestUtility.GetRequestsTask.Status.FINISHED);
+        if (requestsTask == null) {
+            return false;
+        }
+        return (requestsTask.getStatus() != RequestUtility.GetRequestsTask.Status.FINISHED);
     }
 
     private void hideAllOnError() {
@@ -176,5 +159,87 @@ public class MyRequestsFragment extends ListFragment implements OnItemClickListe
         progressBar.setVisibility(View.GONE);
         listView.setVisibility(View.VISIBLE);
         textView.setVisibility(View.GONE);
+    }
+
+    private class GetOffersAsyncTaskHandler implements AsyncTaskHandler {
+        private Context context;
+        private ListView listView;
+        private OfferUtility.GetOfferTask getOfferTask;
+
+        GetOffersAsyncTaskHandler(ListView listView, Context context) {
+            this.context = context;
+            this.listView = listView;
+        }
+
+        public void getOffers(ArrayList<Request> requests) {
+            OfferUtility offerUtility = new OfferUtility<>(this);
+            getOfferTask = offerUtility.getOffers(context, requests);
+        }
+
+        private Offer idInOffersList(ArrayList<Offer> offers, int id) {
+            for (Offer offer : offers) {
+                if (offer.getRequest().getRequestId() == id) {
+                    return offer;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public void beforeAsyncTask() {
+
+        }
+
+        @Override
+        public void afterAsyncTask(String result) {
+            if (result == null || result.equals("")) {
+                return;
+            }
+            ArrayList<Offer> offers = Offer.getListOfOffersFromJSON(result);
+            if (offers.size() == 0) {
+                return;
+            }
+
+            for (int i = 0; i < listView.getChildCount(); i++) {
+                View view = listView.getChildAt(i);
+                Request request = (Request) listView.getItemAtPosition(i);
+                int requestId = request.getRequestId();
+                final Offer offer = idInOffersList(offers, requestId);
+                if (offer != null) {
+                    ImageButton replyButton = (ImageButton) view.findViewById(R.id.buttonReplyWarning);
+                    replyButton.setVisibility(View.VISIBLE);
+                    replyButton.setFocusable(false);
+                    replyButton.setClickable(false);
+                    replyButton.setOnClickListener(new ReplyOnClickListener(offer));
+                    view.setOnClickListener(new ReplyOnClickListener(offer));
+                }
+            }
+        }
+
+        @Override
+        public boolean isAsyncTaskRunning() {
+            if (getOfferTask == null) {
+                return false;
+            }
+            return getOfferTask.getStatus() != OfferUtility.GetOfferTask.Status.FINISHED;
+        }
+
+        private class ReplyOnClickListener implements View.OnClickListener {
+            private Offer offer;
+
+            ReplyOnClickListener(Offer offer) {
+                this.offer = offer;
+            }
+
+            @Override
+            public void onClick(View v) {
+                BorrowDialogFragment moreInfoDialog = new BorrowDialogFragment();
+                // A more elegant solution will be needed. But for now, get the first offer.
+                moreInfoDialog.setOfferObj(offer);
+
+                FragmentManager fm = getFragmentManager();
+                moreInfoDialog.show(fm, "Sample Fragment");
+            }
+        }
     }
 }

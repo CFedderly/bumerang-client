@@ -50,7 +50,7 @@ public class BorrowDialogFragment extends DialogFragment {
         Button acceptButton = (Button)rootView.findViewById(R.id.buttonBorrowAccept);
 
         //set accept button text depending on if your offer is a lend or a borrow
-        if (offer.getRequestInfo().getRequestType() == Request.RequestType.LEND) {
+        if (offer.getRequest().getRequestType() == Request.RequestType.LEND) {
             acceptButton.setText(getString(R.string.button_start_lending));
         } else {
             acceptButton.setText(getString(R.string.button_accept_offer));
@@ -90,10 +90,10 @@ public class BorrowDialogFragment extends DialogFragment {
         ProfilePictureView profile_picture = (ProfilePictureView) rootView.findViewById(R.id.user_image);
 
         // Fill text fields with proper user info.
-        itemName.setText(offer.getRequestInfo().getTitle());
-        itemExp.setText("Expires in " + offer.getRequestInfo().getMinutesUntilExpiry() + " minutes.");
+        itemName.setText(offer.getRequest().getTitle());
+        itemExp.setText("Expires in " + offer.getRequest().getMinutesUntilExpiry() + " minutes.");
 
-        if (offer.getRequestInfo().getRequestType() == Request.RequestType.LEND) {
+        if (offer.getRequest().getRequestType() == Request.RequestType.LEND) {
             lenderName.setText(String.format(Locale.getDefault(),
                     getResources().getString(R.string.covered_me_message),
                     offer.getOfferProfile().getFirstName()));

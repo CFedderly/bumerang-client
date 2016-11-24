@@ -85,8 +85,8 @@ public class PhoneNumberDialogFragment extends DialogFragment {
         ProfilePictureView profile_picture = (ProfilePictureView) rootView.findViewById(R.id.user_image);
 
         // Fill text fields with proper user info.
-        itemName.setText(offer.getRequestInfo().getTitle());
-        itemExp.setText("Expires in " + offer.getRequestInfo().getMinutesUntilExpiry() + " minutes.");
+        itemName.setText(offer.getRequest().getTitle());
+        itemExp.setText("Expires in " + offer.getRequest().getMinutesUntilExpiry() + " minutes.");
         phone.setText(offer.getOfferProfile().getPhoneNumber());
         lenderName.setText(offer.getOfferProfile().getFirstName() + "'s phone number:");
         profile_picture.setProfileId(String.valueOf(offer.getOfferProfile().getFacebookId()));

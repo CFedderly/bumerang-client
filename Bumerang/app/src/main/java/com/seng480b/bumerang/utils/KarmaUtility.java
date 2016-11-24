@@ -41,14 +41,14 @@ public class KarmaUtility {
      * @return
      */
     public int giveKarmaForRequest(Offer offer){
-        Request.RequestType rType = offer.getRequestInfo().getRequestType();
+        Request.RequestType rType = offer.getRequest().getRequestType();
         if(rType== Request.RequestType.BORROW){
             addKarmaForLending(offer.getOfferProfile().getUserId());
-            addKarmaForBorrowing(offer.getRequestInfo().getUserId());
+            addKarmaForBorrowing(offer.getRequest().getUserId());
             return borrowMultiplier;
 
         }else if(rType== Request.RequestType.LEND){
-            addKarmaForLending(offer.getRequestInfo().getUserId());
+            addKarmaForLending(offer.getRequest().getUserId());
             addKarmaForBorrowing(offer.getOfferProfile().getUserId());
             return lendMultiplier;
 
