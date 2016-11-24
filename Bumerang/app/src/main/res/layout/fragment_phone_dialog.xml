@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp" >
@@ -16,11 +17,11 @@
         android:visibility="gone"/>
 
     <ImageButton
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:id="@+id/buttonPhoneDismiss"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:src="@drawable/ic_cancel"
-        android:background="@color/white"
+        android:background="@android:color/transparent"
         android:layout_alignParentRight="true" />
 
     <TextView
@@ -46,7 +47,7 @@
     <View
         android:id="@+id/divider_line2"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="1dp"
         android:background="@color/colorPrimaryDark"
         android:layout_margin="5dp"
         android:layout_below="@id/time_left"/>
@@ -70,18 +71,13 @@
             android:layout_height="match_parent" />
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/phoneTextDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Contact [User]:"
-        android:textColor="@android:color/holo_blue_light"
-        android:textStyle="bold"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_below="@+id/divider_line2"
-        android:layout_toStartOf="@+id/buttonPhoneDismiss"
-        android:layout_marginEnd="24dp" />
+    <View
+        android:id="@+id/divider_line3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimaryDark"
+        android:layout_margin="5dp"
+        android:layout_below="@id/profilePictureGroup"/>
 
     <Button
         android:id="@+id/buttonPhoneMsg"
@@ -94,8 +90,18 @@
         android:padding="10dp"
         android:drawableEnd="@drawable/ic_talk"
         android:drawablePadding="5dp"
-        android:layout_marginBottom="14dp"
-        android:layout_alignBottom="@+id/profilePictureGroup"
-        android:layout_alignStart="@+id/phoneTextDisplay" />
+        android:layout_marginBottom="10dp"
+        android:layout_above="@+id/divider_line3"
+        android:layout_alignEnd="@+id/divider_line2" />
 
+    <TextView
+        android:id="@+id/phoneTextDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contact [User]:"
+        android:textStyle="bold"
+        android:paddingTop="10dp"
+        android:paddingRight="40dp"
+        android:layout_below="@+id/divider_line2"
+        android:layout_alignParentRight="true" />
 </RelativeLayout>

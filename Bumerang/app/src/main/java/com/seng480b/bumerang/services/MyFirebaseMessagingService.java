@@ -68,7 +68,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setSound(sound)
-                .setLights(Color.MAGENTA, 2000, 2000);
+                .setLights(Color.MAGENTA, 2000, 2000)
+                .setAutoCancel(true);
 
         mBuilder.setContentIntent(resultPendingIntent);
         // Sets an ID for the notification

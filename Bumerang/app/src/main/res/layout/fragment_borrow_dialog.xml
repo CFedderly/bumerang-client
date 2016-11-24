@@ -16,8 +16,8 @@
 
     <ImageButton
         android:id="@+id/buttonBorrowDismiss"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:src="@drawable/ic_cancel"
         android:background="@color/white"
         android:layout_alignParentEnd="true"
@@ -44,7 +44,7 @@
     <View
         android:id="@+id/divider_line2"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="1dp"
         android:background="@color/colorPrimaryDark"
         android:layout_margin="5dp"
         android:layout_below="@id/time_left"/>
@@ -89,7 +89,7 @@
         android:background="@color/colorAccent"
         android:textColor="@color/white"
         android:layout_below="@id/borrow_message"
-        android:layout_alignParentEnd="true"
+        android:layout_alignEnd="@+id/divider_line2"
         android:textAllCaps="false"
         android:padding="10dp"
         android:drawableEnd="@drawable/ic_talk"
@@ -99,7 +99,7 @@
     <View
         android:id="@+id/divider_line3"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="1dp"
         android:background="@color/colorPrimaryDark"
         android:layout_margin="5dp"
         android:layout_below="@id/profilePictureGroup"/>
