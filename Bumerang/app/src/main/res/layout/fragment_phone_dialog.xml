@@ -42,14 +42,6 @@
         android:layout_below="@id/item_wanted"
         android:layout_centerHorizontal="true" />
 
-    <com.facebook.login.widget.ProfilePictureView
-        android:id="@+id/user_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_menu_slideshow"
-        android:layout_below="@+id/divider_line2"
-        facebook:com_facebook_preset_size="small"/>
-
 
     <View
         android:id="@+id/divider_line2"
@@ -59,42 +51,51 @@
         android:layout_margin="5dp"
         android:layout_below="@id/time_left"/>
 
+    <FrameLayout
+        android:id="@+id/profilePictureGroup"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/divider_line2">
+
+        <com.facebook.login.widget.ProfilePictureView
+            android:id="@+id/user_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_menu_slideshow"
+            android:padding="6dp"/>
+
+        <ImageView
+            android:src="@drawable/rounded_corners"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
     <TextView
         android:id="@+id/phoneTextDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="[User]'s phone number:"
-        android:textColor="@color/white"
+        android:text="Contact [User]:"
+        android:textColor="@android:color/holo_blue_light"
         android:textStyle="bold"
-        android:background="@color/colorPrimary"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_below="@+id/divider_line2"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="250 111-1111"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:id="@+id/phonePhoneNumber"
-        android:layout_above="@+id/buttonPhoneAccept"
-        android:layout_centerHorizontal="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/cast_libraries_material_featurehighlight_outer_highlight_default_color" />
+        android:layout_toStartOf="@+id/buttonPhoneDismiss"
+        android:layout_marginEnd="24dp" />
 
     <Button
-        android:id="@+id/buttonPhoneAccept"
+        android:id="@+id/buttonPhoneMsg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Accept"
+        android:text="250-111-1111"
         android:background="@color/colorAccent"
         android:textColor="@color/white"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="15dp"
-        android:layout_below="@+id/user_image"
-        android:layout_centerHorizontal="true" />
+        android:textAllCaps="false"
+        android:padding="10dp"
+        android:drawableEnd="@drawable/ic_talk"
+        android:drawablePadding="5dp"
+        android:layout_marginBottom="14dp"
+        android:layout_alignBottom="@+id/profilePictureGroup"
+        android:layout_alignStart="@+id/phoneTextDisplay" />
 
 </RelativeLayout>

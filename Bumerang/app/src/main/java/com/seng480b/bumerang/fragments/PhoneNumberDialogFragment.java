@@ -43,7 +43,6 @@ public class PhoneNumberDialogFragment extends DialogFragment {
         getDialog().setTitle("-MORE INFORMATION- DIALOG");
 
         ImageButton cancelButton = (ImageButton)rootView.findViewById(R.id.buttonPhoneDismiss);
-        Button acceptButton = (Button)rootView.findViewById(R.id.buttonPhoneAccept);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,14 +50,8 @@ public class PhoneNumberDialogFragment extends DialogFragment {
                 dismiss(v);
             }
         });
-        acceptButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss(v);
-            }
-        });
 
-        TextView phoneNumber = (TextView)rootView.findViewById(R.id.phonePhoneNumber);
+        Button phoneNumber = (Button) rootView.findViewById(R.id.buttonPhoneMsg);
         phoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,7 +73,7 @@ public class PhoneNumberDialogFragment extends DialogFragment {
         TextView itemName = (TextView) rootView.findViewById(R.id.item_wanted);
         TextView itemExp = (TextView) rootView.findViewById(R.id.time_left);
         TextView lenderName = (TextView) rootView.findViewById(R.id.phoneTextDisplay);
-        TextView phone = (TextView) rootView.findViewById(R.id.phonePhoneNumber);
+        Button phone = (Button) rootView.findViewById(R.id.buttonPhoneMsg);
 
         ProfilePictureView profile_picture = (ProfilePictureView) rootView.findViewById(R.id.user_image);
 
@@ -88,7 +81,7 @@ public class PhoneNumberDialogFragment extends DialogFragment {
         itemName.setText(offer.getRequest().getTitle());
         itemExp.setText("Expires in " + offer.getRequest().getMinutesUntilExpiry() + " minutes.");
         phone.setText(offer.getOfferProfile().getPhoneNumber());
-        lenderName.setText(offer.getOfferProfile().getFirstName() + "'s phone number:");
+        lenderName.setText("Contact: " + offer.getOfferProfile().getFirstName());
         profile_picture.setProfileId(String.valueOf(offer.getOfferProfile().getFacebookId()));
 
     }
