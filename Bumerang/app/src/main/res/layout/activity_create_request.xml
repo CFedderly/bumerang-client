@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="2dp"
-    android:fillViewport="false">
+    android:fillViewport="false"
+    android:background="@color/white">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -23,7 +24,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true">
-
 
             <TextView
                 android:id="@+id/radio_borrow_lend_text"
@@ -167,14 +167,42 @@
                 android:layout_marginTop="-10dp"
                 android:layout_below="@id/buttonToSetTime"
                 android:textColor="@color/light_blue_text"
-                android:text="2 hours"/>
+                android:text="2 hours" />
+
+            <View
+                android:id="@+id/createRequest_Line"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/labelExpiresIn"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/light_gray"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_enablePostToFacebook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/createRequest_Line"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="5sp"/>
+
+            <TextView
+                android:id="@+id/labelPostToFacebookCheckbox"
+                android:layout_below="@id/createRequest_Line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5sp"
+                android:layout_marginTop="6dp"
+                android:layout_alignBottom="@id/checkbox_enablePostToFacebook"
+                android:layout_alignTop="@id/checkbox_enablePostToFacebook"
+                android:layout_toEndOf="@id/checkbox_enablePostToFacebook"
+                android:text="@string/post_to_facebook_message_borrow" />
 
 
             <RelativeLayout
                 android:id="@+id/layout_advanced_options"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/inputDuration"
+                android:layout_below="@id/labelPostToFacebookCheckbox"
                 android:visibility="gone"
                 android:layout_marginTop="10dp"
                 android:background="@color/light_gray">
@@ -185,7 +213,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/labelDistance"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:layout_alignParentStart="true" />
 
@@ -204,19 +232,21 @@
                     android:text="2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/spinnerDistance"
                     android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:layout_marginTop="12dp"
                     android:layout_above="@id/barDistance"
-                    android:layout_toEndOf="@id/labelDistance"
-                    android:layout_marginStart="20dp"/>
+                    android:textSize="17sp"/>
 
                 <Spinner
                     android:id="@+id/spinnerDistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/barDistance"
-                    android:layout_toEndOf="@id/labelDistanceNum"
-                    android:layout_marginStart="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="30dp"
                     android:dropDownWidth="60dp"
+                    android:layout_marginTop="6dp"
                     android:gravity="end" />
 
                 <TextView
@@ -236,14 +266,15 @@
                     android:inputType="textMultiLine"
                     android:ems="10"
                     android:layout_below="@+id/labelTags"
-                    android:layout_alignParentStart="true" />
+                    android:layout_alignParentStart="true"
+                    android:maxLength="100"/>
 
                 <Button
                     android:id="@+id/createRequest_buttonPickImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/inputTags"
-                    android:drawableLeft="@drawable/ic_menu_gallery"
+                    android:drawableEnd="@drawable/ic_menu_gallery"
                     android:textAllCaps="false"
                     android:background="@android:color/transparent"
                     android:text=" Choose An Image"
@@ -265,14 +296,13 @@
                 android:layout_alignParentBottom="true"
                 android:layout_below="@id/layout_advanced_options" >
 
-
                 <Button
                     android:id="@+id/buttonAdvancedOptions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:background="@android:color/transparent"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/colorPrimaryDark"
                     android:text="@string/expand_advanced_options"/>
 
                 <Button

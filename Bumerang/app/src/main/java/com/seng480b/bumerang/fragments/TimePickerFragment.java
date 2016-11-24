@@ -68,7 +68,7 @@ public class TimePickerFragment extends DialogFragment
         } else {
             TextView expiryText = (TextView) getActivity().findViewById(R.id.labelExpiresIn);
             expiryText.setVisibility(View.GONE);
-            longToast(getActivity(), "Are you a time traveller?");
+            longToast(getActivity(), R.string.going_back_in_time_toast);
             durationText.setText(getString(R.string.going_back_in_time_message));
         }
 
