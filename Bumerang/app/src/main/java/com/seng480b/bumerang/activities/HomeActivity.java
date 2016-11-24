@@ -233,7 +233,6 @@ public class HomeActivity extends AppCompatActivity
             fab.setVisibility(View.GONE);
             // Transition to the create request fragment
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(createReq, "create_request");
             ft.addToBackStack("create_request");
             ft.replace(R.id.mainFrame,createReq);
             ft.commit();
@@ -249,7 +248,6 @@ public class HomeActivity extends AppCompatActivity
 
             // call a blank fragment for the background of the tabs
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(fragment2, "browse");
             ft.addToBackStack("browse");
             ft.replace(R.id.mainFrame, fragment2);
             ft.commit();
@@ -262,13 +260,11 @@ public class HomeActivity extends AppCompatActivity
             fab.setVisibility(View.GONE);
             // Call the Profile Page Fragment
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(profilePage, "profile");
             ft.addToBackStack("profile");
             ft.replace(R.id.mainFrame,profilePage);
             ft.commit();
         } else if (id == R.id.nav_my_requests){
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(my_requests, "my_requests");
             ft.addToBackStack("my_requests");
             ft.replace(R.id.mainFrame, my_requests);
             ft.commit();

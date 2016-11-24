@@ -2,7 +2,6 @@ package com.seng480b.bumerang.fragments;
 
 
 import android.content.Intent;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 import com.facebook.login.widget.ProfilePictureView;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.models.Offer;
+import com.seng480b.bumerang.utils.Utility;
 
 
 public class PhoneNumberDialogFragment extends DialogFragment {
@@ -40,25 +40,17 @@ public class PhoneNumberDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_phone_dialog, container, false);
-        getDialog().setTitle("-MORE INFORMATION- DIALOG");
+        getDialog().setTitle("-OFFER ACCEPTED- DIALOG");
 
-        ImageButton cancelButton = (ImageButton)rootView.findViewById(R.id.buttonPhoneDismiss);
-        Button acceptButton = (Button)rootView.findViewById(R.id.buttonPhoneAccept);
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton dismissButton = (ImageButton) rootView.findViewById(R.id.buttonPhoneDismiss);
+        dismissButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss(v);
-            }
-        });
-        acceptButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss(v);
+                dismiss();
             }
         });
 
-        TextView phoneNumber = (TextView)rootView.findViewById(R.id.phonePhoneNumber);
+        Button phoneNumber = (Button) rootView.findViewById(R.id.buttonPhoneMsg);
         phoneNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,7 +61,6 @@ public class PhoneNumberDialogFragment extends DialogFragment {
                 startActivity(smsIntent);
             }
         });
-        phoneNumber.setPaintFlags(phoneNumber.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
         populateViews();
 
 
@@ -80,15 +71,15 @@ public class PhoneNumberDialogFragment extends DialogFragment {
         TextView itemName = (TextView) rootView.findViewById(R.id.item_wanted);
         TextView itemExp = (TextView) rootView.findViewById(R.id.time_left);
         TextView lenderName = (TextView) rootView.findViewById(R.id.phoneTextDisplay);
-        TextView phone = (TextView) rootView.findViewById(R.id.phonePhoneNumber);
+        Button phone = (Button) rootView.findViewById(R.id.buttonPhoneMsg);
 
         ProfilePictureView profile_picture = (ProfilePictureView) rootView.findViewById(R.id.user_image);
 
         // Fill text fields with proper user info.
         itemName.setText(offer.getRequest().getTitle());
         itemExp.setText("Expires in " + offer.getRequest().getMinutesUntilExpiry() + " minutes.");
-        phone.setText(offer.getOfferProfile().getPhoneNumber());
-        lenderName.setText(offer.getOfferProfile().getFirstName() + "'s phone number:");
+        phone.setText(Utility.formatPhoneNumber(offer.getOfferProfile().getPhoneNumber()));
+        lenderName.setText("Contact: " + offer.getOfferProfile().getFirstName());
         profile_picture.setProfileId(String.valueOf(offer.getOfferProfile().getFacebookId()));
 
     }
