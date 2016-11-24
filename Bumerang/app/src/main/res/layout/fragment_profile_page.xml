@@ -10,7 +10,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.seng480b.bumerang.fragments.ProfilePageFragment"
-    android:elevation="1sp">
+    android:elevation="1sp"
+    android:background="@color/white">
 
     <Button
         android:id="@+id/profileButtonEdit"

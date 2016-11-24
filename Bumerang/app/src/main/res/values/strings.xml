@@ -61,6 +61,8 @@
     <string name="delete_request_fail_message">Unable to delete request. Please try again!</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="going_back_in_time_toast">"Time travel not yet supported.</string>
     <string name="going_back_in_time_message">Your request will be set for 2 hours.</string>
+    <string name="post_to_facebook_message">Post your request/offer to Facebook</string>
 
 </resources>

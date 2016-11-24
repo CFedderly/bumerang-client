@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
@@ -73,6 +74,8 @@ public class CreateRequestFragment extends Fragment {
     private static final int PICK_IMAGE = 12345;
     private ImageView chosenImage;
 
+    CheckBox postToFacebook;
+
     View inflatedView;
     Button cancelButton;
     Button createButton;
@@ -115,7 +118,7 @@ public class CreateRequestFragment extends Fragment {
         radioLendBorrow.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                //checkedId is the radiobutton that was selected
+                //checkedId is the radio button that was selected
                 switch(checkedId){
                     case R.id.radio_borrow:
                         longToast(getActivity(), "Borrow!");
@@ -274,6 +277,10 @@ public class CreateRequestFragment extends Fragment {
             }
         });
 
+        //Setup for checkbox to enable posting to Facebook
+        postToFacebook=(CheckBox)inflatedView.findViewById(R.id.checkbox_enablePostToFacebook);
+
+
         //set up button for hiding and expanding advanced options
         final Button adv_options_button = (Button)inflatedView.findViewById(R.id.buttonAdvancedOptions);
         adv_options_button.setOnClickListener(new View.OnClickListener() {
@@ -342,7 +349,10 @@ public class CreateRequestFragment extends Fragment {
             params.putLong(FirebaseAnalytics.Param.VALUE, durationInMinutes);
             mFireBaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, params);
 
-            postToFacebook(titleStr, descriptionStr, hoursInt, minutesInt);
+
+            if (postToFacebook.isChecked()) {
+                postToFacebook(titleStr, descriptionStr, hoursInt, minutesInt);
+            }
 
             return new Request(userId, titleStr, descriptionStr, hoursInt, minutesInt, distance, requestType);
         } else {
@@ -372,7 +382,6 @@ public class CreateRequestFragment extends Fragment {
 
         }
     }
-
 
 
     private void openGallery(){

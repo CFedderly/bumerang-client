@@ -87,7 +87,8 @@
             android:hint="Tell us a little about yourself!"
             android:layout_below="@+id/editProfile_LabelBio"
             android:layout_alignParentStart="true"
-            android:background="@color/textboxBackground"/>
+            android:background="@color/textboxBackground"
+            android:maxLength="500"/>
 
 
         <TextView
@@ -108,7 +109,8 @@
             android:hint="Enter items, seperated by a comma, of the items you are willing to lend out."
             android:layout_below="@+id/editProfile_LabelTags"
             android:layout_alignParentStart="true"
-            android:background="@color/textboxBackground"/>
+            android:background="@color/textboxBackground"
+            android:maxLength="200"/>
 
         <Button
             android:text="Save"
