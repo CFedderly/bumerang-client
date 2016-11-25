@@ -23,7 +23,11 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     private void sendRegistrationToServer(String refreshedToken) {
         boolean loggedIn = AccessToken.getCurrentAccessToken()!=null;
         if (loggedIn) {
-            ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
+            try {
+                ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
+            } catch (Exception e) {
+                // this is handled below by checking for null
+            }
         }
 
         if (UserDataCache.getCurrentUser() != null) {

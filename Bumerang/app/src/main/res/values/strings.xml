@@ -5,7 +5,6 @@
     // if your App ID is 1234567, you should use fb1234567
     <string name="fb_login_protocol_scheme">fb1614053472225944</string>
     <string name="covered_you_message">%1$s\'s got you covered!</string>
-    <string name="covered_me_message">You\'ve got %1$s covered!</string>
     <string name="covered_them_message">You\'ve got %1$s covered!</string>
     <string name="button_start_lending">Start Lending</string>
     <string name="button_accept_offer">Accept Offer</string>

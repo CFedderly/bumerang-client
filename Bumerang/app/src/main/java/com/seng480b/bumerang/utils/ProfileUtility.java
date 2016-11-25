@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.seng480b.bumerang.BuildConfig;
+import com.seng480b.bumerang.exceptions.LoginException;
 import com.seng480b.bumerang.models.Profile;
 
 import org.json.JSONException;
@@ -19,18 +20,17 @@ public class ProfileUtility {
     private static final String PROFILE_BY_FACEBOOK_ID_URL = BuildConfig.SERVER_URL + "/profile/facebookid/";
     private static final String EDIT_PROFILE_URL = BuildConfig.SERVER_URL + "/profile/edit/";
 
-    public static boolean isFirstLogin(com.facebook.Profile fbProfile) {
+    public static boolean isFirstLogin (com.facebook.Profile fbProfile) throws Exception {
         long facebookId = Long.parseLong(fbProfile.getId());
         storeProfileFromFacebookId(facebookId);
         return !UserDataCache.hasProfile();
     }
 
-    private static void storeProfileFromFacebookId(long facebookId) {
+    private static void storeProfileFromFacebookId (long facebookId) throws Exception {
         String requestUrl = PROFILE_BY_FACEBOOK_ID_URL + String.valueOf(facebookId).trim();
-        try {
-            new LoadProfileTask().execute(requestUrl).get();
-        } catch (Exception e) {
-            // TODO: Error handle pls.
+        String result = new LoadProfileTask().execute(requestUrl).get();
+        if (result == null) {
+            throw new LoginException("ERROR LOADING PROFILE");
         }
     }
 

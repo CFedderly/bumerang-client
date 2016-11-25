@@ -108,7 +108,12 @@ public class RequestDetailFragment extends DialogFragment implements AsyncTaskHa
         if (result == null || result.equals("")) {
             longToast(getActivity(), R.string.error_message);
         } else {
-            String message = String.format(Locale.getDefault(), getResources().getString(R.string.covered_them_message), requester);
+            String message;
+            if (request.getRequestType() == Request.RequestType.LEND ) {
+                message = String.format(Locale.getDefault(), getResources().getString(R.string.covered_you_message), requester);
+            } else {
+                message = String.format(Locale.getDefault(), getResources().getString(R.string.covered_them_message), requester);
+            }
             longToast(getActivity(), message);
             dismiss();
         }

@@ -1,6 +1,5 @@
 package com.seng480b.bumerang.activities;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -28,7 +27,6 @@ import com.facebook.login.LoginManager;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.seng480b.bumerang.fragments.MyRequestsFragment;
 import com.seng480b.bumerang.fragments.ProfilePageFragment;
-import com.seng480b.bumerang.utils.KarmaUtility;
 import com.seng480b.bumerang.utils.ProfileUtility;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.adapters.SectionsPagerAdapter;
@@ -85,10 +83,9 @@ public class HomeActivity extends AppCompatActivity
             boolean loggedIn = AccessToken.getCurrentAccessToken()!=null;
             // Ensure user is logged into the app. Otherwise launch main page.
             if (loggedIn) {
-                ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
+                checkFirstLogin();
                 updateProfileDeviceId();
                 Fragment my_requests = new MyRequestsFragment();
-                ft.add(my_requests, "my_request");
                 ft.addToBackStack("my_request");
                 ft.replace(R.id.mainFrame, my_requests);
                 ft.commit();
@@ -98,10 +95,30 @@ public class HomeActivity extends AppCompatActivity
             }
         } else {
             // If user hasn't logged in before, redirect them to profile edit page
-            boolean isFirst = ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
-            loadStartupFragment(isFirst);
+            if (com.facebook.Profile.getCurrentProfile() != null ) {
+                boolean isFirst = checkFirstLogin();
+                loadStartupFragment(isFirst);
+            } else {
+                Utility.longToast(this, getString(R.string.error_message));
+                // Redirect to login screen.
+                logoutFromFacebook();
+                Intent login = new Intent(this, MainActivity.class);
+                startActivity(login);
+            }
         }
 
+    }
+
+    public boolean checkFirstLogin() {
+        try {
+            return ProfileUtility.isFirstLogin(com.facebook.Profile.getCurrentProfile());
+        } catch (Exception e) {
+            // Something went wrong send back to login page.
+            Utility.longToast(this, getString(R.string.error_message));
+            Intent login = new Intent(this, MainActivity.class);
+            startActivity(login);
+        }
+        return false;
     }
 
     //will start up the browse fragment if is not the first time opening the app

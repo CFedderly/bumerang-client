@@ -16,6 +16,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.utils.ConnectivityUtility;
+import com.seng480b.bumerang.utils.Utility;
 
 import java.util.Arrays;
 
@@ -31,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         FacebookSdk.sdkInitialize(getApplicationContext());
 
-
         setContentView(R.layout.activity_main);
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager,
@@ -43,13 +44,11 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onCancel() {
-                        // App code
-                    }
+                    public void onCancel() {}
 
                     @Override
                     public void onError(FacebookException exception) {
-                        // App code
+                        Utility.longToast(getApplicationContext(), getString(R.string.error_message));
                     }
                 });
         AppEventsLogger.activateApp(this);
@@ -70,34 +69,24 @@ public class MainActivity extends AppCompatActivity {
 
         //If user is already logged in automatically goes to the 'BrowseFragment page"
         if  (loggedIn) {
-            Intent browse = new Intent(this, HomeActivity.class);
-            startActivity(browse);
-        //If user is not logged in they are taken to the Login page.
-        } else{
-            setContentView(R.layout.activity_main);
-            callbackManager = CallbackManager.Factory.create();
-            LoginManager.getInstance().registerCallback(callbackManager,
-
-                    new FacebookCallback<LoginResult>() {
-                        @Override
-                        public void onSuccess(LoginResult loginResult) {
-                            loginSuccess();
-                        }
-
-                        @Override
-                        public void onCancel() {
-                            // App code
-                        }
-
-                        @Override
-                        public void onError(FacebookException exception) {
-                            // App code
-                        }
-                    });
-            AppEventsLogger.activateApp(this);
+            // Ensure that the user can connect to the internet
+            if (ConnectivityUtility.checkNetworkConnection(this) == true) {
+                Intent browse = new Intent(this, HomeActivity.class);
+                startActivity(browse);
+            } else {
+                logoutFromFacebook();
+                Utility.longToast(this, getString(R.string.no_internet_connection_generic));
+            }
         }
     }
 
+    public void logoutFromFacebook(){
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        if (AccessToken.getCurrentAccessToken()==null){
+            return; //already logged out
+        }
+        LoginManager.getInstance().logOut();
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
