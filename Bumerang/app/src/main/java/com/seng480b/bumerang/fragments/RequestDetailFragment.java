@@ -154,10 +154,24 @@ public class RequestDetailFragment extends DialogFragment implements AsyncTaskHa
         if (result == null || result.equals("")) {
             longToast(getActivity(), R.string.error_message);
         } else {
+            int messageId;
+            switch (request.getRequestType()) {
+                case BORROW:
+                    messageId = R.string.covered_them_message;
+                    break;
+                case LEND:
+                    messageId = R.string.covered_you_message;
+                    break;
+                default:
+                    Log.e("ERROR", "Invalid request type when accepting offer");
+                    longToast(getActivity(), R.string.error_message);
+                    dismiss();
+                    return;
+            }
             // Create local copy of Offer
             Offer offer = createOfferFromResult(result);
             UserDataCache.addOffer(offer);
-            String message = String.format(Locale.getDefault(), getResources().getString(R.string.covered_them_message), requester);
+            String message = String.format(Locale.getDefault(), getResources().getString(messageId), requester);
             longToast(getActivity(), message);
             dismiss();
         }

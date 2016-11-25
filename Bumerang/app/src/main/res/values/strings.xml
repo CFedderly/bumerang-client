@@ -46,7 +46,7 @@
     <string name="facebook_first_name">First Name</string>
 
     <string name="unable_to_display_request_detail">Sorry, we weren\'t able to get the details of that request. Please try again!</string>
-    <string name="unable_to_accept_own_request">Nope! You can\'t accept your own request.</string>
+    <string name="unable_to_accept_own_request">Sorry, you can\'t accept your own request.</string>
     <string name="unable_to_accept_request_again">That\'s very kind of you, but you can\'t accept the same request twice!</string>
 
     <string-array name="distance_array">

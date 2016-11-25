@@ -176,10 +176,15 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
         listView.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
 
-        if (Utility.getCurrentRequestType(viewPager) == Request.RequestType.BORROW) {
-            textView.setText(R.string.empty_needs_message);
-        } else {
-            textView.setText(R.string.empty_has_message);
+        switch (Utility.getCurrentRequestType(viewPager)) {
+            case BORROW:
+                textView.setText(R.string.empty_needs_message);
+                break;
+            case LEND:
+                textView.setText(R.string.empty_has_message);
+                break;
+            default:
+                Log.e("ERROR", "Invalid request type");
         }
     }
 
