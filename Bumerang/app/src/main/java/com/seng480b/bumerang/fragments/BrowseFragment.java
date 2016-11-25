@@ -23,9 +23,12 @@ import android.widget.TextView;
 import com.seng480b.bumerang.activities.HomeActivity;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.interfaces.AsyncTaskHandler;
+import com.seng480b.bumerang.models.Offer;
 import com.seng480b.bumerang.models.Request;
 import com.seng480b.bumerang.adapters.BrowseAdapter;
+import com.seng480b.bumerang.utils.OfferUtility;
 import com.seng480b.bumerang.utils.RequestUtility;
+import com.seng480b.bumerang.utils.caching.UserDataCache;
 import com.seng480b.bumerang.utils.Utility;
 
 import java.util.ArrayList;
@@ -38,6 +41,7 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
     private TextView textView;
     private ListView listView;
     private RequestUtility.GetRequestsTask requestsTask;
+    private GetUserOffersAsyncTaskHandler offerHandler;
 
     public BrowseFragment() {
         // Required empty public constructor
@@ -81,6 +85,10 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
 
         final RequestUtility requestUtility = new RequestUtility<>(this);
         requestsTask = requestUtility.getRequestsByRecent(getContext());
+
+        // Start task to get offers from the logged in user
+        offerHandler = new GetUserOffersAsyncTaskHandler(getContext());
+        offerHandler.startGetOffersTask(UserDataCache.getCurrentUser().getUserId());
 
         if (isAsyncTaskRunning()) {
             showProgressBar();
@@ -144,12 +152,15 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
                 getListView().setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Request req = reqList.get(position);
-                        RequestDetailFragment details = new RequestDetailFragment();
-                        details.setRequest(req);
-
-                        FragmentManager fm = getFragmentManager();
-                        details.show(fm, "Sample Fragment");
+                        if (offerHandler.isOfferTaskFinished()) {
+                            Request req = reqList.get(position);
+                            RequestDetailFragment details = new RequestDetailFragment();
+                            details.setRequest(req);
+                            FragmentManager fm = getFragmentManager();
+                            details.show(fm, "Sample Fragment");
+                        } else {
+                            Utility.longToast(getContext(), R.string.unable_to_display_request_detail);
+                        }
                     }
                 });
             } else {
@@ -165,10 +176,15 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
         listView.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
 
-        if (Utility.getCurrentRequestType(viewPager) == Request.RequestType.BORROW) {
-            textView.setText(R.string.empty_needs_message);
-        } else {
-            textView.setText(R.string.empty_has_message);
+        switch (Utility.getCurrentRequestType(viewPager)) {
+            case BORROW:
+                textView.setText(R.string.empty_needs_message);
+                break;
+            case LEND:
+                textView.setText(R.string.empty_has_message);
+                break;
+            default:
+                Log.e("ERROR", "Invalid request type");
         }
     }
 
@@ -183,4 +199,50 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
         listView.setVisibility(View.VISIBLE);
         textView.setVisibility(View.GONE);
     }
+
+    private class GetUserOffersAsyncTaskHandler implements AsyncTaskHandler {
+        private Context context;
+        private OfferUtility.GetOfferTask getOfferTask;
+
+        GetUserOffersAsyncTaskHandler(Context context) {
+            this.context = context;
+        }
+
+        void startGetOffersTask(int profileId) {
+            OfferUtility offerUtility = new OfferUtility<>(this);
+            getOfferTask = offerUtility.getOffersByUser(context, profileId);
+        }
+
+        boolean isOfferTaskFinished() {
+            return !isAsyncTaskRunning();
+        }
+
+        @Override
+        public void beforeAsyncTask() {
+
+        }
+
+        @Override
+        public void afterAsyncTask(String result) {
+            ArrayList<Offer> offers;
+            if (result == null || result.equals("")) {
+                UserDataCache.setOffers(null);
+                return;
+            }
+            offers = Offer.getListOfOffersFromJSON(result);
+            if (offers.size() == 0) {
+                offers = null;
+            }
+            UserDataCache.setOffers(offers);
+        }
+
+        @Override
+        public boolean isAsyncTaskRunning() {
+            if (getOfferTask == null) {
+                return false;
+            }
+            return getOfferTask.getStatus() != OfferUtility.GetOfferTask.Status.FINISHED ;
+        }
+    }
+
 }

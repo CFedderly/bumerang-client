@@ -25,7 +25,7 @@ import com.seng480b.bumerang.utils.OfferUtility;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.models.Request;
 import com.seng480b.bumerang.utils.RequestUtility;
-import com.seng480b.bumerang.utils.UserDataCache;
+import com.seng480b.bumerang.utils.caching.UserDataCache;
 import com.seng480b.bumerang.activities.HomeActivity;
 import com.seng480b.bumerang.adapters.MyRequestAdapter;
 import com.seng480b.bumerang.utils.Utility;

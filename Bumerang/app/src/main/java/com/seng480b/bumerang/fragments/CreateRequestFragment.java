@@ -39,7 +39,7 @@ import com.seng480b.bumerang.BuildConfig;
 import com.seng480b.bumerang.activities.HomeActivity;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.models.Request;
-import com.seng480b.bumerang.utils.UserDataCache;
+import com.seng480b.bumerang.utils.caching.UserDataCache;
 import com.seng480b.bumerang.utils.ConnectivityUtility;
 
 import java.io.IOException;

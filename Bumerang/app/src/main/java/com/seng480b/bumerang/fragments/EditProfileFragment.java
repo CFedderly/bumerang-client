@@ -21,12 +21,10 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.seng480b.bumerang.BuildConfig;
 import com.seng480b.bumerang.activities.HomeActivity;
 import com.seng480b.bumerang.models.Profile;
-import com.seng480b.bumerang.utils.KarmaUtility;
 import com.seng480b.bumerang.utils.ProfileUtility;
 import com.seng480b.bumerang.R;
-import com.seng480b.bumerang.utils.UserDataCache;
+import com.seng480b.bumerang.utils.caching.UserDataCache;
 import com.seng480b.bumerang.utils.ConnectivityUtility;
-import com.seng480b.bumerang.utils.Utility;
 
 import static com.seng480b.bumerang.utils.Utility.*;
 
