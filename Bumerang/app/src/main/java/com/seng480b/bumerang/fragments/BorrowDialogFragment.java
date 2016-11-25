@@ -95,7 +95,7 @@ public class BorrowDialogFragment extends DialogFragment {
 
         if (offer.getRequest().getRequestType() == Request.RequestType.LEND) {
             lenderName.setText(String.format(Locale.getDefault(),
-                    getResources().getString(R.string.covered_me_message),
+                    getResources().getString(R.string.covered_them_message),
                     offer.getOfferProfile().getFirstName()));
         } else {
             lenderName.setText(String.format(Locale.getDefault(),
