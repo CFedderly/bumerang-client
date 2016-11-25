@@ -7,6 +7,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.seng480b.bumerang.BuildConfig;
 import com.seng480b.bumerang.exceptions.LoginException;
 import com.seng480b.bumerang.models.Profile;
+import com.seng480b.bumerang.utils.caching.UserDataCache;
 
 import org.json.JSONException;
 import org.json.JSONObject;

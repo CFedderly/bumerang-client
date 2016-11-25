@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.facebook.login.widget.ProfilePictureView;
 import com.seng480b.bumerang.R;
-import com.seng480b.bumerang.utils.UserDataCache;
+import com.seng480b.bumerang.utils.caching.UserDataCache;
 import com.seng480b.bumerang.utils.Utility;
 import com.seng480b.bumerang.activities.HomeActivity;
 import com.seng480b.bumerang.models.Profile;

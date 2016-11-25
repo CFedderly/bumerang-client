@@ -9,6 +9,7 @@ import com.seng480b.bumerang.BuildConfig;
 import com.seng480b.bumerang.interfaces.AsyncTaskHandler;
 import com.seng480b.bumerang.models.Offer;
 import com.seng480b.bumerang.models.Request;
+import com.seng480b.bumerang.utils.caching.UserDataCache;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 
 public class OfferUtility<T extends AsyncTaskHandler> {
     private static final String GET_OFFER_URL = BuildConfig.SERVER_URL + "/offer/ids/";
+    private static final String GET_OFFER_BY_USER = BuildConfig.SERVER_URL + "/offer/user/";
     private static final String CREATE_OFFER_URL = BuildConfig.SERVER_URL + "/offer/";
 
     private T container;
@@ -27,9 +29,18 @@ public class OfferUtility<T extends AsyncTaskHandler> {
 
     public GetOfferTask getOffers(Context context, ArrayList<Request> requests) {
         String getOfferUrlWithId = GET_OFFER_URL + getRequestIdString(requests);
+        return callGetOffers(context, getOfferUrlWithId);
+    }
+
+    public GetOfferTask getOffersByUser(Context context, int profileId) {
+        String getOfferUrlWithUserId = GET_OFFER_BY_USER + profileId;
+        return callGetOffers(context, getOfferUrlWithUserId);
+    }
+
+    private GetOfferTask callGetOffers(Context context, String url) {
         if (ConnectivityUtility.checkNetworkConnection(context)) {
             GetOfferTask getOfferTask = new GetOfferTask(container);
-            getOfferTask.execute(getOfferUrlWithId.trim());
+            getOfferTask.execute(url.trim());
             return getOfferTask;
         }
         return null;

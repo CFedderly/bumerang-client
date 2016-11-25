@@ -6,6 +6,7 @@ import android.util.Log;
 import com.seng480b.bumerang.BuildConfig;
 import com.seng480b.bumerang.models.Offer;
 import com.seng480b.bumerang.models.Request;
+import com.seng480b.bumerang.utils.caching.UserDataCache;
 
 import java.io.IOException;
 import java.util.HashMap;
