@@ -24,7 +24,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -76,7 +75,7 @@ public class CreateRequestFragment extends Fragment {
     private ImageView chosenImage;
 
     CheckBox postToFacebook;
-    RadioButton borrow;
+
 
     View inflatedView;
     Button cancelButton;
@@ -286,10 +285,6 @@ public class CreateRequestFragment extends Fragment {
         //Setup for checkbox to enable posting to Facebook
         postToFacebook=(CheckBox)inflatedView.findViewById(R.id.checkbox_enablePostToFacebook);
 
-        //Setup for radio group to see if borrow or lending to auto post to Facebook
-        borrow = (RadioButton)inflatedView.findViewById(R.id.radio_borrow);
-
-
         //set up button for hiding and expanding advanced options
         final Button adv_options_button = (Button)inflatedView.findViewById(R.id.buttonAdvancedOptions);
         adv_options_button.setOnClickListener(new View.OnClickListener() {
@@ -345,31 +340,42 @@ public class CreateRequestFragment extends Fragment {
         if (UserDataCache.hasProfile()) {
             int userId = UserDataCache.getCurrentUser().getUserId();
 
-            //This is where info on what users are entering is collected
-            mFireBaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
-
-            //Turn total minutes (totalTimeInMinutes) into hours and minutes
+            //Turn durationInMinutes into hours and minutes
             int hoursInt = durationInMinutes/60;
             int minutesInt = durationInMinutes % 60;
 
-            //One of these should be tracking something
+            //This is where info on what users are entering is collected
+            mFireBaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
             Bundle params = new Bundle();
             params.putString( FirebaseAnalytics.Param.CONTENT_TYPE, titleStr);
             params.putString(FirebaseAnalytics.Param.ITEM_ID, descriptionStr);
             mFireBaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, params);
 
-            Bundle params2 = new Bundle();
-            params2.putString("Title", titleStr);
-            params2.putString("Description", descriptionStr);
-            params2.putInt("Time", ((hoursInt*60)+minutesInt));
-            mFireBaseAnalytics.logEvent("request", params2);
+            if (requestType==Request.RequestType.BORROW) {
+                mFireBaseAnalytics.setUserProperty("borrow", titleStr);
+                Bundle borrow = new Bundle();
+                borrow.putString("Action", "Borrow");
+                borrow.putString("Title", titleStr);
+                borrow.putString("Description", descriptionStr);
+                borrow.putInt("Time", ((hoursInt * 60) + minutesInt));
+                mFireBaseAnalytics.logEvent("request", borrow);
+            }
+            else{
+                mFireBaseAnalytics.setUserProperty("lend",titleStr);
+                Bundle lend = new Bundle();
+                lend.putString("Action", "Borrow");
+                lend.putString("Title", titleStr);
+                lend.putString("Description", descriptionStr);
+                lend.putInt("Time", ((hoursInt * 60) + minutesInt));
+                mFireBaseAnalytics.logEvent("request", lend);
+            }
 
             mFireBaseAnalytics.setUserProperty("title", titleStr);
             mFireBaseAnalytics.setUserProperty("Timeset", String.valueOf((hoursInt*60)+minutesInt));
             mFireBaseAnalytics.setUserProperty("description", descriptionStr);
 
             if (postToFacebook.isChecked()) {
-                postToFacebook(borrow.isChecked(),titleStr, descriptionStr, hoursInt, minutesInt);
+                postToFacebook(requestType,titleStr, descriptionStr, hoursInt, minutesInt);
             }
 
             return new Request(userId, titleStr, descriptionStr, hoursInt, minutesInt, distance, requestType);
@@ -379,13 +385,13 @@ public class CreateRequestFragment extends Fragment {
         }
     }
 
-    private void postToFacebook(boolean borrow,String titleStr, String descriptionStr, int hoursInt, int minutesInt) {
+    private void postToFacebook(Request.RequestType requestType,String titleStr, String descriptionStr, int hoursInt, int minutesInt) {
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         ShareDialog shareDialog = new ShareDialog(getActivity());
 
         String quote = "";
 
-        if (borrow==true) {
+        if (requestType==Request.RequestType.BORROW) {
             quote = "Hey everybody, I'm currently looking for " + titleStr + ".";
             if (descriptionStr.equals("")) {
                 quote = quote + " I need it within " + String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours please!";
@@ -413,7 +419,6 @@ public class CreateRequestFragment extends Fragment {
 
         }
     }
-
 
     private void openGallery(){
         Intent gallery = new Intent(Intent.ACTION_PICK,
