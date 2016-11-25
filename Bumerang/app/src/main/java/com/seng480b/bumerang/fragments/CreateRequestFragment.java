@@ -76,6 +76,7 @@ public class CreateRequestFragment extends Fragment {
 
     CheckBox postToFacebook;
 
+
     View inflatedView;
     Button cancelButton;
     Button createButton;
@@ -284,7 +285,6 @@ public class CreateRequestFragment extends Fragment {
         //Setup for checkbox to enable posting to Facebook
         postToFacebook=(CheckBox)inflatedView.findViewById(R.id.checkbox_enablePostToFacebook);
 
-
         //set up button for hiding and expanding advanced options
         final Button adv_options_button = (Button)inflatedView.findViewById(R.id.buttonAdvancedOptions);
         adv_options_button.setOnClickListener(new View.OnClickListener() {
@@ -340,22 +340,42 @@ public class CreateRequestFragment extends Fragment {
         if (UserDataCache.hasProfile()) {
             int userId = UserDataCache.getCurrentUser().getUserId();
 
-            //This is where info on what users are entering is collected
-            mFireBaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
-
-            //Turn total minutes (totalTimeInMinutes) into hours and minutes
+            //Turn durationInMinutes into hours and minutes
             int hoursInt = durationInMinutes/60;
             int minutesInt = durationInMinutes % 60;
 
+            //This is where info on what users are entering is collected
+            mFireBaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
             Bundle params = new Bundle();
-            params.putString( FirebaseAnalytics.Param.ITEM_NAME, titleStr);
-            params.putString("Description", descriptionStr);
-            params.putLong(FirebaseAnalytics.Param.VALUE, durationInMinutes);
+            params.putString( FirebaseAnalytics.Param.CONTENT_TYPE, titleStr);
+            params.putString(FirebaseAnalytics.Param.ITEM_ID, descriptionStr);
             mFireBaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, params);
 
+            if (requestType==Request.RequestType.BORROW) {
+                mFireBaseAnalytics.setUserProperty("borrow", titleStr);
+                Bundle borrow = new Bundle();
+                borrow.putString("Action", "Borrow");
+                borrow.putString("Title", titleStr);
+                borrow.putString("Description", descriptionStr);
+                borrow.putInt("Time", ((hoursInt * 60) + minutesInt));
+                mFireBaseAnalytics.logEvent("request", borrow);
+            }
+            else{
+                mFireBaseAnalytics.setUserProperty("lend",titleStr);
+                Bundle lend = new Bundle();
+                lend.putString("Action", "Borrow");
+                lend.putString("Title", titleStr);
+                lend.putString("Description", descriptionStr);
+                lend.putInt("Time", ((hoursInt * 60) + minutesInt));
+                mFireBaseAnalytics.logEvent("request", lend);
+            }
+
+            mFireBaseAnalytics.setUserProperty("title", titleStr);
+            mFireBaseAnalytics.setUserProperty("Timeset", String.valueOf((hoursInt*60)+minutesInt));
+            mFireBaseAnalytics.setUserProperty("description", descriptionStr);
 
             if (postToFacebook.isChecked()) {
-                postToFacebook(titleStr, descriptionStr, hoursInt, minutesInt);
+                postToFacebook(requestType,titleStr, descriptionStr, hoursInt, minutesInt);
             }
 
             return new Request(userId, titleStr, descriptionStr, hoursInt, minutesInt, distance, requestType);
@@ -365,16 +385,29 @@ public class CreateRequestFragment extends Fragment {
         }
     }
 
-    private void postToFacebook(String titleStr, String descriptionStr, int hoursInt, int minutesInt) {
+    private void postToFacebook(Request.RequestType requestType,String titleStr, String descriptionStr, int hoursInt, int minutesInt) {
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         ShareDialog shareDialog = new ShareDialog(getActivity());
 
-        String quote = "Hey everybody, I'm currently looking for a " + titleStr + ".";
-        if (descriptionStr.equals("")) {
-            quote = quote + " I need it within " + String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours please!";
-        } else {
-            quote = quote + " I would describe it as a " + descriptionStr + ". I need it within " +
-                    String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours please!";
+        String quote = "";
+
+        if (requestType==Request.RequestType.BORROW) {
+            quote = "Hey everybody, I'm currently looking for " + titleStr + ".";
+            if (descriptionStr.equals("")) {
+                quote = quote + " I need it within " + String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours please!";
+            } else {
+                quote = quote + " I would describe it as " + descriptionStr + ". Contact me within " +
+                        String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours please!";
+            }
+        }
+        else{
+            quote = "Hey everybody, I'm currently looking to lend " + titleStr + ".";
+            if (descriptionStr.equals("")) {
+                quote = quote + " You could use it for " + String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours!";
+            } else {
+                quote = quote + " I would describe it as " + descriptionStr + ". Contact me within " +
+                        String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours please!";
+            }
         }
         //This code was found here: https://developers.facebook.com/docs/sharing/android#share_dialog
         if (ShareDialog.canShow(ShareLinkContent.class)) {
@@ -386,7 +419,6 @@ public class CreateRequestFragment extends Fragment {
 
         }
     }
-
 
     private void openGallery(){
         Intent gallery = new Intent(Intent.ACTION_PICK,
