@@ -8,7 +8,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.seng480b.bumerang.BuildConfig;
 import com.seng480b.bumerang.models.Profile;
 import com.seng480b.bumerang.utils.ProfileUtility;
-import com.seng480b.bumerang.utils.UserDataCache;
+import com.seng480b.bumerang.utils.caching.UserDataCache;
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     private static final String PROFILE_EDIT_URL = BuildConfig.SERVER_URL + "/profile/edit/";

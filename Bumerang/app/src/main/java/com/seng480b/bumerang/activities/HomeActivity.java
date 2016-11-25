@@ -34,7 +34,7 @@ import com.seng480b.bumerang.fragments.TestFragment;
 import com.seng480b.bumerang.fragments.CreateRequestFragment;
 import com.seng480b.bumerang.fragments.EditProfileFragment;
 import com.seng480b.bumerang.utils.Utility;
-import com.seng480b.bumerang.utils.UserDataCache;
+import com.seng480b.bumerang.utils.caching.UserDataCache;
 
 
 public class HomeActivity extends AppCompatActivity

@@ -27,7 +27,7 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
-    <string name="empty_needs_message">Guess everyone\'s set to go!</string>
+    <string name="empty_needs_message">Guess nobody needs anything right now!</string>
     <string name="empty_has_message">Looks like nobody has anything to lend!\n Wanna lead the way?</string>
     <string name="empty_my_needs_message">Hey, guess you don\'t need anything?</string>
     <string name="empty_my_has_message">Looks like you don\'t have anything to lend!</string>
@@ -45,10 +45,15 @@
     <string name="updated_profile">Your profile has been successfully updated!</string>
     <string name="facebook_first_name">First Name</string>
 
+    <string name="unable_to_display_request_detail">Sorry, we weren\'t able to get the details of that request. Please try again!</string>
+    <string name="unable_to_accept_own_request">Nope! You can\'t accept your own request.</string>
+    <string name="unable_to_accept_request_again">That\'s very kind of you, but you can\'t accept the same request twice!</string>
+
     <string-array name="distance_array">
         <item>km</item>
         <item>m</item>
     </string-array>
+
     <string name="title_activity_browse_tabs">BrowseTabs</string>
 
     <string name="expand_advanced_options">more options</string>
