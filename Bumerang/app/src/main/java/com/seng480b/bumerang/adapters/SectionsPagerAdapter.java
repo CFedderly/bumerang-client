@@ -3,8 +3,6 @@ package com.seng480b.bumerang.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 
 import com.seng480b.bumerang.fragments.BrowseFragment;
 
