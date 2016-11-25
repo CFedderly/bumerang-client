@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -75,6 +76,7 @@ public class CreateRequestFragment extends Fragment {
     private ImageView chosenImage;
 
     CheckBox postToFacebook;
+    RadioButton borrow;
 
     View inflatedView;
     Button cancelButton;
@@ -284,6 +286,9 @@ public class CreateRequestFragment extends Fragment {
         //Setup for checkbox to enable posting to Facebook
         postToFacebook=(CheckBox)inflatedView.findViewById(R.id.checkbox_enablePostToFacebook);
 
+        //Setup for radio group to see if borrow or lending to auto post to Facebook
+        borrow = (RadioButton)inflatedView.findViewById(R.id.radio_borrow);
+
 
         //set up button for hiding and expanding advanced options
         final Button adv_options_button = (Button)inflatedView.findViewById(R.id.buttonAdvancedOptions);
@@ -347,15 +352,24 @@ public class CreateRequestFragment extends Fragment {
             int hoursInt = durationInMinutes/60;
             int minutesInt = durationInMinutes % 60;
 
+            //One of these should be tracking something
             Bundle params = new Bundle();
-            params.putString( FirebaseAnalytics.Param.ITEM_NAME, titleStr);
-            params.putString("Description", descriptionStr);
-            params.putLong(FirebaseAnalytics.Param.VALUE, durationInMinutes);
+            params.putString( FirebaseAnalytics.Param.CONTENT_TYPE, titleStr);
+            params.putString(FirebaseAnalytics.Param.ITEM_ID, descriptionStr);
             mFireBaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, params);
 
+            Bundle params2 = new Bundle();
+            params2.putString("Title", titleStr);
+            params2.putString("Description", descriptionStr);
+            params2.putInt("Time", ((hoursInt*60)+minutesInt));
+            mFireBaseAnalytics.logEvent("request", params2);
+
+            mFireBaseAnalytics.setUserProperty("title", titleStr);
+            mFireBaseAnalytics.setUserProperty("Timeset", String.valueOf((hoursInt*60)+minutesInt));
+            mFireBaseAnalytics.setUserProperty("description", descriptionStr);
 
             if (postToFacebook.isChecked()) {
-                postToFacebook(titleStr, descriptionStr, hoursInt, minutesInt);
+                postToFacebook(borrow.isChecked(),titleStr, descriptionStr, hoursInt, minutesInt);
             }
 
             return new Request(userId, titleStr, descriptionStr, hoursInt, minutesInt, distance, requestType);
@@ -365,16 +379,29 @@ public class CreateRequestFragment extends Fragment {
         }
     }
 
-    private void postToFacebook(String titleStr, String descriptionStr, int hoursInt, int minutesInt) {
+    private void postToFacebook(boolean borrow,String titleStr, String descriptionStr, int hoursInt, int minutesInt) {
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         ShareDialog shareDialog = new ShareDialog(getActivity());
 
-        String quote = "Hey everybody, I'm currently looking for a " + titleStr + ".";
-        if (descriptionStr.equals("")) {
-            quote = quote + " I need it within " + String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours please!";
-        } else {
-            quote = quote + " I would describe it as a " + descriptionStr + ". I need it within " +
-                    String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours please!";
+        String quote = "";
+
+        if (borrow==true) {
+            quote = "Hey everybody, I'm currently looking for " + titleStr + ".";
+            if (descriptionStr.equals("")) {
+                quote = quote + " I need it within " + String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours please!";
+            } else {
+                quote = quote + " I would describe it as " + descriptionStr + ". Contact me within " +
+                        String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours please!";
+            }
+        }
+        else{
+            quote = "Hey everybody, I'm currently looking to lend " + titleStr + ".";
+            if (descriptionStr.equals("")) {
+                quote = quote + " You could use it for " + String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours!";
+            } else {
+                quote = quote + " I would describe it as " + descriptionStr + ". Contact me within " +
+                        String.valueOf(hoursInt + ((double) minutesInt / 60)) + " hours please!";
+            }
         }
         //This code was found here: https://developers.facebook.com/docs/sharing/android#share_dialog
         if (ShareDialog.canShow(ShareLinkContent.class)) {

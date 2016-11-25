@@ -44,7 +44,8 @@
         </service>
 
         <activity
-            android:name=".activities.MainActivity">
+            android:name=".activities.MainActivity"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity
