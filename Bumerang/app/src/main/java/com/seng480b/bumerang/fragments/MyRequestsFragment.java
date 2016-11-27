@@ -2,6 +2,8 @@ package com.seng480b.bumerang.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
@@ -234,11 +236,22 @@ public class MyRequestsFragment extends ListFragment implements OnItemClickListe
             @Override
             public void onClick(View v) {
                 BorrowDialogFragment moreInfoDialog = new BorrowDialogFragment();
-                // A more elegant solution will be needed. But for now, get the first offer.
-                moreInfoDialog.setOfferObj(offer);
+                PhoneNumberDialogFragment phoneNumberDialog = new PhoneNumberDialogFragment();
 
-                FragmentManager fm = getFragmentManager();
-                moreInfoDialog.show(fm, "Sample Fragment");
+                //TODO: A more elegant solution will be needed. But for now, get the first offer.
+                // if the offer has already been accepted then you go to the phone number dialog
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                if (prefs.contains(String.valueOf(offer.getOfferId()))) {
+                    phoneNumberDialog.setOfferObj(offer);
+                    FragmentManager fm = getFragmentManager();
+                    phoneNumberDialog.show(fm, "Sample Fragment");
+                // else go to the more info dialog
+                }else{
+                    moreInfoDialog.setOfferObj(offer);
+                    FragmentManager fm = getFragmentManager();
+                    moreInfoDialog.show(fm, "Sample Fragment");
+                }
+
             }
         }
     }
