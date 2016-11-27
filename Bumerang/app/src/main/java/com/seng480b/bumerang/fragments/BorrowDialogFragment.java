@@ -1,5 +1,7 @@
 package com.seng480b.bumerang.fragments;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -20,9 +22,11 @@ import com.seng480b.bumerang.models.Request;
 import java.util.Locale;
 
 
+
 public class BorrowDialogFragment extends DialogFragment {
     private View rootView;
     private Offer offer;
+    private static final String prefFileName = "com.bumerang.app";
 
     //private Button cancelButton, acceptButton;
     public BorrowDialogFragment() {
@@ -65,20 +69,13 @@ public class BorrowDialogFragment extends DialogFragment {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setOfferStatus();
                 giveKarma();
-                PhoneNumberDialogFragment phoneNumberDialog = new PhoneNumberDialogFragment();
-                // A more elegant solution will be needed. But for now, get the first offer.
-                phoneNumberDialog.setOfferObj(offer);
-
-                FragmentManager fm = getFragmentManager();
-                phoneNumberDialog.show(fm, "Sample Fragment");
-                dismiss();
+                showPhoneNumber();
             }
         });
 
         populateViews();
-
-
         return rootView;
     }
 
@@ -118,4 +115,25 @@ public class BorrowDialogFragment extends DialogFragment {
         }
     }
 
+
+    //TODO: this will have to be changed when we change the contact method
+    private void showPhoneNumber(){
+        PhoneNumberDialogFragment phoneNumberDialog = new PhoneNumberDialogFragment();
+        // A more elegant solution will be needed. But for now, get the first offer.
+        phoneNumberDialog.setOfferObj(offer);
+
+        FragmentManager fm = getFragmentManager();
+        phoneNumberDialog.show(fm, "Sample Fragment");
+        dismiss();
+    }
+
+    private void setOfferStatus(){
+        offer.setStatus(Offer.OfferStatus.FINISHED);
+        String status = String.valueOf(offer.getStatus());
+        //TODO: setup pending system
+        //store a value in the shared preferences to record that the offer has been accepted
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(String.valueOf(offer.getOfferId()),"accepted").apply();
+    }
 }
