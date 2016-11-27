@@ -152,5 +152,13 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="10dp" />
 
+    <Button
+        android:id="@+id/profileButtonKarmaHelp"
+        android:background="@drawable/ic_menu_info"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/profilePictureGroup"
+        android:layout_toEndOf="@+id/KarmaGroup" />
+
 
 </RelativeLayout>
