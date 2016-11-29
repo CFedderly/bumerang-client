@@ -173,7 +173,9 @@ public class HomeActivity extends AppCompatActivity
             super.onBackPressed();
             FragmentManager ft = getSupportFragmentManager();
             if (ft.findFragmentById(R.id.tabs) == null && ft.getBackStackEntryCount() == 0) {
-                loadTabs();
+                Intent browse = new Intent(this, HomeActivity.class);
+                startActivity(browse);
+                finish();
             }
         }
     }
@@ -255,7 +257,9 @@ public class HomeActivity extends AppCompatActivity
             p.setAnchorId(View.NO_ID);
             fab.setLayoutParams(p);
             fab.setVisibility(View.VISIBLE);
-            loadTabs();
+            Intent browse = new Intent(this, HomeActivity.class);
+            startActivity(browse);
+            finish();
         } else if (id == R.id.nav_manage) {
             // Hide the Floating action button
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
