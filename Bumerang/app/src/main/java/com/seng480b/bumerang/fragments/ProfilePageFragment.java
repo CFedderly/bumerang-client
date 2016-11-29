@@ -102,8 +102,8 @@ public class ProfilePageFragment extends Fragment {
                 layoutInflater = (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 ViewGroup container = (ViewGroup) layoutInflater.inflate(R.layout.fragment_profile_karma_explanation,null);
 
-                popupWindow = new PopupWindow(container, 750, 640,true);
-                popupWindow.showAtLocation(myInflatedView, Gravity.NO_GRAVITY, width/6, height/3);
+                popupWindow = new PopupWindow(container, (int)((float)width/1.5), (int)((float)height/2.75), true);
+                popupWindow.showAtLocation(myInflatedView, Gravity.NO_GRAVITY, width/6, height/4);
                 myInflatedView.setAlpha(0.5F);
 
                 popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener(){

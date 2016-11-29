@@ -22,7 +22,7 @@
     />
     <TextView
         android:id="@+id/body"
-        android:text="@string/karama_explanation"
+        android:text="@string/karma_explanation"
         android:textSize="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
