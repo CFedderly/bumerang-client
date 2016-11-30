@@ -20,6 +20,8 @@ public class OfferUtility<T extends AsyncTaskHandler> {
     private static final String GET_OFFER_URL = BuildConfig.SERVER_URL + "/offer/ids/";
     private static final String GET_OFFER_BY_USER = BuildConfig.SERVER_URL + "/offer/user/";
     private static final String CREATE_OFFER_URL = BuildConfig.SERVER_URL + "/offer/";
+    private static final String OFFER_STATUS_URL = BuildConfig.SERVER_URL + "/offer/status/";
+
 
     private T container;
 
@@ -51,6 +53,17 @@ public class OfferUtility<T extends AsyncTaskHandler> {
             CreateOfferTask createOfferTask = new CreateOfferTask(container);
             createOfferTask.execute(CREATE_OFFER_URL, profileId, requestId);
             return createOfferTask;
+        }
+        return null;
+    }
+
+    public UpdateOfferStatusTask UpdateOfferStatus(Context context, int id, Offer.OfferStatus offerStatus){
+        String updateOfferStatusUrl = OFFER_STATUS_URL + id;
+        String status = String.valueOf(offerStatus);
+        if (ConnectivityUtility.checkNetworkConnection(context)) {
+            UpdateOfferStatusTask updateOfferStatusTask = new UpdateOfferStatusTask(container);
+            updateOfferStatusTask.execute(updateOfferStatusUrl, status);
+            return updateOfferStatusTask;
         }
         return null;
     }
@@ -140,6 +153,42 @@ public class OfferUtility<T extends AsyncTaskHandler> {
             if (container!=null) {
                 container.afterAsyncTask(result);
                 this.container = null;
+            }
+        }
+    }
+
+
+    public class UpdateOfferStatusTask extends AsyncTask<String, Void, String> {
+        private T container;
+
+        UpdateOfferStatusTask(T container) {
+            this.container = container;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            container.beforeAsyncTask();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try{
+                HashMap<String, String> json = Offer.getJSONForOfferStatus(params[1]);
+                return ConnectivityUtility.makeHttpPostRequest(params[0],json);
+            }catch(IOException e){
+                e.printStackTrace();
+                Log.e("ERROR","Unable to update offer's status");
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (container != null) {
+                container.afterAsyncTask(result);
+
             }
         }
     }
