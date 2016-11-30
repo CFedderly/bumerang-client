@@ -185,7 +185,6 @@ public class RequestDetailFragment extends DialogFragment implements AsyncTaskHa
                 }
             });
             AlertDialog dialog = builder.create();
-            //longToast(getActivity(), message);
             dismiss();
         }
     }

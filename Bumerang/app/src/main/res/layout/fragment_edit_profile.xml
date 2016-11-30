@@ -106,7 +106,7 @@
             android:inputType="textMultiLine"
             android:ems="10"
             android:id="@+id/editProfile_InputTags"
-            android:hint="Enter items, seperated by a comma, of the items you are willing to lend out."
+            android:hint="Enter items, separated by a comma, of the items you are willing to lend out."
             android:layout_below="@+id/editProfile_LabelTags"
             android:layout_alignParentStart="true"
             android:background="@color/textboxBackground"
