@@ -1,8 +1,10 @@
 package com.seng480b.bumerang.fragments;
 
+import android.content.DialogInterface;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -171,8 +173,18 @@ public class RequestDetailFragment extends DialogFragment implements AsyncTaskHa
             // Create local copy of Offer
             Offer offer = createOfferFromResult(result);
             UserDataCache.addOffer(offer);
-            String message = String.format(Locale.getDefault(), getResources().getString(messageId), requester);
-            longToast(getActivity(), message);
+            String title = String.format(Locale.getDefault(), getResources().getString(messageId), requester);
+            String message = String.format(Locale.getDefault(), getResources().getString(R.string.responded_message), requester);
+            // Starting work here
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(title).setMessage(message);
+            builder.setPositiveButton(R.string.dialog_got_it, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dismiss();
+                }
+            });
+            AlertDialog dialog = builder.create();
             dismiss();
         }
     }

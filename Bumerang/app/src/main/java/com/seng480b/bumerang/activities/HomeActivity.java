@@ -30,7 +30,6 @@ import com.seng480b.bumerang.fragments.ProfilePageFragment;
 import com.seng480b.bumerang.utils.ProfileUtility;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.adapters.SectionsPagerAdapter;
-import com.seng480b.bumerang.fragments.TestFragment;
 import com.seng480b.bumerang.fragments.CreateRequestFragment;
 import com.seng480b.bumerang.fragments.EditProfileFragment;
 import com.seng480b.bumerang.utils.Utility;
@@ -136,12 +135,7 @@ public class HomeActivity extends AppCompatActivity
             ft.replace(R.id.mainFrame,editProfileFragment);
             ft.commit();
         } else {
-            // call a blank fragment for the background of the tabs
             updateProfileDeviceId();
-            Fragment fragment2 = new TestFragment();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame, fragment2);
-            ft.commit();
             loadTabs();
         }
     }
@@ -179,7 +173,9 @@ public class HomeActivity extends AppCompatActivity
             super.onBackPressed();
             FragmentManager ft = getSupportFragmentManager();
             if (ft.findFragmentById(R.id.tabs) == null && ft.getBackStackEntryCount() == 0) {
-                loadTabs();
+                Intent browse = new Intent(this, HomeActivity.class);
+                startActivity(browse);
+                finish();
             }
         }
     }
@@ -234,7 +230,6 @@ public class HomeActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Fragment fragment2 = new TestFragment();
 
         Fragment createReq = new CreateRequestFragment();
 
@@ -262,13 +257,9 @@ public class HomeActivity extends AppCompatActivity
             p.setAnchorId(View.NO_ID);
             fab.setLayoutParams(p);
             fab.setVisibility(View.VISIBLE);
-
-            // call a blank fragment for the background of the tabs
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.addToBackStack("browse");
-            ft.replace(R.id.mainFrame, fragment2);
-            ft.commit();
-            loadTabs();
+            Intent browse = new Intent(this, HomeActivity.class);
+            startActivity(browse);
+            finish();
         } else if (id == R.id.nav_manage) {
             // Hide the Floating action button
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();

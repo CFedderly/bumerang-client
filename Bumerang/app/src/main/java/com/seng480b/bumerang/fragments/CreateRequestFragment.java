@@ -260,10 +260,8 @@ public class CreateRequestFragment extends Fragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment back = new BrowseFragment();
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.mainFrame,back);
-                ft.commit();
+                Intent browse = new Intent(getActivity(), HomeActivity.class);
+                startActivity(browse);
             }
         });
 
@@ -478,10 +476,8 @@ public class CreateRequestFragment extends Fragment {
 
         @Override
         protected void onCancelled(String result) {
-            Fragment browse = new BrowseFragment();
-            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame, browse);
-            ft.commit();
+            Intent browse = new Intent(getActivity(), HomeActivity.class);
+            startActivity(browse);
             alertForRequestNotCreated();
         }
 

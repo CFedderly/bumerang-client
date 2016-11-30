@@ -44,11 +44,15 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onCancel() {}
+                    public void onCancel() {
+                        Utility.longToast(getApplicationContext(), getString(R.string.error_message));
+                        logoutFromFacebook();
+                    }
 
                     @Override
                     public void onError(FacebookException exception) {
                         Utility.longToast(getApplicationContext(), getString(R.string.error_message));
+                        logoutFromFacebook();
                     }
                 });
         AppEventsLogger.activateApp(this);

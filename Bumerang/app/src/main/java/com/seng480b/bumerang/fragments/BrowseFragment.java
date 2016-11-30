@@ -74,8 +74,7 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((HomeActivity)getActivity()).setActionBarTitle("Browse");
-
+        ((HomeActivity) getActivity()).setActionBarTitle("Browse");
         // make the tabs visible
         viewPager = (ViewPager) activity.findViewById(R.id.container);
         TabLayout tabLayout = (TabLayout) activity.findViewById(R.id.tabs);

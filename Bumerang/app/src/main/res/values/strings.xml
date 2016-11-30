@@ -6,6 +6,7 @@
     <string name="fb_login_protocol_scheme">fb1614053472225944</string>
     <string name="covered_you_message">%1$s\'s got you covered!</string>
     <string name="covered_them_message">You\'ve got %1$s covered!</string>
+    <string name="responded_message">%1$s will be in touch!</string>
     <string name="button_start_lending">Start Lending</string>
     <string name="button_accept_offer">Accept Offer</string>
     <string name="error_message">Oops! Something went wrong. Please try again!</string>
@@ -16,11 +17,12 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="dialog_got_it">Got it!</string>
     <string name="action_settings">Settings</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hello_test_fragment">Hello TEST fragment</string>
-    <string name="browse_text">Gday</string>
+    <string name="browse_text">G\'day</string>
     <string name="details">DETAILS</string>
 
     <string name="title_activity_splash_screen">SplashScreen</string>
