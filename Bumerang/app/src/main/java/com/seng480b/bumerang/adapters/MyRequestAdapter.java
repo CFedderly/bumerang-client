@@ -142,4 +142,6 @@ public class MyRequestAdapter extends ArrayAdapter<Request> implements AsyncTask
         }
         return deleteRequestTask.getStatus() != RequestUtility.DeleteRequestTask.Status.FINISHED;
     }
+
+
 }

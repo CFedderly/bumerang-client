@@ -11,6 +11,8 @@
 
     <color name="buttonPressPink">#ff758c</color>
 
+    <color name="contextActionBar">#ff5a92</color>
+
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorNavBar">#ffffff</color>

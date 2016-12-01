@@ -272,6 +272,8 @@ public class HomeActivity extends AppCompatActivity
             ft.replace(R.id.mainFrame,profilePage);
             ft.commit();
         } else if (id == R.id.nav_my_requests){
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setVisibility(View.VISIBLE);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.addToBackStack("my_requests");
             ft.replace(R.id.mainFrame, my_requests);
