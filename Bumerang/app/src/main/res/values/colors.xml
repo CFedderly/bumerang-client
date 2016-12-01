@@ -19,6 +19,8 @@
 
     <color name="colorPrimaryDark">#ad6592ac</color>
 
+    <color name="blue_text">#df406f8b</color>
+
     <color name="light_blue_text">#7da6b4</color>
 
     <color name="light_gray">#ededed</color>

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.util.Log;
 
@@ -57,7 +58,7 @@ public class EditProfileFragment extends Fragment {
         mViewPager.setVisibility(View.GONE);
         tabLayout.setVisibility(View.GONE);
 
-        // Check if the user already has a profile
+        // Check if the user has a profile
         if (UserDataCache.hasProfile()) {
             String profileUrlWithId = PROFILE_URL + UserDataCache.getCurrentUser().getUserId();
             if (ConnectivityUtility.checkNetworkConnection(getActivity().getApplicationContext())) {
@@ -92,13 +93,32 @@ public class EditProfileFragment extends Fragment {
                 longToast(getActivity(), R.string.invalid_phone_number_message);
             } else {
                 if (!UserDataCache.hasProfile()) {
-                    createNewProfile(phoneNumber, description);
+                    longToast(getActivity(),R.string.error_in_finding_profile);
                 } else {
                     editProfile(phoneNumber, description);
                 }
             }
             }
         });
+
+
+        ImageButton aboutPhoneButton = (ImageButton) inflatedView.findViewById(R.id.editProfile_phoneInfoButton);
+        aboutPhoneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                TextView moreInfo = (TextView) inflatedView.findViewById(R.id.editProfile_phoneInfoText);
+                if (moreInfo.getVisibility()==View.GONE) {
+                    moreInfo.setVisibility(View.VISIBLE);
+                    moreInfo.animate()
+                            .alpha(1.0f)
+                            .setDuration(200);
+                } else {
+                    moreInfo.setAlpha(0.0f);
+                    moreInfo.setVisibility(View.GONE);
+                }
+            }
+        });
+
         return inflatedView;
     }
     private void populateFieldsFromFacebook() {
@@ -143,30 +163,6 @@ public class EditProfileFragment extends Fragment {
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame,back);
         ft.commit();
-    }
-
-    private void createNewProfile(EditText phoneNumber, EditText description) {
-
-        // create temporary profile from fields
-        Profile tempProfile = new Profile(
-                0, Long.parseLong(FBProfile.getId()),
-                FirebaseInstanceId.getInstance().getToken(),
-                FBProfile.getFirstName(),
-                FBProfile.getLastName(),
-                stripPhoneNumber(phoneNumber),
-                editTextToString(description), 10);
-        // Set temporary profile as current profile in cache
-        UserDataCache.setCurrentUser(tempProfile);
-        // If we are connected to the network, send profile object to server
-        if (ConnectivityUtility.checkNetworkConnection(getActivity().getApplicationContext())) {
-            try {
-                new ProfileUtility.CreateProfileTask().execute(PROFILE_URL).get();
-            } catch (Exception e) {
-                e.printStackTrace();
-                // TODO: this is a hacky solution, will need real error handling
-            }
-            changeFragment();
-        }
     }
 
     private void editProfile(EditText phoneNumber, EditText description) {

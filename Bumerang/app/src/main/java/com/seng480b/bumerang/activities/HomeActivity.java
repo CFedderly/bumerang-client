@@ -129,11 +129,11 @@ public class HomeActivity extends AppCompatActivity
             p.setAnchorId(View.NO_ID);
             fab.setLayoutParams(p);
             fab.setVisibility(View.GONE);
-            // Call the Edit Profile Fragment
-            Fragment editProfileFragment = new EditProfileFragment();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.mainFrame,editProfileFragment);
-            ft.commit();
+
+            //build intent for the first welcoming screen
+             Intent welcome = new Intent(this, WelcomeActivity.class);
+             startActivity(welcome);
+
         } else {
             updateProfileDeviceId();
             loadTabs();
@@ -252,7 +252,7 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_home) {
 
             // this is just to fix a bug might be unneeded later
-            // Hide the Floating action button
+            // Show Floating action button
             CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
             p.setAnchorId(View.NO_ID);
             fab.setLayoutParams(p);

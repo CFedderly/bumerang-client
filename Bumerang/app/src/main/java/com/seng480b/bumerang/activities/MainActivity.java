@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Makes screen fullscreen
-        getSupportActionBar().hide();
+        if (getSupportActionBar() != null){ getSupportActionBar().hide(); }
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.activity_main);

@@ -29,6 +29,38 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
+    <string name="welcome">Welcome to Bümerang!</string>
+    <string name="welcome_info">Hey, thank you for signing up! You\'re almost ready, just a few things you should know:</string>
+    <string name="beta_notice">Notice: Bümerang is in Beta! Cool, huh? That means some things might not work. But\nwe\'re working on it, don\'t worry</string>
+    <string name="important_info">
+        -Bümerang is an app for the short term exchange of things. This means you will be responsible for your own things, and doubly responsible for
+        other\'s things. In that theme..
+        \n\n-Be responsible with your stuff. Be careful who you lend it to.
+        \n\n-Be responsible with other people\'s things.
+        \n\n-We aren\'t responsible for theft or loss of property. But it\'s our goal to make it as safe as possible to lend and borrow.
+        \n\n**  Privacy  **
+        \n\n-Bümerang accesses Facebook for authorization, to set up your basic profile, and, if you wish, to share requests to your timeline.
+        \n\n-Basic analytics are gathered using Google Analytics, Firebase and Facebook.
+        \n\n-We make use of notifications on your phone.
+        \n\n-Note that we take your privacy very seriously.
+        \n\n**  Notice  **
+        \n\n-We\'re currently in Beta - that means you\'re a Beta user!\nThat also means some things
+        may not work perfectly. If you discover anything strange, or if you\'d just like to drop by
+        and leave a comment, feel free to contact us! Our contact details are listed at http//www.bumerangapp.com
+    </string>
+
+    <string name="walkthrough_phone_title">Enter a Phone Number</string>
+    <string name="phone_number_explanation_expanded">
+        Bümerang requires a phone number. This is how you\'ll get in contact with people in order to lend and borrow, so we\'d
+        strongly encourage you to input a valid number.\n
+        It\'s not public information; you will be always be asked to confirm before it is shared.
+    </string>
+
+    <string name="walkthrough_extra_info_title">Extra Information(optional)</string>
+    <string name="extra_info_explanation">You\'re all done. Happy sharing!</string>
+
+    <string name="phone_number_explanation">A phone number is needed to borrow and lend. You will always be notified before it is shared.</string>
+
     <string name="empty_needs_message">Guess nobody needs anything right now!</string>
     <string name="empty_has_message">Looks like nobody has anything to lend!\n Wanna lead the way?</string>
     <string name="empty_my_needs_message">Hey, guess you don\'t need anything?</string>
@@ -36,6 +68,7 @@
     <string name="empty_request_field_message">Looks like you forgot to fill in a field!</string>
     <string name="empty_phone_number_message">You forgot your phone number! You\'ll need it to lend and borrow.</string>
     <string name="invalid_phone_number_message">That phone number isn\'t valid. You\'ll need a valid one to lend and borrow!</string>
+    <string name="error_in_finding_profile">Sorry, an error has occurred.</string>
 
     <string name="no_internet_connection_generic">We weren\'t able to connect to the internet. Please try again!</string>
     <string name="no_internet_connection_create_request">We weren\'t able to connect to the internet, so we couldn\'t create your request. Please try again!</string>
