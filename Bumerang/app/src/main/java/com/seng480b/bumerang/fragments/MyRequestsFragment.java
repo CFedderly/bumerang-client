@@ -121,8 +121,9 @@ public class MyRequestsFragment extends ListFragment implements OnItemClickListe
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-                            long id) { }
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }
 
     private void populateBrowse() {
         showProgressBar();

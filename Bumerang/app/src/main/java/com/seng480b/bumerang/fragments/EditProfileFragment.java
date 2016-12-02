@@ -25,8 +25,10 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.seng480b.bumerang.BuildConfig;
 import com.seng480b.bumerang.activities.HomeActivity;
 import com.seng480b.bumerang.models.Profile;
+import com.seng480b.bumerang.utils.KarmaUtility;
 import com.seng480b.bumerang.utils.ProfileUtility;
 import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.utils.Utility;
 import com.seng480b.bumerang.utils.caching.UserDataCache;
 import com.seng480b.bumerang.utils.ConnectivityUtility;
 
@@ -169,6 +171,33 @@ public class EditProfileFragment extends Fragment {
         ft.commit();
     }
 
+    
+    private void createNewProfile(EditText phoneNumber, EditText description) {
+
+        // create temporary profile from fields
+        Profile tempProfile = new Profile(
+                0, Long.parseLong(FBProfile.getId()),
+                FirebaseInstanceId.getInstance().getToken(),
+                FBProfile.getFirstName(),
+                FBProfile.getLastName(),
+                stripPhoneNumber(phoneNumber),
+                editTextToString(description), 0);
+        // Set temporary profile as current profile in cache
+        UserDataCache.setCurrentUser(tempProfile);
+        giveKarma();
+        // If we are connected to the network, send profile object to server
+        if (ConnectivityUtility.checkNetworkConnection(getActivity().getApplicationContext())) {
+            try {
+                new ProfileUtility.CreateProfileTask().execute(PROFILE_URL).get();
+            } catch (Exception e) {
+                e.printStackTrace();
+                // TODO: this is a hacky solution, will need real error handling
+            }
+            changeFragment();
+        }
+    }
+
+
     private void editProfile(EditText phoneNumber, EditText description) {
         Profile currProfile = UserDataCache.getCurrentUser();
 
@@ -198,6 +227,14 @@ public class EditProfileFragment extends Fragment {
         }
     }
 
+    public void giveKarma(){
+        int karma = new KarmaUtility().giveKarmaForFirstLogin();
+        if (karma>0){
+            Utility.karmaToast(getActivity(), karma);
+        }
+    }
+
+
     public void checkToggle(boolean check){
         notificationToggle = (ToggleButton) inflatedView.findViewById(R.id.notificationToggle);
         notificationToggle.setChecked(check);
@@ -220,4 +257,5 @@ public class EditProfileFragment extends Fragment {
         });
     }
     
+
 }
