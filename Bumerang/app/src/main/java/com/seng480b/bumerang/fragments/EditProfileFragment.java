@@ -21,8 +21,10 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.seng480b.bumerang.BuildConfig;
 import com.seng480b.bumerang.activities.HomeActivity;
 import com.seng480b.bumerang.models.Profile;
+import com.seng480b.bumerang.utils.KarmaUtility;
 import com.seng480b.bumerang.utils.ProfileUtility;
 import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.utils.Utility;
 import com.seng480b.bumerang.utils.caching.UserDataCache;
 import com.seng480b.bumerang.utils.ConnectivityUtility;
 
@@ -154,9 +156,10 @@ public class EditProfileFragment extends Fragment {
                 FBProfile.getFirstName(),
                 FBProfile.getLastName(),
                 stripPhoneNumber(phoneNumber),
-                editTextToString(description), 10);
+                editTextToString(description), 0);
         // Set temporary profile as current profile in cache
         UserDataCache.setCurrentUser(tempProfile);
+        giveKarma();
         // If we are connected to the network, send profile object to server
         if (ConnectivityUtility.checkNetworkConnection(getActivity().getApplicationContext())) {
             try {
@@ -195,6 +198,12 @@ public class EditProfileFragment extends Fragment {
                 longToast(getActivity(), R.string.unable_to_update_profile);
                 Log.d("DEBUG", "Could not edit profile.");
             }
+        }
+    }
+    public void giveKarma(){
+        int karma = new KarmaUtility().giveKarmaForFirstLogin();
+        if (karma>0){
+            Utility.karmaToast(getActivity(), karma);
         }
     }
 }
