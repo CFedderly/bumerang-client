@@ -17,6 +17,9 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="borrow_tab">I need it!</string>
+    <string name="lend_tab">I have it!</string>
+
     <string name="dialog_got_it">Got it!</string>
     <string name="action_settings">Settings</string>
 

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,7 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
     private ProgressBar progressBar;
     private TextView textView;
     private ListView listView;
+    private SwipeRefreshLayout refreshLayout;
     private RequestUtility.GetRequestsTask requestsTask;
     private GetUserOffersAsyncTaskHandler offerHandler;
 
@@ -64,7 +66,8 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        RelativeLayout rl = (RelativeLayout) inflater.inflate(R.layout.fragment_browse_list, container, false);
+        refreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_browse_list, container, false);
+        RelativeLayout rl = (RelativeLayout) refreshLayout.findViewById(R.id.relative_layout);
         progressBar = (ProgressBar) rl.findViewById(R.id.progress_bar);
         textView = (TextView) rl.findViewById(R.id.empty_list);
         return rl;
@@ -83,17 +86,11 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
         listView = getListView();
 
         final RequestUtility requestUtility = new RequestUtility<>(this);
-        requestsTask = requestUtility.getRequestsByRecent(getContext());
 
         // Start task to get offers from the logged in user
         offerHandler = new GetUserOffersAsyncTaskHandler(getContext());
-        offerHandler.startGetOffersTask(UserDataCache.getCurrentUser().getUserId());
 
-        if (isAsyncTaskRunning()) {
-            showProgressBar();
-        } else {
-            hideProgressBar();
-        }
+        getRequestsAndOffers(requestUtility);
 
         // add a listener to reload the browse page once the tab is switched
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -101,9 +98,15 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
             @Override
             public void onPageSelected(int position) {
                 Log.d("DEBUG", "onPageSelected " + position);
-                if (!isAsyncTaskRunning()) {
-                    requestsTask = requestUtility.getRequestsByRecent(getContext());
-                }
+                getRequestsAndOffers(requestUtility);
+            }
+        });
+
+        // add a listener to force refresh once listview is "pulled down"
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
             }
         });
     }
@@ -147,16 +150,20 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
             final ArrayList<Request> reqList = Request.filterRequestsByType(requests, Utility.getCurrentRequestType(viewPager));
             if (reqList.size() > 0) {
                 BrowseAdapter mAdapter = new BrowseAdapter(activity, reqList);
-                getListView().setAdapter(mAdapter);
-                getListView().setOnItemClickListener(new OnItemClickListener() {
+                listView.setAdapter(mAdapter);
+                listView.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if (offerHandler.isOfferTaskFinished()) {
-                            Request req = reqList.get(position);
-                            RequestDetailFragment details = new RequestDetailFragment();
-                            details.setRequest(req);
-                            FragmentManager fm = getFragmentManager();
-                            details.show(fm, "Sample Fragment");
+                            Request request = reqList.get(position);
+                            RequestFragment requestFragment = new RequestFragment();
+                            requestFragment.setRequest(request);
+                            getFragmentManager().beginTransaction()
+                                    //.hide(BrowseFragment.this)
+                                    //.add(R.id.mainFrame, requestFragment)
+                                    .replace(R.id.mainFrame, requestFragment)
+                                    .addToBackStack(null)
+                                    .commit();
                         } else {
                             Utility.longToast(getContext(), R.string.unable_to_display_request_detail);
                         }
@@ -167,6 +174,18 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
             }
         } else {
             showEmptyMessage();
+        }
+    }
+
+    private void getRequestsAndOffers(RequestUtility requestUtility) {
+        if (isAsyncTaskRunning()) {
+            showProgressBar();
+        } else {
+            hideProgressBar();
+            requestsTask = requestUtility.getRequestsByRecent(getContext());
+        }
+        if (!offerHandler.isAsyncTaskRunning()) {
+            offerHandler.startGetOffersTask(UserDataCache.getCurrentUser().getUserId());
         }
     }
 
@@ -233,6 +252,7 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
                 offers = null;
             }
             UserDataCache.setOffers(offers);
+            getOfferTask = null;
         }
 
         @Override

@@ -1,6 +1,7 @@
 package com.seng480b.bumerang.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -39,24 +41,23 @@ import com.seng480b.bumerang.utils.caching.UserDataCache;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private FloatingActionButton fab;
+    private ActionBarDrawerToggle drawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Firebase Setup here.
+        // Firebase setup
         FirebaseMessaging.getInstance().subscribeToTopic("all");
 
         // Initialize facebook SDK
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_nav_drawer);
 
-        //toolbar/actionbar setup
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        String notifyReceived = getIntent().getStringExtra("MsgReceived");
+        // Toolbar/Actionbar setup
+        setupToolbar();
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        String notifyReceived = getIntent().getStringExtra("MsgReceived");
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -66,28 +67,19 @@ public class HomeActivity extends AppCompatActivity
                 }
             });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         // isFirst is used to both check if the user has ever logged in
         // And to set the current user profile if launched from a notification.
-
         if (notifyReceived != null) {
             boolean loggedIn = AccessToken.getCurrentAccessToken()!=null;
             // Ensure user is logged into the app. Otherwise launch main page.
             if (loggedIn) {
                 checkFirstLogin();
                 updateProfileDeviceId();
-                Fragment my_requests = new MyRequestsFragment();
-                ft.addToBackStack("my_request");
-                ft.replace(R.id.mainFrame, my_requests);
-                ft.commit();
+                Fragment myRequests = new MyRequestsFragment();
+                replaceMainFrameWithFragment(myRequests, "my_requests");
             } else {
                 Intent login = new Intent(this, MainActivity.class);
                 startActivity(login);
@@ -124,19 +116,24 @@ public class HomeActivity extends AppCompatActivity
     //will open the edit profile page if it is the first time.
     public void loadStartupFragment(boolean first){
          if (first) {
-            // Hide the Floating action button
-            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-            p.setAnchorId(View.NO_ID);
-            fab.setLayoutParams(p);
-            fab.setVisibility(View.GONE);
-
-            //build intent for the first welcoming screen
+             setFabVisibility(false);
              Intent welcome = new Intent(this, WelcomeActivity.class);
              startActivity(welcome);
-
         } else {
             updateProfileDeviceId();
             loadTabs();
+        }
+    }
+
+    public void setupToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawerToggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(drawerToggle);
+            drawerToggle.syncState();
         }
     }
 
@@ -156,16 +153,15 @@ public class HomeActivity extends AppCompatActivity
         p.setAnchorId(View.NO_ID);
         fab.setLayoutParams(p);
         fab.setVisibility(View.GONE);
-        Fragment createReq = new CreateRequestFragment();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.addToBackStack("create_request");
-        ft.add(createReq, "create_request");
-        ft.replace(R.id.mainFrame,createReq);
-        ft.commit();
+        Fragment createRequest = new CreateRequestFragment();
+        replaceMainFrameWithFragment(createRequest, "create_request");
     }
 
     @Override
     public void onBackPressed() {
+            // turn on the Navigation Drawer image;
+            // this is called in the LowerLevelFragments
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -184,22 +180,34 @@ public class HomeActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.nav_drawer, menu);
+        super.onCreateOptionsMenu(menu);
         return true;
     }
 
     @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the HomeActivity/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Log.d("DEBUG", "home");
+                return false;
+            case R.id.action_settings:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void setActionBarTitle(String title){
@@ -225,67 +233,64 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
+    public void setFabVisibility(boolean isVisible) {
+        CoordinatorLayout.LayoutParams fabLayout = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        fabLayout.setAnchorId(View.NO_ID);
+        fab.setLayoutParams(fabLayout);
+        if (isVisible) {
+            fab.setVisibility(View.VISIBLE);
+        } else {
+            fab.setVisibility(View.GONE);
+        }
+    }
+
+    private void replaceMainFrameWithFragment(Fragment fragment, String tag) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.addToBackStack(tag);
+        ft.replace(R.id.mainFrame, fragment);
+        ft.commit();
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        Fragment createReq = new CreateRequestFragment();
+        Fragment createRequest = new CreateRequestFragment();
 
-        Fragment my_requests = new MyRequestsFragment();
+        Fragment myRequests = new MyRequestsFragment();
 
         Fragment profilePage = new ProfilePageFragment();
 
-        if (id == R.id.nav_createReq) {
-            // Hide the Floating action button
-            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-            p.setAnchorId(View.NO_ID);
-            fab.setLayoutParams(p);
-            fab.setVisibility(View.GONE);
-            // Transition to the create request fragment
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.addToBackStack("create_request");
-            ft.replace(R.id.mainFrame,createReq);
-            ft.commit();
-
-        } else if (id == R.id.nav_home) {
-
-            // this is just to fix a bug might be unneeded later
-            // Show Floating action button
-            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-            p.setAnchorId(View.NO_ID);
-            fab.setLayoutParams(p);
-            fab.setVisibility(View.VISIBLE);
-            Intent browse = new Intent(this, HomeActivity.class);
-            startActivity(browse);
-            finish();
-        } else if (id == R.id.nav_manage) {
-            // Hide the Floating action button
-            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-            p.setAnchorId(View.NO_ID);
-            fab.setLayoutParams(p);
-            fab.setVisibility(View.GONE);
-            // Call the Profile Page Fragment
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.addToBackStack("profile");
-            ft.replace(R.id.mainFrame,profilePage);
-            ft.commit();
-        } else if (id == R.id.nav_my_requests){
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setVisibility(View.VISIBLE);
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.addToBackStack("my_requests");
-            ft.replace(R.id.mainFrame, my_requests);
-            ft.commit();
-        } else if (id == R.id.nav_logout) {
-            logoutFromFacebook();
-            //Go back to login page
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-
+        switch (item.getItemId()) {
+            case R.id.nav_createReq:
+                setFabVisibility(false);
+                // Transition to the create request fragment
+                replaceMainFrameWithFragment(createRequest, "create_request");
+                break;
+            case R.id.nav_home:
+                setFabVisibility(true);
+                Intent browse = new Intent(this, HomeActivity.class);
+                startActivity(browse);
+                finish();
+                break;
+            case R.id.nav_manage:
+                setFabVisibility(false);
+                replaceMainFrameWithFragment(profilePage, "profile");
+                break;
+            case R.id.nav_my_requests:
+                setFabVisibility(true);
+                replaceMainFrameWithFragment(myRequests, "my_requests");
+                break;
+            case R.id.nav_logout:
+                logoutFromFacebook();
+                //Go back to login page
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
         }
-
         //close drawer after the action
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
