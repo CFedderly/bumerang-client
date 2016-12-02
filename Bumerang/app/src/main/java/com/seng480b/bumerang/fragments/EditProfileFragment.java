@@ -11,9 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.util.Log;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.facebook.login.widget.ProfilePictureView;
 
@@ -43,6 +47,8 @@ public class EditProfileFragment extends Fragment {
     private View inflatedView;
     private com.facebook.Profile FBProfile = com.facebook.Profile.getCurrentProfile();
 
+    private ToggleButton notificationToggle;
+
     //both the create and cancel buttons redirect to the profile page
     private Fragment back = new ProfilePageFragment();
 
@@ -59,7 +65,7 @@ public class EditProfileFragment extends Fragment {
         mViewPager.setVisibility(View.GONE);
         tabLayout.setVisibility(View.GONE);
 
-        // Check if the user already has a profile
+        // Check if the user has a profile
         if (UserDataCache.hasProfile()) {
             String profileUrlWithId = PROFILE_URL + UserDataCache.getCurrentUser().getUserId();
             if (ConnectivityUtility.checkNetworkConnection(getActivity().getApplicationContext())) {
@@ -94,13 +100,32 @@ public class EditProfileFragment extends Fragment {
                 longToast(getActivity(), R.string.invalid_phone_number_message);
             } else {
                 if (!UserDataCache.hasProfile()) {
-                    createNewProfile(phoneNumber, description);
+                    longToast(getActivity(),R.string.error_in_finding_profile);
                 } else {
                     editProfile(phoneNumber, description);
                 }
             }
             }
         });
+
+        ImageButton aboutPhoneButton = (ImageButton) inflatedView.findViewById(R.id.editProfile_phoneInfoButton);
+        aboutPhoneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                TextView moreInfo = (TextView) inflatedView.findViewById(R.id.editProfile_phoneInfoText);
+                if (moreInfo.getVisibility()==View.GONE) {
+                    moreInfo.setVisibility(View.VISIBLE);
+                    moreInfo.animate()
+                            .alpha(1.0f)
+                            .setDuration(200);
+                } else {
+                    moreInfo.setAlpha(0.0f);
+                    moreInfo.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        checkToggle(true);
         return inflatedView;
     }
     private void populateFieldsFromFacebook() {
@@ -121,7 +146,6 @@ public class EditProfileFragment extends Fragment {
         ((EditText) inflatedView.findViewById(DESCRIPTION_FIELD)).setText(currProfile.getDescription());
         ((EditText) inflatedView.findViewById(PHONE_NUMBER_FIELD)).setText(currProfile.getPhoneNumber());
         ((EditText) inflatedView.findViewById(TAGS_FIELD)).setText(currProfile.getTags());
-
     }
 
     private static boolean isValidPhoneNumber(EditText phoneNumber) {
@@ -147,6 +171,7 @@ public class EditProfileFragment extends Fragment {
         ft.commit();
     }
 
+    
     private void createNewProfile(EditText phoneNumber, EditText description) {
 
         // create temporary profile from fields
@@ -171,6 +196,7 @@ public class EditProfileFragment extends Fragment {
             changeFragment();
         }
     }
+
 
     private void editProfile(EditText phoneNumber, EditText description) {
         Profile currProfile = UserDataCache.getCurrentUser();
@@ -200,10 +226,36 @@ public class EditProfileFragment extends Fragment {
             }
         }
     }
+
     public void giveKarma(){
         int karma = new KarmaUtility().giveKarmaForFirstLogin();
         if (karma>0){
             Utility.karmaToast(getActivity(), karma);
         }
     }
+
+
+    public void checkToggle(boolean check){
+        notificationToggle = (ToggleButton) inflatedView.findViewById(R.id.notificationToggle);
+        notificationToggle.setChecked(check);
+
+        //attach a listener to check for changes in state
+        notificationToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                //check the current state before we display the screen
+                if(isChecked){
+                    Toast.makeText(getActivity(), R.string.notifications_on,
+                            Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getActivity(), R.string.notifications_off,
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+    
+
 }

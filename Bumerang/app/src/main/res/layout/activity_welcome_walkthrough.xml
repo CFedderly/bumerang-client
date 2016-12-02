@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fillViewport="false"
+    android:background="@color/white"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_welcome_walkthough"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context="com.seng480b.bumerang.activities.WelcomeWalkthroughActivity">
+
+        <TextView
+            android:id="@+id/walkthrough_stepCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Step 1/2"
+            android:layout_gravity="end"
+            android:layout_margin="20dp"/>
+
+        <TextView
+            android:id="@+id/walkthrough_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-10dp"
+            android:text="@string/walkthrough_phone_title"
+            android:layout_gravity="center_horizontal"
+            android:textSize="20sp"/>
+
+        <ImageView
+            android:id="@+id/walkthrough_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:src="@drawable/phonebooth"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp" />
+
+        <ImageView
+            android:id="@+id/walkthrough_second_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:src="@drawable/sketchy_umbrella"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"/>
+
+        <EditText
+            android:id="@+id/walkthrough_InputPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Phone"
+            android:lines="1"
+            android:maxLength="12"
+            android:textSize="22sp"
+            android:inputType="phone"
+            android:background="@color/light_gray"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="2dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:padding="10dp"
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/walkthrough_LabelBio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bio"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="5dp"
+            android:visibility="gone"/>
+
+        <EditText
+            android:id="@+id/walkthrough_InputBio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            android:padding="5dp"
+            android:hint="Tell us a little about yourself!"
+            android:background="@color/light_gray"
+            android:maxLength="500"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/walkthrough_LabelTags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tags"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="20dp"
+            android:visibility="gone"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:padding="5dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:id="@+id/walkthrough_InputTags"
+            android:hint="Enter items, seperated by a comma, of the items you are willing to lend out."
+            android:background="@color/textboxBackground"
+            android:maxLength="200"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/walkthrough_moreInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_number_explanation_expanded"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:layout_margin="18dp"
+            android:layout_marginTop="20dp"/>
+
+        <Button
+            android:id="@+id/welcomeWalkthrough_buttonContinue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/white"
+            android:background="@color/colorAccent"
+            android:text="Continue"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -39,10 +39,10 @@
         android:id="@+id/slogan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Somebody's got you covered!"
+        android:text="Someone's got you covered!"
         android:layout_marginBottom="25dp"
         android:textStyle="italic|bold"
-        android:textSize="65px"
+        android:textSize="25sp"
         android:textColor="@color/white" />
 
     <com.facebook.login.widget.LoginButton

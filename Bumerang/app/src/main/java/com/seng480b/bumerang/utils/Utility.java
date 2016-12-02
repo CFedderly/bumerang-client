@@ -3,6 +3,7 @@ package com.seng480b.bumerang.utils;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.telephony.PhoneNumberUtils;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 

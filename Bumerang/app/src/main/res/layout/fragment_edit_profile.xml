@@ -8,6 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/white"
     tools:context="com.seng480b.bumerang.fragments.CreateProfileFragment">
 
     <RelativeLayout
@@ -53,29 +54,64 @@
             android:id="@+id/editProfile_InputLastName"
             android:hint="Last Name"
             android:layout_below="@id/editProfile_InputFirstName"
+            android:layout_marginBottom="10dp"
             android:textSize="22sp"/>
 
+        <TextView
+            android:text="Your phone number:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editProfile_LabelPhone"
+            android:textSize="15sp"
+            android:layout_marginBottom="-7dp"
+            android:layout_below="@+id/editProfile_InputLastName"
+            android:layout_alignParentStart="true" />
 
         <EditText
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Phone number"
+            android:hint="Phone"
             android:lines="1"
             android:maxLength="12"
             android:textSize="22sp"
+            android:layout_toStartOf="@+id/editProfile_phoneInfoButton"
             android:id="@+id/editProfile_InputPhoneNumber"
             android:textAlignment="textStart"
             android:inputType="phone"
-            android:layout_below="@+id/editProfile_InputLastName"
-            android:layout_alignParentStart="true"/>
+            android:layout_below="@+id/editProfile_LabelPhone"
+            android:layout_alignParentStart="true" />
+
+        <ImageButton
+            android:id="@+id/editProfile_phoneInfoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editProfile_InputLastName"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="20dp"
+            android:padding="0dp"
+            android:backgroundTint="@color/colorAccent"
+            android:background="@android:drawable/ic_menu_help" />
+
+        <TextView
+            android:id="@+id/editProfile_phoneInfoText"
+            android:layout_below="@id/editProfile_InputPhoneNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-5dp"
+            android:textColor="@color/colorAccent"
+            android:alpha="0.0"
+            android:text="@string/phone_number_explanation"
+            android:visibility="gone"/>
 
         <TextView
             android:text="Bio:"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/editProfile_LabelBio"
-            android:textAppearance="@style/TextAppearance.AppCompat"
-            android:layout_below="@+id/editProfile_InputPhoneNumber"
+            android:textSize="15sp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/editProfile_phoneInfoText"
             android:layout_alignParentStart="true" />
 
         <EditText
@@ -87,16 +123,17 @@
             android:hint="Tell us a little about yourself!"
             android:layout_below="@+id/editProfile_LabelBio"
             android:layout_alignParentStart="true"
+            android:layout_marginBottom="10dp"
             android:background="@color/textboxBackground"
-            android:maxLength="500"/>
-
+            android:maxLength="500" />
 
         <TextView
             android:text="Tags:"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editProfile_LabelTags"
-            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textSize="15sp"
+            android:layout_marginBottom="5dp"
             android:layout_below="@+id/editProfile_InputBio"
             android:layout_alignParentStart="true" />
 
@@ -137,6 +174,28 @@
             android:layout_below="@+id/editProfile_ButtonSave"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="30dp"/>
+
+        <TextView
+            android:id="@+id/textView"
+            android:text="@string/notification_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="37dp"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginStart="27dp"
+            android:layout_below="@+id/editProfile_InputTags"
+            android:layout_toEndOf="@+id/editProfile_LabelBio" />
+
+        <ToggleButton
+            android:text="ToggleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/notificationToggle"
+            android:layout_marginEnd="38dp"
+            android:layout_alignBaseline="@+id/textView"
+            android:layout_alignBottom="@+id/textView"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 
