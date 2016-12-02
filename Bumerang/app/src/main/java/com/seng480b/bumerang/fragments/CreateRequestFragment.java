@@ -2,6 +2,7 @@ package com.seng480b.bumerang.fragments;
 
 
 import android.app.Activity;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -484,6 +485,9 @@ public class CreateRequestFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             Fragment myRequests = new MyRequestsFragment();
+            // Show the floating action button
+            FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+            fab.setVisibility(View.VISIBLE);
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainFrame, myRequests);
             ft.addToBackStack("my_requests");
