@@ -34,8 +34,8 @@
     <string name="beta_notice">Notice: Bümerang is in Beta! Cool, huh? That means some things might not work. But\nwe\'re working on it, don\'t worry</string>
     <string name="important_info">
         -Bümerang is an app for the short term exchange of things. This means you will be responsible for your own things, and doubly responsible for
-        other\'s things. In that theme..
-        \n\n-Be responsible with your stuff. Be careful who you lend it to.
+        other\'s things.
+        \n\n-Be responsible with your stuff. Trust your gut. Don\'t lend out more than what you are comfortable with.
         \n\n-Be responsible with other people\'s things.
         \n\n-We aren\'t responsible for theft or loss of property. But it\'s our goal to make it as safe as possible to lend and borrow.
         \n\n**  Privacy  **
@@ -56,7 +56,7 @@
         It\'s not public information; you will be always be asked to confirm before it is shared.
     </string>
 
-    <string name="walkthrough_extra_info_title">Extra Information(optional)</string>
+    <string name="walkthrough_extra_info_title">Extra Information (optional)</string>
     <string name="extra_info_explanation">You\'re all done. Happy sharing!</string>
 
     <string name="phone_number_explanation">A phone number is needed to borrow and lend. You will always be notified before it is shared.</string>
