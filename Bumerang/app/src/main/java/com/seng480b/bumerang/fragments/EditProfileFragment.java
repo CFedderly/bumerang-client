@@ -11,9 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.util.Log;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.facebook.login.widget.ProfilePictureView;
 
@@ -40,6 +43,8 @@ public class EditProfileFragment extends Fragment {
 
     private View inflatedView;
     private com.facebook.Profile FBProfile = com.facebook.Profile.getCurrentProfile();
+
+    private ToggleButton notificationToggle;
 
     //both the create and cancel buttons redirect to the profile page
     private Fragment back = new ProfilePageFragment();
@@ -99,6 +104,7 @@ public class EditProfileFragment extends Fragment {
             }
             }
         });
+        checkToggle(true);
         return inflatedView;
     }
     private void populateFieldsFromFacebook() {
@@ -119,7 +125,6 @@ public class EditProfileFragment extends Fragment {
         ((EditText) inflatedView.findViewById(DESCRIPTION_FIELD)).setText(currProfile.getDescription());
         ((EditText) inflatedView.findViewById(PHONE_NUMBER_FIELD)).setText(currProfile.getPhoneNumber());
         ((EditText) inflatedView.findViewById(TAGS_FIELD)).setText(currProfile.getTags());
-
     }
 
     private static boolean isValidPhoneNumber(EditText phoneNumber) {
@@ -146,7 +151,6 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void createNewProfile(EditText phoneNumber, EditText description) {
-
         // create temporary profile from fields
         Profile tempProfile = new Profile(
                 0, Long.parseLong(FBProfile.getId()),
@@ -197,4 +201,27 @@ public class EditProfileFragment extends Fragment {
             }
         }
     }
+
+    public void checkToggle(boolean check){
+        notificationToggle = (ToggleButton) inflatedView.findViewById(R.id.notificationToggle);
+        notificationToggle.setChecked(check);
+
+        //attach a listener to check for changes in state
+        notificationToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                //check the current state before we display the screen
+                if(isChecked){
+                    Toast.makeText(getActivity(), R.string.notifications_on,
+                            Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getActivity(), R.string.notifications_off,
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+    
 }
