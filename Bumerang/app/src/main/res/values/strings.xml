@@ -111,4 +111,8 @@
         karma when you don\'t return items on time.</string>
     <string name="happy_sharing">Happy Sharing!</string>
 
+    <string name="notifications_on"> Notifications turned on! </string>
+    <string name="notifications_off"> Notifications turned off! </string>
+    <string name="notification_name"> Notifications </string>
+
 </resources>

@@ -175,16 +175,15 @@ public class RequestDetailFragment extends DialogFragment implements AsyncTaskHa
             UserDataCache.addOffer(offer);
             String title = String.format(Locale.getDefault(), getResources().getString(messageId), requester);
             String message = String.format(Locale.getDefault(), getResources().getString(R.string.responded_message), requester);
-            // Starting work here
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(title).setMessage(message);
-            builder.setPositiveButton(R.string.dialog_got_it, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dismiss();
-                }
-            });
-            AlertDialog dialog = builder.create();
+            new AlertDialog.Builder(getContext())
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton(R.string.dialog_got_it, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
             dismiss();
         }
     }
