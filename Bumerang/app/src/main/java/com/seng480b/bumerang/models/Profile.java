@@ -19,6 +19,8 @@ public class Profile implements Serializable {
     private String tags = "";
     private int karma;
 
+    private Settings settings;
+
     public Profile(int userId,
                    long facebookId,
                    String deviceId,
@@ -76,6 +78,10 @@ public class Profile implements Serializable {
 
     public void setDescription(String description) { this.description = description; }
 
+    public Settings getSettings() { return settings; }
+
+    public void setSettings(Settings settings) { this.settings = settings; }
+
     public HashMap<String, String> getJSONKeyValuePairs() {
         HashMap<String, String> keyValue = new HashMap<>();
         keyValue.put("facebook_id", String.valueOf(facebookId));
@@ -119,7 +125,6 @@ public class Profile implements Serializable {
         }
         return keyValue;
     }
-
 
     public void addKarma(int karma) {
         this.karma += karma;

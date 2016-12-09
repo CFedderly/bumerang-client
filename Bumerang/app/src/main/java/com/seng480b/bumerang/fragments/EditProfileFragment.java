@@ -25,6 +25,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.seng480b.bumerang.BuildConfig;
 import com.seng480b.bumerang.activities.HomeActivity;
 import com.seng480b.bumerang.models.Profile;
+import com.seng480b.bumerang.models.Settings;
 import com.seng480b.bumerang.utils.ProfileUtility;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.utils.caching.UserDataCache;
@@ -69,6 +70,11 @@ public class EditProfileFragment extends Fragment {
             if (ConnectivityUtility.checkNetworkConnection(getActivity().getApplicationContext())) {
                 // if user has profile, populate profile fields
                 new ProfileUtility.LoadProfileTask().execute(profileUrlWithId);
+                try {
+                    ProfileUtility.loadNotificationSettings();
+                } catch (Exception e){
+                    Log.e("ERROR", "Settings error");
+                }
                 populateFields();
             }
         } else {
@@ -91,6 +97,8 @@ public class EditProfileFragment extends Fragment {
             public void onClick(View v) {
             EditText description = (EditText) inflatedView.findViewById(DESCRIPTION_FIELD);
             EditText phoneNumber = (EditText) inflatedView.findViewById(PHONE_NUMBER_FIELD);
+            boolean notifications = notificationToggle.isChecked();
+
 
             if (isEmpty(phoneNumber)) {
                 longToast(getActivity(), R.string.empty_phone_number_message);
@@ -100,7 +108,7 @@ public class EditProfileFragment extends Fragment {
                 if (!UserDataCache.hasProfile()) {
                     longToast(getActivity(),R.string.error_in_finding_profile);
                 } else {
-                    editProfile(phoneNumber, description);
+                    editProfile(phoneNumber, description, notifications);
                 }
             }
             }
@@ -123,7 +131,6 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
-        checkToggle(true);
         return inflatedView;
     }
     private void populateFieldsFromFacebook() {
@@ -144,6 +151,8 @@ public class EditProfileFragment extends Fragment {
         ((EditText) inflatedView.findViewById(DESCRIPTION_FIELD)).setText(currProfile.getDescription());
         ((EditText) inflatedView.findViewById(PHONE_NUMBER_FIELD)).setText(currProfile.getPhoneNumber());
         ((EditText) inflatedView.findViewById(TAGS_FIELD)).setText(currProfile.getTags());
+
+        checkToggle(currProfile.getSettings().isRequestNotifications());
     }
 
     private static boolean isValidPhoneNumber(EditText phoneNumber) {
@@ -169,23 +178,26 @@ public class EditProfileFragment extends Fragment {
         ft.commit();
     }
 
-    private void editProfile(EditText phoneNumber, EditText description) {
+    private void editProfile(EditText phoneNumber, EditText description, boolean notifications) {
         Profile currProfile = UserDataCache.getCurrentUser();
 
         Profile tempProfile = (Profile) deepClone(currProfile);
         tempProfile.setDescription(editTextToString(description));
         tempProfile.setPhoneNumber(stripPhoneNumber(phoneNumber));
+        tempProfile.setSettings(new Settings(notifications, true));
         UserDataCache.setCurrentUser(tempProfile);
 
         String editProfileUrlWithId = EDIT_PROFILE_URL + UserDataCache.getCurrentUser().getUserId();
         if(ConnectivityUtility.checkNetworkConnection(getActivity().getApplicationContext())) {
             String result = null;
+            String settingsResult = null;
             try {
                 result = ProfileUtility.editProfile(editProfileUrlWithId.trim());
+                settingsResult = ProfileUtility.editNotificationSettings();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (result != null) {
+            if (result != null && settingsResult!=null) {
                 longToast(getActivity(), R.string.updated_profile);
                 Log.d("DEBUG", "Profile edited successfully");
                 changeFragment();
