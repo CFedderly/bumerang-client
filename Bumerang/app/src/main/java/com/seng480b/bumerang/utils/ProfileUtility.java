@@ -7,6 +7,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.seng480b.bumerang.BuildConfig;
 import com.seng480b.bumerang.exceptions.LoginException;
 import com.seng480b.bumerang.models.Profile;
+import com.seng480b.bumerang.models.Settings;
 import com.seng480b.bumerang.utils.caching.UserDataCache;
 
 import org.json.JSONException;
@@ -20,6 +21,7 @@ public class ProfileUtility {
     private static final String PROFILE_BY_USER_ID_URL = BuildConfig.SERVER_URL + "/profile/";
     private static final String PROFILE_BY_FACEBOOK_ID_URL = BuildConfig.SERVER_URL + "/profile/facebookid/";
     private static final String EDIT_PROFILE_URL = BuildConfig.SERVER_URL + "/profile/edit/";
+    private static final String EDIT_PROFILE_SETTINGS_URL = BuildConfig.SERVER_URL + "/profile/settings/";
 
     public static boolean isFirstLogin (com.facebook.Profile fbProfile) throws Exception {
         long facebookId = Long.parseLong(fbProfile.getId());
@@ -67,6 +69,32 @@ public class ProfileUtility {
             }
         }
     }
+
+    public static String loadNotificationSettings() throws Exception{
+        String url = EDIT_PROFILE_SETTINGS_URL+UserDataCache.getCurrentUser().getUserId();
+        return new LoadProfileSettingsTask().execute(url).get();
+    }
+
+    public static class LoadProfileSettingsTask extends  AsyncTask<String, Void, String> {
+        protected String doInBackground(String... params) {
+            String result = null;
+            try {
+                result = ConnectivityUtility.makeHttpGetRequest(params[0]);
+                if (result != null) {
+                    Settings setting = new Settings(result);
+                    UserDataCache.getCurrentUser().setSettings(setting);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.e("ERROR", "Unable to parse JSON object in settings");
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("ERROR", "Unable to retrieve profile record for the settings");
+            }
+            return result;
+        }
+    }
+
     /* Returns null if HTTP response was not OK, else returns JSON string for profile record */
     public static class LoadProfileTask extends AsyncTask<String, Void, String>{
 
@@ -157,6 +185,31 @@ public class ProfileUtility {
 
     public static String editDeviceId(String url) throws Exception {
         return new EditProfileTask().execute(url, "deviceId").get();
+    }
+
+    public static String editNotificationSettings() throws Exception{
+        String url = EDIT_PROFILE_SETTINGS_URL+UserDataCache.getCurrentUser().getUserId();
+        return new EditProfileSettingsTask().execute(url).get();
+    }
+
+    private static class EditProfileSettingsTask extends AsyncTask<String, Void, String>{
+        protected  String doInBackground(String ... params){
+            HashMap<String,String> json = UserDataCache.getCurrentUser().getSettings().getJSONKeyValuePairs();
+            String result= null;
+            try{
+                result = ConnectivityUtility.makeHttpPostRequest(params[0], json);
+                if (result != null) {
+                    Log.d("DEBUG","Edited the current users profile setting using: " + json);
+                }
+                else{
+                    Log.e("ERROR", "Unable edit the users notification settings");
+                }
+            }
+            catch (IOException e){
+                Log.e("ERROR", "Could not edit the current profile settings.");
+            }
+            return result;
+        }
     }
 
     private static class EditProfileTask extends AsyncTask<String, Void, String>{
