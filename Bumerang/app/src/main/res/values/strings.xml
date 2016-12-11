@@ -11,6 +11,7 @@
     <string name="button_accept_offer">Accept Offer</string>
     <string name="error_message">Oops! Something went wrong. Please try again!</string>
     <string name="button_skip">skip</string>
+    <string name="login_cancelled">Login cancelled.</string>
 
     <string name="title_activity_nav_drawer">Bümerang</string>
 
@@ -29,7 +30,10 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
-    <string name="welcome">Welcome to Bümerang!</string>
+    <string name="welcome_back">Welcome back</string>
+    <string name="goodbye">Goodbye</string>
+
+    <string name="welcome">Welcome to Bümerang</string>
     <string name="welcome_info">Hey, thank you for signing up! You\'re almost ready, just a few things you should know:</string>
     <string name="beta_notice">Notice: Bümerang is in Beta! Cool, huh? That means some things might not work. But\nwe\'re working on it, don\'t worry</string>
     <string name="important_info">
