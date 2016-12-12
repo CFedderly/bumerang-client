@@ -3,12 +3,8 @@ package com.seng480b.bumerang.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,17 +32,24 @@ import java.util.ArrayList;
 
 public class BrowseFragment extends ListFragment implements OnItemClickListener, AsyncTaskHandler {
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private ViewPager viewPager;
+    private static final String TAG = "BrowseFragment";
     private Activity activity;
     private ProgressBar progressBar;
     private TextView textView;
     private ListView listView;
-    private SwipeRefreshLayout refreshLayout;
     private RequestUtility.GetRequestsTask requestsTask;
     private GetUserOffersAsyncTaskHandler offerHandler;
 
     public BrowseFragment() {
         // Required empty public constructor
+    }
+
+    public static BrowseFragment newInstance(int sectionNumber) {
+        BrowseFragment fragment = new BrowseFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -66,8 +69,7 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        refreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_browse_list, container, false);
-        RelativeLayout rl = (RelativeLayout) refreshLayout.findViewById(R.id.relative_layout);
+        RelativeLayout rl = (RelativeLayout) inflater.inflate(R.layout.fragment_browse_list, container, false);
         progressBar = (ProgressBar) rl.findViewById(R.id.progress_bar);
         textView = (TextView) rl.findViewById(R.id.empty_list);
         return rl;
@@ -77,12 +79,7 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((HomeActivity) getActivity()).setActionBarTitle("Browse");
-        // make the tabs visible
-        viewPager = (ViewPager) activity.findViewById(R.id.container);
-        TabLayout tabLayout = (TabLayout) activity.findViewById(R.id.tabs);
-        viewPager.setVisibility(View.VISIBLE);
-        tabLayout.setVisibility(View.VISIBLE);
+        ((HomeActivity) activity).setActionBarTitle("Browse");
         listView = getListView();
 
         final RequestUtility requestUtility = new RequestUtility<>(this);
@@ -91,36 +88,10 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
         offerHandler = new GetUserOffersAsyncTaskHandler(getContext());
 
         getRequestsAndOffers(requestUtility);
-
-        // add a listener to reload the browse page once the tab is switched
-        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-
-            @Override
-            public void onPageSelected(int position) {
-                Log.d("DEBUG", "onPageSelected " + position);
-                getRequestsAndOffers(requestUtility);
-            }
-        });
-
-        // add a listener to force refresh once listview is "pulled down"
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-            }
-        });
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) { }
-
-    public static BrowseFragment newInstance(int sectionNumber) {
-        BrowseFragment fragment = new BrowseFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public boolean isAsyncTaskRunning() {
@@ -147,7 +118,8 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
         }
         if (!result.equals("")) {
             final ArrayList<Request> requests = Request.getListOfRequestsFromJSON(result);
-            final ArrayList<Request> reqList = Request.filterRequestsByType(requests, Utility.getCurrentRequestType(viewPager));
+            final ArrayList<Request> reqList = Request.filterRequestsByType(requests,
+                    Utility.getCurrentRequestType(getArguments().getInt(ARG_SECTION_NUMBER)));
             if (reqList.size() > 0) {
                 BrowseAdapter mAdapter = new BrowseAdapter(activity, reqList);
                 listView.setAdapter(mAdapter);
@@ -158,9 +130,8 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
                             Request request = reqList.get(position);
                             RequestFragment requestFragment = new RequestFragment();
                             requestFragment.setRequest(request);
-                            getFragmentManager().beginTransaction()
-                                    //.hide(BrowseFragment.this)
-                                    //.add(R.id.mainFrame, requestFragment)
+                            Log.d(TAG, "Replacing with RequestFragment");
+                            ((HomeActivity)activity).getSupportFragmentManager().beginTransaction()
                                     .replace(R.id.mainFrame, requestFragment)
                                     .addToBackStack(null)
                                     .commit();
@@ -193,17 +164,22 @@ public class BrowseFragment extends ListFragment implements OnItemClickListener,
         textView.setVisibility(View.VISIBLE);
         listView.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
-
-        switch (Utility.getCurrentRequestType(viewPager)) {
-            case BORROW:
-                textView.setText(R.string.empty_needs_message);
-                break;
-            case LEND:
-                textView.setText(R.string.empty_has_message);
-                break;
-            default:
-                Log.e("ERROR", "Invalid request type");
+        Request.RequestType requestType = Utility.getCurrentRequestType(getArguments().getInt(ARG_SECTION_NUMBER));
+        if (requestType != null) {
+            switch (requestType) {
+                case BORROW:
+                    textView.setText(R.string.empty_needs_message);
+                    break;
+                case LEND:
+                    textView.setText(R.string.empty_has_message);
+                    break;
+                default:
+                    Log.e(TAG, "Invalid request type");
+            }
+        } else {
+            Log.e(TAG, "Request type is null");
         }
+
     }
 
     private void showProgressBar() {

@@ -107,11 +107,6 @@ public class CreateRequestFragment extends Fragment {
         dateText.setText(expiryDate);
         timeText.setText(expiryTime);
 
-        /** make the tabs invisible **/
-        ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
-        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
-        mViewPager.setVisibility(View.GONE);
-        tabLayout.setVisibility(View.GONE);
 
         // Setup radiogroup (choose lend or borrow)
         RadioGroup radioLendBorrow = (RadioGroup) inflatedView.findViewById(R.id.radio_borrow_lend);

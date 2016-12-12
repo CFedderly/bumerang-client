@@ -8,4 +8,22 @@
 
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+
+    <!-- various material design dimension constants -->
+    <dimen name="md_font_size_title">20sp</dimen>
+    <dimen name="md_font_size_heading">24sp</dimen>
+    <dimen name="md_font_size_display1">34sp</dimen>
+    <dimen name="md_font_size_display2">45sp</dimen>
+
+    <dimen name="md_margin_edge_left_and_right">16dp</dimen>
+    <dimen name="md_margin_content_left">72dp</dimen>
+    <dimen name="md_title_area_height">80dp</dimen>
+    <dimen name="md_title_area_top_margin">24dp</dimen>
+    <dimen name="md_title_area_bottom_margin">8dp</dimen>
+    <dimen name="md_description_area_height">72dp</dimen>
+    <dimen name="md_description_area_top_margin">8dp</dimen>
+    <dimen name="md_description_area_bottom_margin">16dp</dimen>
+
+    <dimen name="md_dividing_line_width">1px</dimen>
+
 </resources>

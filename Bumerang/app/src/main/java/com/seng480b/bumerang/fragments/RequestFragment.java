@@ -4,16 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.activities.HomeActivity;
@@ -23,8 +21,10 @@ import com.seng480b.bumerang.utils.OfferUtility;
 import com.seng480b.bumerang.utils.ProfileUtility;
 
 public class RequestFragment extends Fragment implements AsyncTaskHandler {
+    private static final String TAG = "RequestFragment";
     private Activity activity;
     private Request request;
+    private RelativeLayout relativeLayout;
     private OfferUtility.CreateOfferTask createOfferTask;
 
     @Override
@@ -44,37 +44,28 @@ public class RequestFragment extends Fragment implements AsyncTaskHandler {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((HomeActivity) activity).setFabVisibility(false);
-        Toolbar actionBar = (Toolbar) activity.findViewById(R.id.toolbar);
-        if (actionBar != null) {
-            actionBar.setNavigationIcon(R.drawable.ic_menu_back);
-            actionBar.setTitle(getIdForRequestType());
-            actionBar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    BrowseFragment browseFragment = new BrowseFragment();
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.mainFrame, browseFragment)
-                            .addToBackStack(null)
-                            .commit();
-                }
-            });
-        }
+        setupToolbar();
+    }
 
-        // hide the tabs
-        ViewPager viewPager = (ViewPager) activity.findViewById(R.id.container);
-        TabLayout tabLayout = (TabLayout) activity.findViewById(R.id.tabs);
-        viewPager.setVisibility(View.GONE);
-        tabLayout.setVisibility(View.GONE);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_request_detail, container, false);
+        relativeLayout = (RelativeLayout) rootView.findViewById(R.id.relative_layout);
+        return rootView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        populateRequestInformation();
     }
 
     @Override
     public void onStop() {
         ((HomeActivity) activity).setupToolbar();
+        ((HomeActivity) activity).setFabVisibility(true);
         super.onStop();
     }
 
@@ -82,6 +73,33 @@ public class RequestFragment extends Fragment implements AsyncTaskHandler {
         this.request = request;
         int userId = request.getUserId();
         ProfileUtility.storeRecentUserFromUserId(userId);
+    }
+
+    private void setupToolbar() {
+        Toolbar actionBar = (Toolbar) activity.findViewById(R.id.toolbar);
+        if (actionBar != null) {
+            actionBar.setNavigationIcon(R.drawable.ic_menu_back);
+            actionBar.setTitle(getIdForRequestType());
+            actionBar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BrowseRootFragment browseRootFragment = new BrowseRootFragment();
+                    ((HomeActivity)activity).getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.mainFrame, browseRootFragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
+        }
+    }
+
+
+    private void populateRequestInformation() {
+        TextView itemName = (TextView) relativeLayout.findViewById(R.id.title);
+        TextView itemDescription = (TextView) relativeLayout.findViewById(R.id.description);
+
+        itemName.setText(request.getTitle());
+        itemDescription.setText(request.getDescription());
     }
 
     @Override

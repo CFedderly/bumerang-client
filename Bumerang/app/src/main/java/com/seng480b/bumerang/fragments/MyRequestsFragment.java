@@ -53,7 +53,6 @@ import static com.seng480b.bumerang.utils.Utility.getCurrentRequestType;
 import static com.seng480b.bumerang.utils.Utility.longToast;
 
 public class MyRequestsFragment extends ListFragment implements OnItemClickListener, AsyncTaskHandler {
-    private ViewPager mViewPager;
     private Activity activity;
     private ProgressBar progressBar;
     private TextView textView;
@@ -61,10 +60,6 @@ public class MyRequestsFragment extends ListFragment implements OnItemClickListe
     private RequestUtility.GetRequestsTask requestsTask;
     private int selectedPosition;
     private ActionMode mActionMode;
-
-    public MyRequestsFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -88,14 +83,7 @@ public class MyRequestsFragment extends ListFragment implements OnItemClickListe
         super.onActivityCreated(savedInstanceState);
 
         ((HomeActivity) activity).setActionBarTitle("My Requests");
-
-        // make tabs invisible
-        mViewPager = (ViewPager) activity.findViewById(R.id.container);
-        TabLayout tabLayout = (TabLayout) activity.findViewById(R.id.tabs);
-        mViewPager.setVisibility(View.GONE);
-        tabLayout.setVisibility(View.GONE);
         listView = getListView();
-
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -127,12 +115,9 @@ public class MyRequestsFragment extends ListFragment implements OnItemClickListe
     private void populateBrowse() {
         showProgressBar();
         RequestUtility requestUtility = new RequestUtility<>(this);
-        Request.RequestType requestType = Utility.getCurrentRequestType(mViewPager);
-        if (requestType != null) {
-            if (UserDataCache.hasProfile()) {
+        if (UserDataCache.hasProfile()) {
                 requestsTask = requestUtility.getRequestsFromUser(getContext(),
                         UserDataCache.getCurrentUser().getUserId());
-            }
         } else {
             hideAllOnError();
         }

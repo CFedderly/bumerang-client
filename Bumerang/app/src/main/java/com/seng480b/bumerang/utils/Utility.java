@@ -64,17 +64,16 @@ public class Utility {
 
     public static Request.RequestType getCurrentRequestType(ViewPager pager) {
         int currentTab = pager.getCurrentItem();
-        Request.RequestType requestType;
-        switch(currentTab) {
+        return getCurrentRequestType(currentTab);
+    }
+
+    public static Request.RequestType getCurrentRequestType(int tab) {
+        switch(tab) {
             case 0:
-                requestType = Request.RequestType.BORROW;
-                break;
+                return Request.RequestType.BORROW;
             case 1:
-                requestType = Request.RequestType.LEND;
-                break;
-            default:
-                requestType = null;
+                return Request.RequestType.LEND;
         }
-        return requestType;
+        return null;
     }
 }

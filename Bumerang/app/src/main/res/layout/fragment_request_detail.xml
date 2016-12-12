@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="vertical">
 
-</LinearLayout>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/md_margin_content_left"
+        android:paddingEnd="@dimen/md_margin_edge_left_and_right">
+            <TextView
+                android:id="@+id/title"
+                android:text="Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Large"
+                android:textSize="@dimen/md_font_size_display1"
+                android:layout_marginTop="@dimen/md_title_area_top_margin"
+                android:layout_marginBottom="@dimen/md_title_area_bottom_margin" />
+
+            <TextView
+                android:id="@+id/description"
+                android:text="Description description description description description description description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                android:layout_below="@id/title"
+                android:layout_marginTop="@dimen/md_description_area_top_margin"
+                android:layout_marginBottom="@dimen/md_description_area_bottom_margin" />
+            <View
+                android:id="@+id/divider_1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/md_dividing_line_width"
+                android:layout_below="@id/description"
+                android:background="@color/colorPrimaryDark"/>
+        </RelativeLayout>
+
+</ScrollView>

@@ -57,13 +57,6 @@ public class EditProfileFragment extends Fragment {
         inflatedView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         ((HomeActivity)getActivity()).setActionBarTitle("Edit Profile");
 
-
-        /* make the tabs invisible */
-        ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
-        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
-        mViewPager.setVisibility(View.GONE);
-        tabLayout.setVisibility(View.GONE);
-
         // Check if the user has a profile
         if (UserDataCache.hasProfile()) {
             String profileUrlWithId = PROFILE_URL + UserDataCache.getCurrentUser().getUserId();

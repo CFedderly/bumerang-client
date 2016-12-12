@@ -5,13 +5,10 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -27,13 +24,12 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.seng480b.bumerang.fragments.BrowseRootFragment;
 import com.seng480b.bumerang.fragments.MyRequestsFragment;
 import com.seng480b.bumerang.fragments.ProfilePageFragment;
 import com.seng480b.bumerang.utils.ProfileUtility;
 import com.seng480b.bumerang.R;
-import com.seng480b.bumerang.adapters.SectionsPagerAdapter;
 import com.seng480b.bumerang.fragments.CreateRequestFragment;
-import com.seng480b.bumerang.fragments.EditProfileFragment;
 import com.seng480b.bumerang.utils.Utility;
 import com.seng480b.bumerang.utils.caching.UserDataCache;
 
@@ -50,6 +46,7 @@ public class HomeActivity extends AppCompatActivity
         // Firebase setup
         FirebaseMessaging.getInstance().subscribeToTopic("all");
 
+        // Initialize facebook SDK
         // Initialize facebook SDK
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_nav_drawer);
@@ -120,8 +117,8 @@ public class HomeActivity extends AppCompatActivity
              Intent welcome = new Intent(this, WelcomeActivity.class);
              startActivity(welcome);
         } else {
-            updateProfileDeviceId();
-            loadTabs();
+             updateProfileDeviceId();
+             replaceMainFrameWithFragment(new BrowseRootFragment(), "browse_page", false);
         }
     }
 
@@ -135,17 +132,6 @@ public class HomeActivity extends AppCompatActivity
             drawer.addDrawerListener(drawerToggle);
             drawerToggle.syncState();
         }
-    }
-
-    public void loadTabs(){
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        // Set up the ViewPager with the sections adapter.
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
     }
 
     public void floatingClicked() {
@@ -168,7 +154,7 @@ public class HomeActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
             FragmentManager ft = getSupportFragmentManager();
-            if (ft.findFragmentById(R.id.tabs) == null && ft.getBackStackEntryCount() == 0) {
+            if (ft.getBackStackEntryCount() == 0) {
                 Intent browse = new Intent(this, HomeActivity.class);
                 startActivity(browse);
                 finish();
@@ -244,11 +230,26 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    private void replaceMainFrameWithFragment(Fragment fragment, String tag) {
+    private void replaceMainFrameWithFragment(Fragment fragment, String tag, boolean padding) {
+        int mainFrameId = R.id.mainFrame;
+        int horizontalPadding = 0;
+        int verticalPadding = 0;
+        if (padding) {
+            horizontalPadding = (int) (getResources().getDimension(R.dimen.activity_horizontal_margin)
+                    / getResources().getDisplayMetrics().density);
+            verticalPadding = (int) (getResources().getDimension(R.dimen.activity_vertical_margin) /
+                    getResources().getDisplayMetrics().density);
+        }
+        findViewById(mainFrameId).setPadding(horizontalPadding, verticalPadding,
+                horizontalPadding, verticalPadding);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.addToBackStack(tag);
-        ft.replace(R.id.mainFrame, fragment);
+        ft.replace(mainFrameId, fragment);
         ft.commit();
+    }
+
+    private void replaceMainFrameWithFragment(Fragment fragment, String tag) {
+        replaceMainFrameWithFragment(fragment, tag, true);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -256,23 +257,19 @@ public class HomeActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
 
+        Fragment browsePage = new BrowseRootFragment();
         Fragment createRequest = new CreateRequestFragment();
-
         Fragment myRequests = new MyRequestsFragment();
-
         Fragment profilePage = new ProfilePageFragment();
 
         switch (item.getItemId()) {
             case R.id.nav_createReq:
                 setFabVisibility(false);
-                // Transition to the create request fragment
                 replaceMainFrameWithFragment(createRequest, "create_request");
                 break;
             case R.id.nav_home:
                 setFabVisibility(true);
-                Intent browse = new Intent(this, HomeActivity.class);
-                startActivity(browse);
-                finish();
+                replaceMainFrameWithFragment(browsePage, "browse_page", false);
                 break;
             case R.id.nav_manage:
                 setFabVisibility(false);

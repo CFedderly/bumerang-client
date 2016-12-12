@@ -34,14 +34,7 @@ public class ProfilePageFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         myInflatedView = inflater.inflate(R.layout.fragment_profile_page, container,false);
-        /** set the action bar title **/
         ((HomeActivity)getActivity()).setActionBarTitle("Profile");
-
-        /** make the tabs invisible **/
-        ViewPager mViewPager = (ViewPager) getActivity().findViewById(R.id.container);
-        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
-        mViewPager.setVisibility(View.GONE);
-        tabLayout.setVisibility(View.GONE);
         if (UserDataCache.hasProfile()) {
             updateProfileInfo();
         }
