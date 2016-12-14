@@ -31,13 +31,13 @@ import com.seng480b.bumerang.utils.ProfileUtility;
 import com.seng480b.bumerang.R;
 import com.seng480b.bumerang.adapters.SectionsPagerAdapter;
 import com.seng480b.bumerang.fragments.CreateRequestFragment;
-import com.seng480b.bumerang.fragments.EditProfileFragment;
 import com.seng480b.bumerang.utils.Utility;
 import com.seng480b.bumerang.utils.caching.UserDataCache;
 
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
     private FloatingActionButton fab;
 
     @Override
@@ -77,7 +77,6 @@ public class HomeActivity extends AppCompatActivity
 
         // isFirst is used to both check if the user has ever logged in
         // And to set the current user profile if launched from a notification.
-
         if (notifyReceived != null) {
             boolean loggedIn = AccessToken.getCurrentAccessToken()!=null;
             // Ensure user is logged into the app. Otherwise launch main page.
@@ -100,7 +99,7 @@ public class HomeActivity extends AppCompatActivity
             } else {
                 Utility.longToast(this, getString(R.string.error_message));
                 // Redirect to login screen.
-                logoutFromFacebook();
+                logoutFromFacebook(false); // true = it manually logged out
                 Intent login = new Intent(this, MainActivity.class);
                 startActivity(login);
             }
@@ -114,6 +113,7 @@ public class HomeActivity extends AppCompatActivity
         } catch (Exception e) {
             // Something went wrong send back to login page.
             Utility.longToast(this, getString(R.string.error_message));
+            Log.e("ERROR","something went wrong with checking first login.");
             Intent login = new Intent(this, MainActivity.class);
             startActivity(login);
         }
@@ -209,10 +209,14 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-    public void logoutFromFacebook(){
+    public void logoutFromFacebook(boolean manual){
         FacebookSdk.sdkInitialize(getApplicationContext());
         if (AccessToken.getCurrentAccessToken()==null){
             return; //already logged out
+        }
+        if(manual) {
+            com.facebook.Profile p = com.facebook.Profile.getCurrentProfile();
+            Utility.longToast(getApplicationContext(), getString(R.string.goodbye) +" "+ p.getFirstName()+".");
         }
         LoginManager.getInstance().logOut();
     }
@@ -279,7 +283,7 @@ public class HomeActivity extends AppCompatActivity
             ft.replace(R.id.mainFrame, my_requests);
             ft.commit();
         } else if (id == R.id.nav_logout) {
-            logoutFromFacebook();
+            logoutFromFacebook(true); // true = it manually logged out
             //Go back to login page
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
