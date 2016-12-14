@@ -12,31 +12,35 @@
 
     <TextView
         android:id="@+id/title"
-        android:textSize="25dp"
+        android:textSize="25sp"
         android:textStyle="bold"
         android:text="@string/karma_help_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_centerHorizontal="true"
-    />
+        android:textColor="@color/blue_text"
+        android:layout_centerHorizontal="true"/>
+
     <TextView
         android:id="@+id/body"
         android:text="@string/karma_explanation"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
         android:gravity="center"
+        android:textColor="@color/blue_text"
         android:layout_centerHorizontal="true"/>
+
     <TextView
         android:id="@+id/finalRemarks"
         android:text="@string/happy_sharing"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/body"
         android:gravity="center"
+        android:textColor="@color/blue_text"
         android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

@@ -4,6 +4,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
@@ -221,10 +222,12 @@ public class EditProfileFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
                 //check the current state before we display the screen
                 if(isChecked){
+                    buttonView.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.buttonPressPink));
                     Toast.makeText(getActivity(), R.string.notifications_on,
                             Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    buttonView.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.light_gray));
                     Toast.makeText(getActivity(), R.string.notifications_off,
                             Toast.LENGTH_SHORT).show();
                 }
