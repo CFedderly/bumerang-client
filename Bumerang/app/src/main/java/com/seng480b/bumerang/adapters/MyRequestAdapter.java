@@ -5,6 +5,9 @@ package com.seng480b.bumerang.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.seng480b.bumerang.R;
+import com.seng480b.bumerang.fragments.MyRequestsFragment;
 import com.seng480b.bumerang.interfaces.AsyncTaskHandler;
 import com.seng480b.bumerang.models.Request;
 import com.seng480b.bumerang.utils.RequestUtility;
@@ -29,10 +33,12 @@ public class MyRequestAdapter extends ArrayAdapter<Request> implements AsyncTask
     private ArrayList<Request> requests;
     private RequestUtility.DeleteRequestTask deleteRequestTask;
     private int currentPosition;
+    private Context context;
 
     public MyRequestAdapter(Context context, ArrayList<Request> requests) {
         super(context,0,requests);
         this.requests = requests;
+        this.context = context;
     }
 
     @Override
@@ -132,6 +138,7 @@ public class MyRequestAdapter extends ArrayAdapter<Request> implements AsyncTask
             longToast(getContext(), R.string.delete_request_success_message);
             requests.remove(currentPosition);
             notifyDataSetChanged();
+            reloadList();
         }
     }
 
@@ -143,5 +150,10 @@ public class MyRequestAdapter extends ArrayAdapter<Request> implements AsyncTask
         return deleteRequestTask.getStatus() != RequestUtility.DeleteRequestTask.Status.FINISHED;
     }
 
-
+    public void reloadList() {
+        FragmentTransaction ft = ((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
+        Fragment my_requests = new MyRequestsFragment();
+        ft.replace(R.id.mainFrame, my_requests);
+        ft.commit();
+    }
 }
