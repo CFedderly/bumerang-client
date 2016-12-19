@@ -36,13 +36,11 @@ Requires Android 5.0 +
 
 ###Updates
 
-Current Version: 0.12
-Last Update: December 6th, 2016
-Patch Notes - December 1, 2016.
-- Added Introduction to app upon first creating a profile.
-- Limited the number of times an offer can be accepted.
-- Added a dialog to inform the user what happens next after they have accepted a request
-- Added description for Karma number on user's profile page.
-- Fixed issue where multiple browse screens were being created.
-- General UI Fixes 
+Current Version: 0.2
+Last Update: December 19th, 2016
+Patch Notes - December 19, 2016.
+- Added ability to turn off notifications from user's profile
+- Added scrollable pages for the edit profile page
+- Fixed issue where app would crash upon users first login
+- Fixed UI issues after deleting a request
 
