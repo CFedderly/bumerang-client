@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -16,9 +15,7 @@ import android.support.v4.app.ListFragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.ActionMode;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,8 +45,6 @@ import com.seng480b.bumerang.utils.Utility;
 
 import java.util.ArrayList;
 
-import static android.R.attr.statusBarColor;
-import static com.seng480b.bumerang.utils.Utility.getCurrentRequestType;
 import static com.seng480b.bumerang.utils.Utility.longToast;
 
 public class MyRequestsFragment extends ListFragment implements OnItemClickListener, AsyncTaskHandler {
@@ -244,6 +239,7 @@ public class MyRequestsFragment extends ListFragment implements OnItemClickListe
                 MyRequestAdapter deleteAdapter = (MyRequestAdapter) listView.getAdapter();
                 deleteAdapter.remove(request);
                 deleteAdapter.notifyDataSetChanged();
+                reloadList();
             }
         }
 
@@ -259,6 +255,14 @@ public class MyRequestsFragment extends ListFragment implements OnItemClickListe
             requestUtility = new RequestUtility<>(this);
             this.request = request;
             deleteRequestTask = requestUtility.deleteRequest(getContext(), request.getRequestId());
+        }
+
+        public void reloadList() {
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            Fragment my_requests = new MyRequestsFragment();
+            ft.addToBackStack("my_requests");
+            ft.replace(R.id.mainFrame, my_requests);
+            ft.commit();
         }
     }
 
